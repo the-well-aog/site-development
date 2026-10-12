@@ -2,34 +2,26 @@
 import Base from '../layouts/Base.astro';
 import PageHero from '../components/PageHero.astro';
 import PlaceholderForm from '../components/PlaceholderForm.astro';
-import { body, lede } from '../data/copy';
+import { url } from '../lib/url';
 ---
 
-<Base title="Prayer" description="Ask The Well Assembly of God to pray with you." image="images/chapel.jpg">
-  <PageHero kicker="Prayer" title="Tell us what hurts." deck={lede} />
+<Base title="Prayer" description="Find information about sharing a prayer request with The Well Assembly of God." image="images/chapel.jpg">
+  <PageHero kicker="Prayer" title="Let's pray." deck="A worry, a hope, a moment of gratitude. You don't have to find the perfect words to begin." />
   <section class="section" style="padding-top: 0.2rem;">
     <div class="wrap contact-grid">
       <div class="measure">
-        <p>{body}</p>
-        <p style="margin-top: 1rem;">{lede}</p>
-        <p class="fine" style="margin-top: 1.2rem;">
-          A person would read this. It is not an emergency line, and this preview does not send it anywhere.
-        </p>
+        <p class="eyebrow">One conversation at a time</p>
+        <h2 class="block-title">Make room<br />for prayer.</h2>
+        <p class="deck" style="margin-top: 1.2rem;">Prayer requests are not being accepted through this website yet.</p>
+        <p>The form is shown here as a preview. Before it becomes available, this page will explain who receives your request and how to ask for a reply.</p>
+        <div class="actions"><a class="more" href={url('/contact')}>Contact information <span aria-hidden="true">→</span></a></div>
       </div>
       <div class="panel">
+        <h2 class="card-title" style="margin: 0 0 1.3rem;">Share a prayer request</h2>
         <PlaceholderForm submit="Share a request">
-          <label class="field">
-            <span>Name, if you want</span>
-            <input name="name" autocomplete="name" />
-          </label>
-          <label class="field">
-            <span>Email, if you want a reply</span>
-            <input name="email" type="email" autocomplete="email" />
-          </label>
-          <label class="field">
-            <span>Request</span>
-            <textarea name="request" required></textarea>
-          </label>
+          <label class="field"><span>Name (optional)</span><input name="name" autocomplete="name" /></label>
+          <label class="field"><span>Email (optional)</span><input name="email" type="email" autocomplete="email" /></label>
+          <label class="field"><span>Your prayer request</span><textarea name="request" rows="5" required></textarea></label>
         </PlaceholderForm>
       </div>
     </div>

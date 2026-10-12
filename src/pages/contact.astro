@@ -2,53 +2,48 @@
 import Base from '../layouts/Base.astro';
 import PageHero from '../components/PageHero.astro';
 import PlaceholderForm from '../components/PlaceholderForm.astro';
-import { lede } from '../data/copy';
 import { site } from '../data/site';
+import { url } from '../lib/url';
 ---
 
-<Base title="Contact" description="Write or call The Well Assembly of God." image="images/exterior.jpg">
-  <PageHero kicker="Hello" title="Contact" deck={lede} />
+<Base title="Contact" description="Find contact information and ways to connect with The Well Assembly of God." image="images/exterior.jpg">
+  <PageHero kicker="Let's connect" title="Start with hello." deck="A question about Sunday, a next step, or something on your mind. Find a place to begin the conversation." />
   <section class="section" style="padding-top: 0.4rem;">
     <div class="wrap contact-grid">
       <div>
-        <p class="eyebrow">Office</p>
-        <h2 class="block-title" style="font-size: 2.6rem;">{site.address}</h2>
+        <p class="eyebrow">Find The Well</p>
+        <h2 class="block-title" style="font-size: clamp(2rem, 4vw, 2.6rem);">{site.address}</h2>
         <p class="deck" style="margin-top: 0.4rem;">{site.city}</p>
-        <p class="meta-row">
-          <a href={site.phoneHref}>{site.phoneDisplay}</a>
-          <a href={`mailto:${site.email}`}>{site.email}</a>
-        </p>
-        <dl class="facts" style="grid-template-columns: 1fr 1fr;">
-          <div>
-            <dt>{site.sundayLabel}</dt>
-            <dd>{site.sundayTime}</dd>
-          </div>
-          <div>
-            <dt>{site.midweekLabel}</dt>
-            <dd>{site.midweekTime}</dd>
-          </div>
+        <p class="fine" style="margin-top: 1rem;">Address and gathering times shown here are sample details. The church's confirmed contact information will be added before launch.</p>
+        <dl class="facts contact-times">
+          <div><dt>{site.sundayLabel}</dt><dd>{site.sundayTime}</dd></div>
+          <div><dt>{site.midweekLabel}</dt><dd>{site.midweekTime}</dd></div>
         </dl>
+        <div class="contact-paths">
+          <a class="contact-path" href={url('/visit')}><span><strong>Planning a first visit?</strong><small>Start with what to expect.</small></span><span aria-hidden="true">↗</span></a>
+          <a class="contact-path" href={url('/prayer')}><span><strong>Looking for prayer?</strong><small>Explore the prayer page.</small></span><span aria-hidden="true">↗</span></a>
+        </div>
       </div>
       <div class="panel">
+        <h2 class="card-title" style="margin: 0 0 1.3rem;">Send a note</h2>
         <PlaceholderForm submit="Send a note">
-          <label class="field">
-            <span>Name</span>
-            <input name="name" autocomplete="name" required />
-          </label>
-          <label class="field">
-            <span>Email</span>
-            <input name="email" type="email" autocomplete="email" required />
-          </label>
-          <label class="field">
-            <span>Message</span>
-            <textarea name="message" required></textarea>
-          </label>
-          <label class="check">
-            <input type="checkbox" name="prayer" />
-            <span>This is a prayer request</span>
-          </label>
+          <label class="field"><span>Name</span><input name="name" autocomplete="name" required /></label>
+          <label class="field"><span>Email</span><input name="email" type="email" autocomplete="email" required /></label>
+          <label class="field"><span>Message</span><textarea name="message" rows="5" required></textarea></label>
+          <label class="check"><input type="checkbox" name="prayer" /><span>This is a prayer request</span></label>
         </PlaceholderForm>
       </div>
     </div>
   </section>
 </Base>
+
+<style>
+  .contact-times { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .contact-path { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 1.1rem 0; border-top: 1px solid var(--line); text-decoration: none; }
+  .contact-path:last-child { border-bottom: 1px solid var(--line); }
+  .contact-path strong, .contact-path small { display: block; }
+  .contact-path strong { font-weight: 500; }
+  .contact-path small { margin-top: .2rem; color: var(--muted); }
+  .contact-path > span:last-child { font-size: 1.35rem; color: var(--tide); }
+  .contact-path:hover strong { text-decoration: underline; text-underline-offset: .2em; }
+</style>

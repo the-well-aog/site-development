@@ -1,8 +1,13 @@
 export const lede =
-  'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
+  'A place to ask questions, grow in faith, and find your next step. There is room for you at The Well.';
 
 export const body =
-  'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.';
+  'Whether you are exploring faith or looking for a church to call home, start here. Get to know The Well, explore our beliefs, and discover ways to connect.';
 
 export const more =
-  'Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.';
+  'You do not have to have every answer before taking the first step. Come with your questions and begin a conversation.';
+
+/** Keep the original sample records while presenting honest, readable preview copy. */
+export function isPlaceholderText(value = ''): boolean {
+  return /lorem ipsum|ut enim ad minim|duis aute|excepteur sint|sed do eiusmod|quis nostrud|sunt in culpa/i.test(value);
+}

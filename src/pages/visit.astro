@@ -2,85 +2,101 @@
 import Base from '../layouts/Base.astro';
 import PageHero from '../components/PageHero.astro';
 import PlaceholderForm from '../components/PlaceholderForm.astro';
-import { body, lede } from '../data/copy';
 import { site } from '../data/site';
-import { img } from '../lib/url';
+import { img, url } from '../lib/url';
 
-const expectations = [
-  { n: '01', title: 'When to arrive', text: lede },
-  { n: '02', title: 'What to wear', text: body },
-  { n: '03', title: 'Where to enter', text: lede },
-  { n: '04', title: 'Kids', text: body },
+const questions = [
+  { title: 'What should I know before I come?', text: 'Start with the gathering times and location. If you have a question about the service, arrival time, or what to wear, get in touch before your visit.', href: '/contact', label: 'Ask about your visit' },
+  { title: 'What about my kids?', text: 'Visit the Kids page to explore the ministry, then contact us about ages, check-in, and what your family can expect.', href: '/ministries/kids', label: 'Explore Kids' },
+  { title: 'Where do I park and enter?', text: 'Contact us for parking and entrance details before you set out. Let us know if you have an accessibility question or need help planning your arrival.', href: '/contact', label: 'Get arrival details' },
+  { title: 'Can I get to know The Well first?', text: 'Absolutely. Explore our beliefs, browse messages, and take a look at the ways to connect. There is no need to rush your next step.', href: '/about', label: 'Get to know The Well' },
 ];
 ---
 
-<Base title="Plan your visit" description="What to expect on a first Sunday at The Well Assembly of God." image="images/exterior.jpg">
-  <PageHero kicker="I'm new" title="Plan your visit" deck={lede} />
-  <figure class="page-figure">
-    <img src={img('exterior')} alt="A low contemporary building at dusk, with an olive tree in a gravel court." />
-  </figure>
-  <section class="section">
+<Base title="Plan your visit" description="Find gathering times, explore Kids, and plan your first visit to The Well Assembly of God." image="images/church-exterior.jpg">
+  <PageHero kicker="Your first Sunday" title="Come as you are." deck="A new place can come with a lot of questions. Let's make your first step a little easier." />
+  <section class="visit-at-a-glance" aria-label="Gathering times and location">
     <div class="wrap">
       <dl class="facts">
-        <div>
-          <dt>{site.sundayLabel}</dt>
-          <dd>{site.sundayTime}</dd>
-        </div>
-        <div>
-          <dt>{site.midweekLabel}</dt>
-          <dd>{site.midweekTime}</dd>
-        </div>
-        <div>
-          <dt>Where</dt>
-          <dd>{site.city}</dd>
-        </div>
+        <div><dt>{site.sundayLabel}</dt><dd>{site.sundayTime}</dd></div>
+        <div><dt>{site.midweekLabel}</dt><dd>{site.midweekTime}</dd></div>
+        <div><dt>Find us</dt><dd>{site.address}<small>{site.city}</small></dd></div>
       </dl>
-      <div class="expect">
-        {
-          expectations.map((item) => (
-            <article>
-              <span class="num">{item.n}</span>
-              <div>
-                <h2>{item.title}</h2>
-                <p>{item.text}</p>
-              </div>
-            </article>
-          ))
-        }
+      <p class="fine preview-note">Times and location are sample details in this website preview.</p>
+      <nav class="actions" aria-label="Plan your visit">
+        <a class="btn" href="#first-visit">What to expect <span aria-hidden="true">↓</span></a>
+        <a class="more" href={url('/ministries/kids')}>Coming with kids? <span aria-hidden="true">→</span></a>
+      </nav>
+    </div>
+  </section>
+  <figure class="page-figure">
+    <img class="is-church" src={img('church')} alt="The church at golden hour: a long brick building with a red metal roof, a gravel lot, and the covered entrance." width="1254" height="1254" />
+  </figure>
+  <section class="section" id="first-visit">
+    <div class="wrap visit-questions">
+      <div>
+        <p class="eyebrow">Before you arrive</p>
+        <h2 class="block-title">A little more<br />peace of mind.</h2>
+        <p class="deck">Your questions are a good place to start.</p>
+      </div>
+      <div class="faq-list">
+        {questions.map((question, index) => (
+          <details open={index === 0}>
+            <summary>{question.title}<span aria-hidden="true">+</span></summary>
+            <div class="faq-answer">
+              <p>{question.text}</p>
+              <a class="more" href={url(question.href)}>{question.label} <span aria-hidden="true">→</span></a>
+            </div>
+          </details>
+        ))}
       </div>
     </div>
   </section>
-  <section class="section" style="padding-top: 0;">
+  <section class="section visit-connect">
     <div class="wrap contact-grid">
-      <div class="map-panel" role="img" aria-label="Map placeholder">
-        <div class="map-grid"></div>
-        <div class="map-pin">
-          <strong>The Well</strong>
-          <span>{site.address}<br />{site.city}</span>
-        </div>
+      <div class="measure">
+        <p class="eyebrow">Start a conversation</p>
+        <h2 class="block-title">A familiar face<br />starts with hello.</h2>
+        <p class="deck">Have a question about visiting? Tell us a little about yourself and what would help you feel at home.</p>
+        <p class="fine">This preview form does not send a message or reserve a place.</p>
+        <div class="actions"><a class="more" href={url('/contact')}>Contact information <span aria-hidden="true">→</span></a></div>
       </div>
       <div class="panel">
-        <p class="eyebrow">Tell us you're coming</p>
-        <h2 class="block-title" style="font-size: 2.4rem; margin-bottom: 1rem;">We'll save you a seat.</h2>
-        <PlaceholderForm submit="Send">
-          <label class="field">
-            <span>Name</span>
-            <input name="name" autocomplete="name" required />
-          </label>
-          <label class="field">
-            <span>Email</span>
-            <input name="email" type="email" autocomplete="email" required />
-          </label>
-          <label class="field">
-            <span>How many</span>
-            <input name="party" inputmode="numeric" />
-          </label>
-          <label class="field">
-            <span>Anything we should know</span>
-            <textarea name="note"></textarea>
-          </label>
+        <h2 class="card-title form-title">Plan a first visit</h2>
+        <PlaceholderForm submit="Preview your note">
+          <label class="field"><span>Name</span><input name="name" autocomplete="name" required /></label>
+          <label class="field"><span>Email</span><input name="email" type="email" autocomplete="email" required /></label>
+          <label class="field"><span>Number of guests</span><input name="party" type="number" min="1" inputmode="numeric" /></label>
+          <label class="field"><span>Questions about your visit</span><textarea name="note" rows="4"></textarea></label>
         </PlaceholderForm>
       </div>
     </div>
   </section>
 </Base>
+
+<style>
+  .visit-at-a-glance { padding-bottom: 3rem; }
+  .visit-at-a-glance .facts { margin-top: 0; margin-bottom: .7rem; }
+  .facts dd small { display: block; font: .95rem var(--sans); letter-spacing: 0; color: var(--muted); margin-top: .5rem; }
+  .preview-note { max-width: 48ch; }
+  .visit-questions { display: grid; grid-template-columns: .85fr 1.15fr; gap: 4rem; align-items: start; }
+  .visit-questions .deck, .visit-connect .deck { margin-top: 1.2rem; }
+  .visit-connect { padding-top: 0; }
+  .visit-connect .fine { margin-top: 1rem; }
+  .faq-list details { border-top: 1px solid var(--line); }
+  .faq-list details:last-child { border-bottom: 1px solid var(--line); }
+  .faq-list summary { display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; cursor: pointer; padding: 1.4rem 0; font-size: 1.08rem; font-weight: 500; list-style: none; }
+  .faq-list summary::-webkit-details-marker { display: none; }
+  .faq-list summary span { flex: none; color: var(--tide); font-size: 1.5rem; transition: transform .2s; }
+  .faq-list details[open] summary span { transform: rotate(45deg); }
+  .faq-answer { padding: 0 0 1.4rem; }
+  .faq-answer p { color: var(--muted); max-width: 55ch; }
+  .faq-answer .more { display: inline-flex; margin-top: 1rem; }
+  .form-title { margin: 0 0 1.3rem; }
+  @media (max-width: 800px) { .visit-questions { grid-template-columns: minmax(0, 1fr); gap: 2rem; } }
+  @media (max-width: 680px) {
+    .visit-at-a-glance .facts { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .25rem 1rem; }
+    .visit-at-a-glance .facts > div:last-child { grid-column: 1 / -1; }
+  }
+  @media (prefers-reduced-motion: reduce) { .faq-list summary span { transition: none; } }
+</style>

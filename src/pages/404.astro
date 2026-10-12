@@ -1,30 +1,28 @@
 ---
 import Base from '../layouts/Base.astro';
-import { site } from '../data/site';
 import { url } from '../lib/url';
 ---
 
-<Base title="Page not found" description="That page is not on The Well Assembly of God site.">
-  <header class="page-hero">
+<Base title="Page not found" description="Find your way back to The Well Assembly of God.">
+  <header class="page-hero not-found">
     <div class="wrap">
-      <p class="eyebrow">404</p>
-      <h1>This page has run dry.</h1>
-      <p class="deck">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-      <dl class="facts">
-        <div>
-          <dt>{site.sundayLabel}</dt>
-          <dd>{site.sundayTime}</dd>
-        </div>
-        <div>
-          <dt>{site.midweekLabel}</dt>
-          <dd>{site.midweekTime}</dd>
-        </div>
-        <div>
-          <dt>Home</dt>
-          <dd><a href={url('/')}>The Well</a></dd>
-        </div>
-      </dl>
-      <a class="btn" href={url('/')}>Back home</a>
+      <p class="eyebrow">404 · Page not found</p>
+      <h1>A little off<br />the path.</h1>
+      <p class="deck">This page may have moved, or the link may be incomplete. Let's help you find your way.</p>
+      <div class="actions">
+        <a class="btn" href={url('/')}>Back to The Well <span aria-hidden="true">→</span></a>
+        <a class="more" href={url('/visit')}>Plan a visit <span aria-hidden="true">↗</span></a>
+      </div>
+      <nav aria-label="Helpful pages" class="not-found-links">
+        <a href={url('/sermons')}>Watch a message</a>
+        <a href={url('/ministries')}>Explore ministries</a>
+        <a href={url('/contact')}>Contact</a>
+      </nav>
     </div>
   </header>
 </Base>
+
+<style>
+  .not-found { padding-bottom: 6rem; min-height: 75svh; }
+  .not-found-links { display: flex; flex-wrap: wrap; gap: 1rem 2rem; border-top: 1px solid var(--line); padding-top: 1.4rem; margin-top: 3rem; font-size: .92rem; color: var(--muted); }
+</style>

@@ -1,60 +1,40 @@
 ---
 import Base from '../layouts/Base.astro';
 import PageHero from '../components/PageHero.astro';
-import PlaceholderForm from '../components/PlaceholderForm.astro';
-import { lede } from '../data/copy';
 import { url } from '../lib/url';
 
 const steps = [
-  { n: '01', title: 'Talk with us', href: '/contact', text: lede },
-  { n: '02', title: 'Baptism', href: '/contact', text: lede },
-  { n: '03', title: 'Join a group', href: '/ministries/groups', text: lede },
-  { n: '04', title: 'Serve', href: '/contact', text: lede },
+  { n: '01', title: 'Start a conversation', href: '/contact', text: 'Bring a question, introduce yourself, or ask for help finding your way. A simple hello is enough to begin.', label: 'Find contact information' },
+  { n: '02', title: 'Explore baptism', href: '/beliefs', text: 'Learn about the church’s beliefs, then ask about baptism and what taking that step could look like for you.', label: 'Explore our beliefs' },
+  { n: '03', title: 'Find your people', href: '/ministries/groups', text: 'Explore Groups and ask about meeting times, who they are for, and how to get connected.', label: 'Discover Groups' },
+  { n: '04', title: 'Ask about serving', href: '/contact', text: 'Your interests and experience are a good starting point. Ask about opportunities to lend a hand at The Well.', label: 'Start a conversation' },
 ];
 ---
 
-<Base title="Next steps" description="A path from a first visit into the life of The Well." image="images/table.jpg">
-  <PageHero kicker="Next" title="Take a step." deck={lede} />
+<Base title="Next steps" description="Explore ways to connect, ask about baptism, find a group, and serve at The Well." image="images/table.jpg">
+  <PageHero kicker="Find your next step" title="Begin where you are." deck="You don't need to do everything at once. Choose one small step toward connection and let the conversation grow from there." />
   <section class="section" style="padding-top: 0.4rem;">
     <div class="wrap">
       <div class="steps">
-        {
-          steps.map((step) => (
-            <article class="step">
-              <span class="num">{step.n}</span>
-              <div>
-                <h2>{step.title}</h2>
-                <p>{step.text}</p>
-                <p style="margin-top: 0.7rem;">
-                  <a class="more" href={url(step.href)}>Begin <span aria-hidden="true">→</span></a>
-                </p>
-              </div>
-            </article>
-          ))
-        }
+        {steps.map((step) => (
+          <article class="step">
+            <span class="num" aria-hidden="true">{step.n}</span>
+            <div>
+              <h2>{step.title}</h2>
+              <p>{step.text}</p>
+              <p style="margin-top: 0.9rem;"><a class="more" href={url(step.href)}>{step.label} <span aria-hidden="true">→</span></a></p>
+            </div>
+          </article>
+        ))}
       </div>
     </div>
   </section>
-  <section class="section" style="padding-top: 0;">
-    <div class="wrap" style="max-width: 40rem;">
-      <div class="panel">
-        <p class="eyebrow">Serve</p>
-        <h2 class="block-title" style="font-size: 2.3rem; margin-bottom: 1rem;">Lend a hand.</h2>
-        <PlaceholderForm submit="Count me in">
-          <label class="field">
-            <span>Name</span>
-            <input name="name" required />
-          </label>
-          <label class="field">
-            <span>Email</span>
-            <input name="email" type="email" required />
-          </label>
-          <label class="field">
-            <span>Where you might help</span>
-            <textarea name="help"></textarea>
-          </label>
-        </PlaceholderForm>
-      </div>
+  <section class="band-dark">
+    <div class="wrap">
+      <p class="eyebrow light">Your first step can be Sunday</p>
+      <h2 class="block-title">Come and get to know us.</h2>
+      <p class="deck" style="color: rgba(243,239,230,.82); margin-top: 1rem;">Explore what to expect, find the gathering details, and bring your questions.</p>
+      <div class="actions"><a class="btn btn-light" href={url('/visit')}>Plan your visit <span aria-hidden="true">↗</span></a></div>
     </div>
   </section>
 </Base>

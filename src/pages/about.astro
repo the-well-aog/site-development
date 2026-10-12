@@ -1,24 +1,22 @@
 ---
 import Base from '../layouts/Base.astro';
 import PageHero from '../components/PageHero.astro';
-import { body, lede, more } from '../data/copy';
 import { img, url } from '../lib/url';
 ---
 
-<Base title="About" description="The story of The Well Assembly of God." image="images/chapel.jpg">
-  <PageHero kicker="About" title="A people, a place." deck={lede} />
+<Base title="About" description="Get to know The Well Assembly of God. Explore our beliefs, people, and ways to connect." image="images/chapel.jpg">
+  <PageHero kicker="Get to know us" title="Faith. People. Belonging." deck="Whether you're exploring faith or looking for a church to call home, there is a place to begin." />
   <section class="section">
     <div class="wrap split">
-      <div class="frame">
-        <img src={img('chapel')} alt="Sunlight, linen, and a wooden chair in a quiet corner." />
-      </div>
+      <div class="frame"><img src={img('chapel')} alt="Sunlight, linen, and a wooden chair in a quiet corner." loading="lazy" /></div>
       <div class="measure">
-        <p>{lede}</p>
-        <p>{body}</p>
-        <p>{more}</p>
+        <p class="eyebrow">Welcome to The Well</p>
+        <h2 class="block-title">Start with a little<br />curiosity.</h2>
+        <p class="deck" style="margin-top: 1.2rem;">You don't have to know all the answers to take a first step.</p>
+        <p>Learn what we believe, explore the ministries, and find out what to expect before a visit. Take your time, bring your questions, and begin wherever you are.</p>
         <div class="actions">
-          <a class="btn" href={url('/beliefs')}>What we believe</a>
-          <a class="more" href={url('/leadership')}>Leadership <span aria-hidden="true">→</span></a>
+          <a class="btn" href={url('/visit')}>Plan your visit <span aria-hidden="true">↗</span></a>
+          <a class="more" href={url('/leadership')}>Meet the leadership <span aria-hidden="true">→</span></a>
         </div>
       </div>
     </div>
@@ -26,14 +24,18 @@ import { img, url } from '../lib/url';
   <section class="band-dark">
     <div class="wrap sermon-feature">
       <div>
-        <p class="eyebrow light">Assemblies of God</p>
-        <h2>Sixteen truths, one confession.</h2>
-        <p class="deck" style="color: rgba(243,239,230,0.78); margin: 1rem 0 1.4rem;">{lede}</p>
-        <a class="btn btn-light" href={url('/beliefs')}>Read the beliefs</a>
+        <p class="eyebrow light">Our foundation</p>
+        <h2 class="block-title">Explore what<br />we believe.</h2>
+        <p class="deck" style="color: rgba(243,239,230,0.82); margin: 1.2rem 0 1.6rem;">Get to know the Assemblies of God Fundamental Truths and read the full statement of faith.</p>
+        <a class="btn btn-light" href={url('/beliefs')}>Our beliefs <span aria-hidden="true">→</span></a>
       </div>
-      <div class="frame">
-        <img src={img('water')} alt="A round stone basin of still water." />
-      </div>
+      <div class="frame"><img src={img('water')} alt="A round stone basin of still water." loading="lazy" /></div>
+    </div>
+  </section>
+  <section class="section">
+    <div class="wrap pair">
+      <article><p class="eyebrow">Find connection</p><h2>Life is better together.</h2><p>Explore Kids, Students, and Groups to find a place to begin.</p><div class="actions"><a class="more" href={url('/ministries')}>Explore ministries <span aria-hidden="true">→</span></a></div></article>
+      <article><p class="eyebrow">Keep exploring</p><h2>One step at a time.</h2><p>A conversation, a question, a first visit. Your next step can be a simple one.</p><div class="actions"><a class="more" href={url('/next-steps')}>Find your next step <span aria-hidden="true">→</span></a></div></article>
     </div>
   </section>
 </Base>

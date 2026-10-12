@@ -5,51 +5,57 @@ import { url } from '../lib/url';
 
 const year = new Date().getFullYear();
 const social = await loadSocial();
+const explore = [['/visit', 'Plan your visit'], ['/about', 'Our story'], ['/beliefs', 'What we believe'], ['/leadership', 'Our leadership'], ['/sermons', 'Watch a message'], ['/events', 'Events']];
+const connect = [['/ministries', 'Find your community'], ['/next-steps', 'Take a next step'], ['/prayer', 'Ask for prayer'], ['/give', 'Give'], ['/contact', 'Contact us'], ['/live', 'Livestream']];
 ---
 
 <footer class="site-footer">
   <div class="wrap footer-grid">
-    <div>
-      <h2>The Well</h2>
-      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor.</p>
+    <div class="footer-brand">
+      <a class="footer-logo" href={url('/')} aria-label="The Well Assembly of God — home"><img src={url('images/the-well-logo.png')} width="1254" height="1254" alt="The Well Assembly of God" loading="lazy" /></a>
+      <p>A place to know God.<br />A people to call family.</p>
+      <div class="footer-social" aria-label="Social media">
+        {social.facebookPage && <a href={social.facebookPage}>Facebook <span aria-hidden="true">↗</span></a>}
+        {social.channelUrl && <a href={social.channelUrl}>YouTube <span aria-hidden="true">↗</span></a>}
+      </div>
     </div>
-    <div>
-      <h3>Gather</h3>
-      <ul>
-        <li><a href={url('/visit')}>Plan your visit</a></li>
-        <li>{site.sundayLabel} {site.sundayTime}</li>
-        <li>{site.midweekLabel} {site.midweekTime}</li>
-        <li>{site.address}</li>
-        <li>{site.city}</li>
-      </ul>
-    </div>
-    <div>
-      <h3>Watch</h3>
-      <ul>
-        <li><a href={url('/sermons')}>Sermons</a></li>
-        <li><a href={url('/live')}>Livestream</a></li>
-        {social.channelUrl && <li><a href={social.channelUrl}>YouTube</a></li>}
-        <li><a href={url('/events')}>Events</a></li>
-        <li><a href={url('/ministries')}>Ministries</a></li>
-      </ul>
-    </div>
-    <div>
-      <h3>Connect</h3>
-      <ul>
-        <li><a href={url('/give')}>Give</a></li>
-        <li><a href={url('/prayer')}>Prayer</a></li>
-        <li><a href={url('/next-steps')}>Next steps</a></li>
-        <li><a href={url('/beliefs')}>Beliefs</a></li>
-        <li><a href={url('/leadership')}>Leadership</a></li>
-        <li><a href={url('/contact')}>Contact</a></li>
-        {social.facebookPage && <li><a href={social.facebookPage}>Facebook</a></li>}
-        <li><a href={`mailto:${site.email}`}>{site.email}</a></li>
-        <li><a href={site.phoneHref}>{site.phoneDisplay}</a></li>
-      </ul>
-    </div>
+    <nav aria-label="Explore The Well">
+      <h2>Welcome to The Well</h2>
+      <ul>{explore.map(([href, label]) => <li><a href={url(href)}>{label}</a></li>)}</ul>
+    </nav>
+    <nav aria-label="Get connected">
+      <h2>Life together</h2>
+      <ul>{connect.map(([href, label]) => <li><a href={url(href)}>{label}</a></li>)}</ul>
+    </nav>
   </div>
   <div class="wrap legal">
     <span>© {year} {site.legal}</span>
-    <span>Times, address, and names are placeholders.</span>
+    <span>There is a place for you here.</span>
   </div>
 </footer>
+
+<style>
+  .site-footer { padding: 4.5rem 0 1.5rem; color: var(--well, #002e4a); background: var(--paper-2, #efece3); border-top: 1px solid var(--line); }
+  .footer-grid { display: grid; grid-template-columns: 1.5fr 1fr 1fr; gap: 3.5rem; }
+  .footer-logo { display: inline-block; }
+  .footer-logo img { width: 158px; height: 158px; object-fit: contain; }
+  .footer-brand p { font-family: var(--serif); font-size: 1.4rem; letter-spacing: -.025em; line-height: 1.35; color: var(--well); margin-top: 1.25rem; }
+  .site-footer nav { padding-top: 1rem; }
+  .site-footer nav h2 { margin: 0 0 1.05rem; font-family: var(--sans); font-size: .7rem; font-weight: 500; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+  .site-footer ul { list-style: none; margin: 0; padding: 0; display: grid; gap: .15rem; }
+  .site-footer li a { display: inline-flex; align-items: center; min-height: 40px; padding: .35rem 0; font-size: .97rem; text-decoration: none; }
+  .site-footer a:hover { text-decoration: underline; text-underline-offset: .25em; }
+  .footer-social { display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 1.1rem; }
+  .footer-social a { display: inline-flex; gap: .4rem; align-items: center; min-height: 40px; text-decoration: none; font-size: .8rem; }
+  .footer-social span { color: var(--tide); }
+  .legal { display: flex; align-items: center; justify-content: space-between; gap: .5rem 1rem; flex-wrap: wrap; margin-top: 3.5rem; padding-top: 1.1rem; border-top: 1px solid var(--line); color: var(--muted); font-size: .75rem; }
+  @media (max-width: 800px) {
+    .footer-grid { grid-template-columns: 1fr 1fr; gap: 1.75rem; }
+    .footer-brand { grid-column: 1 / -1; padding-bottom: 1.5rem; border-bottom: 1px solid var(--line); }
+    .footer-logo img { width: 130px; height: 130px; }
+    .site-footer { padding-top: 3rem; }
+    .site-footer li a { min-height: 44px; font-size: .9rem; }
+    .site-footer nav h2 { max-width: 15ch; line-height: 1.6; }
+    .legal { margin-top: 2rem; }
+  }
+</style>

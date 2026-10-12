@@ -2,29 +2,30 @@
 import { getCollection } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import PageHero from '../../components/PageHero.astro';
-import { lede } from '../../data/copy';
 import { img, url } from '../../lib/url';
 
 const ministries = (await getCollection('ministries')).sort((a, b) => a.data.order - b.data.order);
 ---
 
 <Base title="Ministries" description="Kids, students, and groups at The Well Assembly of God." image="images/table.jpg">
-  <PageHero kicker="Ministries" title="Rooms in the house" deck={lede} />
+  <PageHero kicker="Life together" title="Find your people." deck="From little ones to the next generation and beyond, explore a place to connect and a next step that feels right for you." />
   <section class="section" style="padding-top: 0.5rem;">
     <div class="wrap">
       {
         ministries.map((entry, index) => (
           <a class:list={['ministry-row', { flip: index % 2 === 1 }]} href={url(`/ministries/${entry.id}`)}>
-            <img src={img(entry.data.image)} alt={entry.data.alt} />
+            <img src={img(entry.data.image)} alt={entry.data.alt} loading="lazy" />
             <div>
               <p class="eyebrow">{entry.data.who}</p>
               <h2 class="block-title">{entry.data.title}</h2>
               <p class="deck" style="margin-top: 0.8rem;">{entry.data.summary}</p>
               <p class="meta-row">{entry.data.when}</p>
+              <p class="more" style="margin-top: 1.2rem;">Explore {entry.data.title} <span aria-hidden="true">→</span></p>
             </div>
           </a>
         ))
       }
     </div>
   </section>
+  <section class="section" style="padding-top: 0;"><div class="wrap measure"><p class="eyebrow">Not sure where to start?</p><h2 class="block-title">A conversation can help.</h2><div class="actions"><a class="btn" href={url('/contact')}>Get in touch <span aria-hidden="true">↗</span></a></div></div></section>
 </Base>

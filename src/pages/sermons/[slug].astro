@@ -1,6 +1,7 @@
 ---
 import { getCollection, render, type CollectionEntry } from 'astro:content';
 import Base from '../../layouts/Base.astro';
+import { isPlaceholderText } from '../../data/copy';
 import { longDate } from '../../lib/format';
 import { img, url } from '../../lib/url';
 
@@ -18,11 +19,13 @@ interface Props {
 
 const { entry } = Astro.props;
 const { Content } = await render(entry);
+const preview = isPlaceholderText(entry.data.summary) || isPlaceholderText(entry.body);
 ---
 
-<Base title={entry.data.title} description={entry.data.summary} image={`images/${entry.data.image}.jpg`}>
+<Base title={entry.data.title} description={isPlaceholderText(entry.data.summary) ? 'A sample message from The Well website preview.' : entry.data.summary} image={`images/${entry.data.image}.jpg`}>
   <header class="page-hero">
     <div class="wrap">
+      <p class="fine" style="margin-bottom: 1.4rem;"><a href={url('/sermons')}>← All messages</a></p>
       <p class="eyebrow">{entry.data.series}</p>
       <h1>{entry.data.title}</h1>
       <p class="meta-row">
@@ -30,21 +33,23 @@ const { Content } = await render(entry);
         <span>{entry.data.speaker}</span>
         <span>{entry.data.passage}</span>
       </p>
+      {preview && <p class="fine" style="margin-top: 1rem;">Sample message for this website preview.</p>}
     </div>
   </header>
   <section class="section" style="padding-top: 0;">
     <div class="wrap">
       <div class="detail-hero">
-        <img src={img(entry.data.image)} alt={entry.data.alt} />
+        <img src={img(entry.data.image)} alt={entry.data.alt} loading="lazy" />
       </div>
       <div class="player" role="region" aria-label="Video placeholder">
         <div>
-          <span class="play" style="position: static; margin-inline: auto;"></span>
-          <p>The recording will live here.</p>
+          <p class="eyebrow light">Recording unavailable</p>
+          <h2 class="card-title">A little more to come.</h2>
+          <p>{preview ? 'This sample message does not have a recording connected.' : 'The recording for this message is not available yet.'}</p>
         </div>
       </div>
       <div class="prose" style="margin-top: 2rem;">
-        <Content />
+        {isPlaceholderText(entry.body) ? <><h2 class="card-title">Message notes coming soon.</h2><p style="margin-top: 1rem;">This is a sample entry in the message library. The message notes and recording will be added when they are available.</p></> : <Content />}
       </div>
       <p style="margin: 2rem 0 4rem;">
         <a class="more" href={url('/sermons')}>All sermons <span aria-hidden="true">→</span></a>
