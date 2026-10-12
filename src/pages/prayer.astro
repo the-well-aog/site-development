@@ -1,0 +1,37 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import PlaceholderForm from '../components/PlaceholderForm.astro';
+import { body, lede } from '../data/copy';
+---
+
+<Base title="Prayer" description="Ask The Well Assembly of God to pray with you." image="images/chapel.jpg">
+  <PageHero kicker="Prayer" title="Tell us what hurts." deck={lede} />
+  <section class="section" style="padding-top: 0.2rem;">
+    <div class="wrap contact-grid">
+      <div class="measure">
+        <p>{body}</p>
+        <p style="margin-top: 1rem;">{lede}</p>
+        <p class="fine" style="margin-top: 1.2rem;">
+          A person would read this. It is not an emergency line, and this preview does not send it anywhere.
+        </p>
+      </div>
+      <div class="panel">
+        <PlaceholderForm submit="Share a request">
+          <label class="field">
+            <span>Name, if you want</span>
+            <input name="name" autocomplete="name" />
+          </label>
+          <label class="field">
+            <span>Email, if you want a reply</span>
+            <input name="email" type="email" autocomplete="email" />
+          </label>
+          <label class="field">
+            <span>Request</span>
+            <textarea name="request" required></textarea>
+          </label>
+        </PlaceholderForm>
+      </div>
+    </div>
+  </section>
+</Base>

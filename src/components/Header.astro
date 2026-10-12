@@ -1,0 +1,55 @@
+---
+import { isActive, url } from '../lib/url';
+
+interface Props {
+  overlay?: boolean;
+}
+
+const { overlay = false } = Astro.props;
+const links = [
+  ['/visit', 'Visit'],
+  ['/about', 'About'],
+  ['/ministries', 'Ministries'],
+  ['/sermons', 'Sermons'],
+  ['/events', 'Events'],
+];
+---
+
+<header class:list={['site-header', { 'is-solid': !overlay }]} data-header>
+  <div class="header-bar">
+    <a class="logo" href={url('/')}>
+      <svg class="mark" viewBox="0 0 32 32" aria-hidden="true">
+        <circle cx="16" cy="16" r="12.5" fill="none" stroke="currentColor" stroke-width="1.2"></circle>
+        <circle cx="16" cy="16" r="7.5" fill="none" stroke="currentColor" stroke-width="1.2"></circle>
+        <circle cx="16" cy="16" r="2.2" fill="currentColor"></circle>
+      </svg>
+      <span>
+        <strong>The Well</strong>
+        <small>Assembly of God</small>
+      </span>
+    </a>
+    <nav class="nav-desktop" aria-label="Primary">
+      {
+        links.map(([href, label]) => (
+          <a href={url(href)} aria-current={isActive(Astro.url.pathname, href) ? 'page' : undefined}>
+            {label}
+          </a>
+        ))
+      }
+      <a class="btn" href={url('/give')}>Give</a>
+    </nav>
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav-panel" data-nav-toggle>
+      <span class="bars" aria-hidden="true"></span>
+      <span class="sr">Menu</span>
+    </button>
+  </div>
+  <nav id="nav-panel" class="nav-panel" aria-label="Mobile">
+    {
+      links.map(([href, label]) => (
+        <a href={url(href)}>{label}</a>
+      ))
+    }
+    <a href={url('/give')}>Give</a>
+    <a href={url('/live')}>Live</a>
+  </nav>
+</header>

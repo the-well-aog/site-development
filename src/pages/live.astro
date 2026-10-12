@@ -1,0 +1,29 @@
+---
+import Base from '../layouts/Base.astro';
+import { lede } from '../data/copy';
+import { site } from '../data/site';
+import { img, url } from '../lib/url';
+---
+
+<Base title="Livestream" description="Watch The Well Assembly of God when you cannot be in the room." image="images/night.jpg">
+  <section class="live">
+    <img src={img('night')} alt="People seated in silhouette around a stone basin in evening light." style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;" />
+    <div class="live-scrim"></div>
+    <div class="wrap">
+      <p class="eyebrow light">We go live</p>
+      <h1>{site.sundayLabel} at {site.sundayTime}</h1>
+      <p class="deck" style="color: rgba(243,239,230,0.86); margin: 1rem 0 1.4rem;">{lede}</p>
+      <div class="actions">
+        <span class="btn" aria-disabled="true">Stream not connected</span>
+        <a class="btn btn-ghost" href={url('/sermons')}>Past messages</a>
+      </div>
+    </div>
+  </section>
+  <section class="section">
+    <div class="wrap measure">
+      <p class="eyebrow">While you wait</p>
+      <h2 class="block-title">The player will sit here.</h2>
+      <p class="deck" style="margin-top: 1rem;">{lede}</p>
+    </div>
+  </section>
+</Base>

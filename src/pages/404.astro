@@ -1,0 +1,30 @@
+---
+import Base from '../layouts/Base.astro';
+import { site } from '../data/site';
+import { url } from '../lib/url';
+---
+
+<Base title="Page not found" description="That page is not on The Well Assembly of God site.">
+  <header class="page-hero">
+    <div class="wrap">
+      <p class="eyebrow">404</p>
+      <h1>This page has run dry.</h1>
+      <p class="deck">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+      <dl class="facts">
+        <div>
+          <dt>{site.sundayLabel}</dt>
+          <dd>{site.sundayTime}</dd>
+        </div>
+        <div>
+          <dt>{site.midweekLabel}</dt>
+          <dd>{site.midweekTime}</dd>
+        </div>
+        <div>
+          <dt>Home</dt>
+          <dd><a href={url('/')}>The Well</a></dd>
+        </div>
+      </dl>
+      <a class="btn" href={url('/')}>Back home</a>
+    </div>
+  </header>
+</Base>

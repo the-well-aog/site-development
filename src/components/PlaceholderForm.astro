@@ -1,0 +1,20 @@
+---
+interface Props {
+  submit: string;
+}
+
+const { submit } = Astro.props;
+---
+
+<form class="form" data-placeholder novalidate={false}>
+  <div data-form-body>
+    <slot />
+    <button class="btn" type="submit">{submit}</button>
+    <p class="fine">Nothing is sent. This form is here so the layout can be reviewed.</p>
+  </div>
+  <div class="form-thanks" data-form-thanks hidden>
+    <p class="eyebrow">Noted</p>
+    <h2>Thank you.</h2>
+    <p class="deck">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nothing left this page.</p>
+  </div>
+</form>

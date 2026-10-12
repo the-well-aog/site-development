@@ -1,0 +1,38 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import PageHero from '../../components/PageHero.astro';
+import { lede } from '../../data/copy';
+import { longDate } from '../../lib/format';
+import { img, url } from '../../lib/url';
+
+const sermons = (await getCollection('sermons')).sort(
+  (a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
+);
+const series = [...new Set(sermons.map((entry) => entry.data.series))];
+---
+
+<Base title="Sermons" description="Messages from The Well Assembly of God." image="images/night.jpg">
+  <PageHero kicker="Watch" title="Sermons" deck={lede} />
+  <section class="section" style="padding-top: 0.4rem;">
+    <div class="wrap">
+      <p class="meta-row" style="margin-top: 0; margin-bottom: 1.6rem;">
+        {series.map((name) => <span>{name}</span>)}
+      </p>
+      <div class="sermon-grid">
+        {
+          sermons.map((entry) => (
+            <a class="sermon-card" href={url(`/sermons/${entry.id}`)}>
+              <img src={img(entry.data.image)} alt={entry.data.alt} />
+              <p class="eyebrow" style="margin-top: 0.9rem;">{entry.data.series}</p>
+              <h2 class="card-title">{entry.data.title}</h2>
+              <p class="fine" style="margin-top: 0.4rem;">
+                {longDate(entry.data.date)} · {entry.data.speaker}
+              </p>
+            </a>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+</Base>
