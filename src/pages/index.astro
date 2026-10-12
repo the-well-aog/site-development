@@ -106,5 +106,22 @@ const community = [
   </section>
 
   <section class="home-invitation" aria-labelledby="invitation-title"><div class="wrap-wide invitation-grid"><div><p class="eyebrow">Your next chapter starts with a step</p><h2 id="invitation-title">We’d love to<br /><em>meet you.</em></h2></div><div><p>First time at church? Finding your way back? Start here. There’s a place for you at The Well.</p><a class="btn" href={url('/visit')}>Plan your first visit <span aria-hidden="true">↗</span></a></div></div></section>
+
+  <section class="home-map" aria-labelledby="map-title">
+    <div class="wrap-wide home-map-head">
+      <div>
+        <p class="eyebrow">Find the church</p>
+        <h2 id="map-title" class="block-title">{site.address}</h2>
+        <p>{site.city}</p>
+      </div>
+      <div class="home-map-actions">
+        <a href={site.phoneHref}>{site.phoneDisplay}</a>
+        <a href={site.mapsHref}>Open in Google Maps <span aria-hidden="true">↗</span></a>
+      </div>
+    </div>
+    <div class="wrap-wide home-map-frame">
+      <iframe title="Map showing The Well Assembly of God at 2902 S Pocola Blvd, Pocola, Oklahoma" src={site.mapsEmbed} loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
+    </div>
+  </section>
 </Base>
 
