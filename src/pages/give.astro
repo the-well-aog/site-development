@@ -1,6 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import PageHero from '../components/PageHero.astro';
+import { site } from '../data/site';
 import { url } from '../lib/url';
 ---
 
@@ -18,7 +19,7 @@ import { url } from '../lib/url';
       <article>
         <p class="eyebrow">Other ways to give</p>
         <h2>Begin with a conversation.</h2>
-        <p>Please check with the church about giving in person or by mail. The mailing address and accepted giving methods are still to be confirmed.</p>
+        <p>The church is at {site.address}, {site.city}. Please check with the church before giving in person or by mail. Accepted ways to give are still to be confirmed.</p>
         <div class="actions"><a class="more" href={url('/contact')}>Contact information <span aria-hidden="true">→</span></a></div>
       </article>
     </div>

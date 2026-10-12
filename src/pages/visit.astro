@@ -20,9 +20,9 @@ const questions = [
       <dl class="facts">
         <div><dt>{site.sundayLabel}</dt><dd>{site.sundayTime}</dd></div>
         <div><dt>{site.midweekLabel}</dt><dd>{site.midweekTime}</dd></div>
-        <div><dt>Find us</dt><dd>{site.address}<small>{site.city}</small></dd></div>
+        <div><dt>Find us</dt><dd><a href={site.mapsHref}>{site.address}</a><small>{site.city}</small><a href={site.phoneHref}>{site.phoneDisplay}</a></dd></div>
       </dl>
-      <p class="fine preview-note">Times and location are sample details in this website preview.</p>
+      <p class="fine preview-note">Gathering times are a preview. Confirm them before you visit.</p>
       <nav class="actions" aria-label="Plan your visit">
         <a class="btn" href="#first-visit">What to expect <span aria-hidden="true">↓</span></a>
         <a class="more" href={url('/ministries/kids')}>Coming with kids? <span aria-hidden="true">→</span></a>
@@ -77,7 +77,10 @@ const questions = [
 <style>
   .visit-at-a-glance { padding-bottom: 3rem; }
   .visit-at-a-glance .facts { margin-top: 0; margin-bottom: .7rem; }
-  .facts dd small { display: block; font: .95rem var(--sans); letter-spacing: 0; color: var(--muted); margin-top: .5rem; }
+  .facts dd small, .facts dd a { display: block; }
+  .facts dd a { color: inherit; text-decoration: none; }
+  .facts dd a:hover { text-decoration: underline; text-underline-offset: .2em; }
+  .facts dd small, .facts dd a[href^='tel:'] { font: .95rem var(--sans); letter-spacing: 0; color: var(--muted); margin-top: .5rem; }
   .preview-note { max-width: 48ch; }
   .visit-questions { display: grid; grid-template-columns: .85fr 1.15fr; gap: 4rem; align-items: start; }
   .visit-questions .deck, .visit-connect .deck { margin-top: 1.2rem; }

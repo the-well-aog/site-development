@@ -14,6 +14,7 @@ const connect = [['/ministries', 'Find your community'], ['/next-steps', 'Take a
     <div class="footer-brand">
       <a class="footer-logo" href={url('/')} aria-label="The Well Assembly of God — home"><img src={url('images/the-well-logo.png')} width="1254" height="1254" alt="The Well Assembly of God" loading="lazy" /></a>
       <p>A place to know God.<br />A people to call family.</p>
+      <p class="footer-contact"><a href={site.mapsHref}>{site.address}<br />{site.city}</a><a href={site.phoneHref}>{site.phoneDisplay}</a></p>
       <div class="footer-social" aria-label="Social media">
         {social.facebookPage && <a href={social.facebookPage}>Facebook <span aria-hidden="true">↗</span></a>}
         {social.channelUrl && <a href={social.channelUrl}>YouTube <span aria-hidden="true">↗</span></a>}
@@ -40,6 +41,9 @@ const connect = [['/ministries', 'Find your community'], ['/next-steps', 'Take a
   .footer-logo { display: inline-block; }
   .footer-logo img { width: 158px; height: 158px; object-fit: contain; }
   .footer-brand p { font-family: var(--serif); font-size: 1.4rem; letter-spacing: -.025em; line-height: 1.35; color: var(--well); margin-top: 1.25rem; }
+  .footer-contact { font-family: var(--sans); font-size: .95rem; letter-spacing: 0; line-height: 1.45; }
+  .footer-contact a { display: block; margin-top: .7rem; text-decoration: none; }
+  .footer-contact a:first-child { margin-top: 0; }
   .site-footer nav { padding-top: 1rem; }
   .site-footer nav h2 { margin: 0 0 1.05rem; font-family: var(--sans); font-size: .7rem; font-weight: 500; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
   .site-footer ul { list-style: none; margin: 0; padding: 0; display: grid; gap: .15rem; }

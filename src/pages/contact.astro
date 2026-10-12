@@ -12,9 +12,10 @@ import { url } from '../lib/url';
     <div class="wrap contact-grid">
       <div>
         <p class="eyebrow">Find The Well</p>
-        <h2 class="block-title" style="font-size: clamp(2rem, 4vw, 2.6rem);">{site.address}</h2>
+        <h2 class="block-title" style="font-size: clamp(2rem, 4vw, 2.6rem);"><a href={site.mapsHref}>{site.address}</a></h2>
         <p class="deck" style="margin-top: 0.4rem;">{site.city}</p>
-        <p class="fine" style="margin-top: 1rem;">Address and gathering times shown here are sample details. The church's confirmed contact information will be added before launch.</p>
+        <p style="margin-top: 0.8rem;"><a class="more" href={site.phoneHref}>{site.phoneDisplay}</a></p>
+        <p class="fine" style="margin-top: 1rem;">Gathering times below are still a preview. The address and phone number are the church's.</p>
         <dl class="facts contact-times">
           <div><dt>{site.sundayLabel}</dt><dd>{site.sundayTime}</dd></div>
           <div><dt>{site.midweekLabel}</dt><dd>{site.midweekTime}</dd></div>
@@ -39,6 +40,8 @@ import { url } from '../lib/url';
 
 <style>
   .contact-times { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .contact-grid h2 a { text-decoration: none; }
+  .contact-grid h2 a:hover { text-decoration: underline; text-underline-offset: .15em; }
   .contact-path { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 1.1rem 0; border-top: 1px solid var(--line); text-decoration: none; }
   .contact-path:last-child { border-bottom: 1px solid var(--line); }
   .contact-path strong, .contact-path small { display: block; }

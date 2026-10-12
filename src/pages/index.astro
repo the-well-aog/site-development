@@ -49,7 +49,8 @@ const community = [
       <div class="gather-time"><span>{site.midweekLabel}</span><strong>{site.midweekTime}</strong></div>
       <a class="gather-link" href={url('/visit')}>What to expect <span aria-hidden="true">↗</span></a>
     </div>
-    <p class="wrap-wide preview-caption">Schedule shown for design preview. Confirm service details before visiting.</p>
+    <p class="wrap-wide gather-contact"><a href={site.mapsHref}>{site.address}, {site.city}</a><a href={site.phoneHref}>{site.phoneDisplay}</a></p>
+    <p class="wrap-wide preview-caption">Service times are a preview. Confirm them before visiting.</p>
   </section>
 
   <section class="section introduction" aria-labelledby="intro-title">

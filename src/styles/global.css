@@ -1037,7 +1037,10 @@ img { height: auto; }
 .gather-time strong { font: 500 2rem/1.3 var(--serif); }
 .gather-link { font-size: .85rem; text-decoration: none; display: flex; gap: 1.4rem; padding-block: .8rem; border-bottom: 1px solid #ffffff50; }
 .gather-link:hover { border-color: white; }
-.preview-caption { font-size: .69rem; color: #c1d2dc; margin-top: 1.4rem; }
+.gather-contact { display: flex; flex-wrap: wrap; gap: .35rem 1.4rem; margin-top: 1.3rem; }
+.gather-contact a { color: inherit; font-size: .95rem; text-decoration: none; }
+.gather-contact a:hover { text-decoration: underline; text-underline-offset: .2em; }
+.preview-caption { font-size: .69rem; color: #c1d2dc; margin-top: .7rem; }
 .intro-grid { display: grid; grid-template-columns: .8fr 1.2fr; align-items: center; gap: clamp(3rem, 7vw, 7rem); }
 .intro-image { position: relative; }
 .intro-image img { width: 100%; height: 360px; object-fit: cover; border-radius: .6rem; }
