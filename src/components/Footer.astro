@@ -1,0 +1,51 @@
+---
+import { site } from '../data/site';
+import { url } from '../lib/url';
+
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="wrap footer-grid">
+    <div>
+      <h2>The Well</h2>
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor.</p>
+    </div>
+    <div>
+      <h3>Gather</h3>
+      <ul>
+        <li><a href={url('/visit')}>Plan your visit</a></li>
+        <li>{site.sundayLabel} {site.sundayTime}</li>
+        <li>{site.midweekLabel} {site.midweekTime}</li>
+        <li>{site.address}</li>
+        <li>{site.city}</li>
+      </ul>
+    </div>
+    <div>
+      <h3>Watch</h3>
+      <ul>
+        <li><a href={url('/sermons')}>Sermons</a></li>
+        <li><a href={url('/live')}>Livestream</a></li>
+        <li><a href={url('/events')}>Events</a></li>
+        <li><a href={url('/ministries')}>Ministries</a></li>
+      </ul>
+    </div>
+    <div>
+      <h3>Connect</h3>
+      <ul>
+        <li><a href={url('/give')}>Give</a></li>
+        <li><a href={url('/prayer')}>Prayer</a></li>
+        <li><a href={url('/next-steps')}>Next steps</a></li>
+        <li><a href={url('/beliefs')}>Beliefs</a></li>
+        <li><a href={url('/leadership')}>Leadership</a></li>
+        <li><a href={url('/contact')}>Contact</a></li>
+        <li><a href={`mailto:${site.email}`}>{site.email}</a></li>
+        <li><a href={site.phoneHref}>{site.phoneDisplay}</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="wrap legal">
+    <span>© {year} {site.legal}</span>
+    <span>Times, address, and names are placeholders.</span>
+  </div>
+</footer>

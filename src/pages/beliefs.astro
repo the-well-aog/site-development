@@ -1,0 +1,36 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import { beliefs, beliefsUrl } from '../data/beliefs';
+import { lede } from '../data/copy';
+---
+
+<Base title="Beliefs" description="The sixteen Fundamental Truths of the Assemblies of God." image="images/water.jpg">
+  <PageHero kicker="Beliefs" title="What we believe" deck={lede} />
+  <section class="section" style="padding-top: 1rem;">
+    <div class="wrap beliefs-layout">
+      <aside>
+        <p class="eyebrow">Statement</p>
+        <p class="fine">
+          Titles below are the Assemblies of God Fundamental Truths. The paragraphs are sample text, not the official statement.
+        </p>
+        <p style="margin-top: 1rem;">
+          <a class="more" href={beliefsUrl}>Read it at ag.org <span aria-hidden="true">→</span></a>
+        </p>
+      </aside>
+      <div>
+        {
+          beliefs.map((item) => (
+            <article class="truth">
+              <span class="num">{item.n}</span>
+              <div>
+                <h2>{item.title}</h2>
+                <p>{lede}</p>
+              </div>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+</Base>

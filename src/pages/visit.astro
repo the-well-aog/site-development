@@ -1,0 +1,86 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import PlaceholderForm from '../components/PlaceholderForm.astro';
+import { body, lede } from '../data/copy';
+import { site } from '../data/site';
+import { img } from '../lib/url';
+
+const expectations = [
+  { n: '01', title: 'When to arrive', text: lede },
+  { n: '02', title: 'What to wear', text: body },
+  { n: '03', title: 'Where to enter', text: lede },
+  { n: '04', title: 'Kids', text: body },
+];
+---
+
+<Base title="Plan your visit" description="What to expect on a first Sunday at The Well Assembly of God." image="images/exterior.jpg">
+  <PageHero kicker="I'm new" title="Plan your visit" deck={lede} />
+  <figure class="page-figure">
+    <img src={img('exterior')} alt="A low contemporary building at dusk, with an olive tree in a gravel court." />
+  </figure>
+  <section class="section">
+    <div class="wrap">
+      <dl class="facts">
+        <div>
+          <dt>{site.sundayLabel}</dt>
+          <dd>{site.sundayTime}</dd>
+        </div>
+        <div>
+          <dt>{site.midweekLabel}</dt>
+          <dd>{site.midweekTime}</dd>
+        </div>
+        <div>
+          <dt>Where</dt>
+          <dd>{site.city}</dd>
+        </div>
+      </dl>
+      <div class="expect">
+        {
+          expectations.map((item) => (
+            <article>
+              <span class="num">{item.n}</span>
+              <div>
+                <h2>{item.title}</h2>
+                <p>{item.text}</p>
+              </div>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+  <section class="section" style="padding-top: 0;">
+    <div class="wrap contact-grid">
+      <div class="map-panel" role="img" aria-label="Map placeholder">
+        <div class="map-grid"></div>
+        <div class="map-pin">
+          <strong>The Well</strong>
+          <span>{site.address}<br />{site.city}</span>
+        </div>
+      </div>
+      <div class="panel">
+        <p class="eyebrow">Tell us you're coming</p>
+        <h2 class="block-title" style="font-size: 2.4rem; margin-bottom: 1rem;">We'll save you a seat.</h2>
+        <PlaceholderForm submit="Send">
+          <label class="field">
+            <span>Name</span>
+            <input name="name" autocomplete="name" required />
+          </label>
+          <label class="field">
+            <span>Email</span>
+            <input name="email" type="email" autocomplete="email" required />
+          </label>
+          <label class="field">
+            <span>How many</span>
+            <input name="party" inputmode="numeric" />
+          </label>
+          <label class="field">
+            <span>Anything we should know</span>
+            <textarea name="note"></textarea>
+          </label>
+        </PlaceholderForm>
+      </div>
+    </div>
+  </section>
+</Base>

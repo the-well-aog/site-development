@@ -1,0 +1,27 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import { lede } from '../data/copy';
+import { img } from '../lib/url';
+
+const leaders = (await getCollection('leaders')).sort((a, b) => a.data.order - b.data.order);
+---
+
+<Base title="Leadership" description="The people who lead The Well Assembly of God." image="images/chapel.jpg">
+  <PageHero kicker="People" title="Leadership" deck={lede} />
+  <section class="section" style="padding-top: 1rem;">
+    <div class="wrap people">
+      {
+        leaders.map((entry) => (
+          <article>
+            <img src={img(entry.data.image)} alt={entry.data.alt} />
+            <p class="eyebrow" style="margin-top: 1rem;">{entry.data.focus}</p>
+            <h2 class="card-title">{entry.data.name}</h2>
+            <p class="fine" style="margin-top: 0.55rem;">{entry.data.summary}</p>
+          </article>
+        ))
+      }
+    </div>
+  </section>
+</Base>

@@ -1,0 +1,54 @@
+---
+import { getCollection, render, type CollectionEntry } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import { longDate } from '../../lib/format';
+import { img, url } from '../../lib/url';
+
+export async function getStaticPaths() {
+  const sermons = await getCollection('sermons');
+  return sermons.map((entry) => ({
+    params: { slug: entry.id },
+    props: { entry },
+  }));
+}
+
+interface Props {
+  entry: CollectionEntry<'sermons'>;
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+---
+
+<Base title={entry.data.title} description={entry.data.summary} image={`images/${entry.data.image}.jpg`}>
+  <header class="page-hero">
+    <div class="wrap">
+      <p class="eyebrow">{entry.data.series}</p>
+      <h1>{entry.data.title}</h1>
+      <p class="meta-row">
+        <span>{longDate(entry.data.date)}</span>
+        <span>{entry.data.speaker}</span>
+        <span>{entry.data.passage}</span>
+      </p>
+    </div>
+  </header>
+  <section class="section" style="padding-top: 0;">
+    <div class="wrap">
+      <div class="detail-hero">
+        <img src={img(entry.data.image)} alt={entry.data.alt} />
+      </div>
+      <div class="player" role="region" aria-label="Video placeholder">
+        <div>
+          <span class="play" style="position: static; margin-inline: auto;"></span>
+          <p>The recording will live here.</p>
+        </div>
+      </div>
+      <div class="prose" style="margin-top: 2rem;">
+        <Content />
+      </div>
+      <p style="margin: 2rem 0 4rem;">
+        <a class="more" href={url('/sermons')}>All sermons <span aria-hidden="true">→</span></a>
+      </p>
+    </div>
+  </section>
+</Base>

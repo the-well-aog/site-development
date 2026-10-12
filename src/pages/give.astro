@@ -1,0 +1,31 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import { body, lede } from '../data/copy';
+import { site } from '../data/site';
+---
+
+<Base title="Give" description="Give to The Well Assembly of God." image="images/water.jpg">
+  <PageHero kicker="Generosity" title="Give" deck={lede} />
+  <section class="section" style="padding-top: 0.5rem;">
+    <div class="wrap pair">
+      <article>
+        <p class="eyebrow">Online</p>
+        <h2>Give in a minute.</h2>
+        <p>{body}</p>
+        <div class="actions">
+          <span class="btn" aria-disabled="true">Give online</span>
+        </div>
+        <p class="fine" style="margin-top: 0.8rem;">The giving link is not connected. No card details are collected here.</p>
+      </article>
+      <article>
+        <p class="eyebrow">By mail</p>
+        <h2>Send it to the office.</h2>
+        <p>{lede}</p>
+        <p class="meta-row">
+          <span>{site.legal}<br />{site.address}<br />{site.city}</span>
+        </p>
+      </article>
+    </div>
+  </section>
+</Base>

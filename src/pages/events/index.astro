@@ -1,0 +1,42 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import PageHero from '../../components/PageHero.astro';
+import { lede } from '../../data/copy';
+import { dayNum, iso, monthShort, todayIso } from '../../lib/format';
+import { url } from '../../lib/url';
+
+const today = todayIso();
+const events = (await getCollection('events'))
+  .filter((entry) => iso(entry.data.date) >= today)
+  .sort((a, b) => a.data.date.valueOf() - b.data.date.valueOf());
+---
+
+<Base title="Events" description="What is happening at The Well Assembly of God." image="images/exterior.jpg">
+  <PageHero kicker="Calendar" title="Events" deck={lede} />
+  <section class="section" style="padding-top: 0.5rem;">
+    <div class="wrap">
+      {
+        events.length === 0 ? (
+          <p class="empty">Nothing on the calendar yet.</p>
+        ) : (
+          <div class="event-list">
+            {events.map((entry) => (
+              <a class="event-row" href={url(`/events/${entry.id}`)}>
+                <span class="event-day">
+                  {dayNum(entry.data.date)}
+                  <small>{monthShort(entry.data.date)}</small>
+                </span>
+                <span>
+                  <strong>{entry.data.title}</strong>
+                  <em>{entry.data.place}</em>
+                </span>
+                <em>{entry.data.time}</em>
+              </a>
+            ))}
+          </div>
+        )
+      }
+    </div>
+  </section>
+</Base>

@@ -1,0 +1,217 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import { beliefs } from '../data/beliefs';
+import { lede } from '../data/copy';
+import { site } from '../data/site';
+import { dayNum, iso, monthShort, todayIso } from '../lib/format';
+import { img, url } from '../lib/url';
+
+const today = todayIso();
+const sermons = (await getCollection('sermons')).sort(
+  (a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
+);
+const latest = sermons[0];
+const events = (await getCollection('events'))
+  .filter((entry) => iso(entry.data.date) >= today)
+  .sort((a, b) => a.data.date.valueOf() - b.data.date.valueOf())
+  .slice(0, 3);
+const notes = (await getCollection('announcements'))
+  .filter((entry) => iso(entry.data.expires) >= today)
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+const ministries = await getCollection('ministries');
+const byId = Object.fromEntries(ministries.map((entry) => [entry.id, entry]));
+const bento = [byId.groups, byId.kids, byId.students].filter((entry) => entry !== undefined);
+---
+
+<Base
+  title="The Well"
+  description="The Well Assembly of God. Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+  overlay
+  image="images/sanctuary.jpg"
+>
+  <section class="hero">
+    <div class="hero-media">
+      <img src={img('sanctuary')} alt="A quiet sanctuary with oak benches and a round stone basin in morning light." />
+    </div>
+    <div class="hero-scrim"></div>
+    <div class="wrap hero-copy">
+      <p class="eyebrow light">Assembly of God</p>
+      <h1>The Well</h1>
+      <p class="lede">{lede}</p>
+      <div class="actions">
+        <a class="btn btn-light" href={url('/visit')}>Plan your visit</a>
+        <a class="btn btn-ghost" href={url('/live')}>Watch live</a>
+      </div>
+    </div>
+    <div class="wrap">
+      <dl class="hero-facts">
+        <div>
+          <dt>{site.sundayLabel}</dt>
+          <dd>{site.sundayTime}</dd>
+        </div>
+        <div>
+          <dt>{site.midweekLabel}</dt>
+          <dd>{site.midweekTime}</dd>
+        </div>
+        <div>
+          <dt>Gathering</dt>
+          <dd>{site.city}</dd>
+        </div>
+      </dl>
+    </div>
+  </section>
+
+  <section class="manifesto">
+    <div class="wrap">
+      {
+        notes[0] && (
+          <p class="note">
+            <span>{monthShort(notes[0].data.date)} {dayNum(notes[0].data.date)}</span>
+            {notes[0].data.summary}
+          </p>
+        )
+      }
+      <p>Lorem ipsum dolor sit amet, <em>consectetur adipiscing</em> elit.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">01 — This Sunday</p>
+          <h2 class="block-title">{latest ? latest.data.series : 'Consectetur'}</h2>
+        </div>
+        <a class="more" href={url('/sermons')}>Sermons <span aria-hidden="true">→</span></a>
+      </div>
+      <div class="split">
+        <div>
+          <p class="deck">{latest ? latest.data.summary : lede}</p>
+          <p class="meta-row">
+            <span>{latest ? latest.data.passage : 'John 4:14'}</span>
+            <span>{site.sundayLabel} {site.sundayTime}</span>
+          </p>
+          <div class="actions">
+            <a class="btn" href={latest ? url(`/sermons/${latest.id}`) : url('/sermons')}>Read the message</a>
+          </div>
+        </div>
+        <div class="frame">
+          <img src={img('water')} alt="Still water in a round limestone basin, crossed by sunlight." />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top: 0;">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">02 — Ministries</p>
+          <h2 class="block-title">Find your room</h2>
+        </div>
+        <a class="more" href={url('/ministries')}>All ministries <span aria-hidden="true">→</span></a>
+      </div>
+      <div class="bento">
+        {
+          bento.map((entry) => (
+            <a class="cover" href={url(`/ministries/${entry.id}`)}>
+              <img src={img(entry.data.image)} alt={entry.data.alt} />
+              <span>{entry.data.title}</span>
+              <small>{entry.data.when}</small>
+            </a>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  {
+    latest && (
+      <section class="band-dark">
+        <div class="wrap sermon-feature">
+          <a class="frame" href={url(`/sermons/${latest.id}`)}>
+            <img src={img(latest.data.image)} alt={latest.data.alt} />
+            <span class="play" aria-hidden="true"></span>
+          </a>
+          <div>
+            <p class="eyebrow light">03 — Latest message</p>
+            <h2>{latest.data.title}</h2>
+            <p class="passage">{latest.data.passage}</p>
+            <p class="deck" style="color: rgba(243,239,230,0.78); margin-top: 1rem;">
+              {latest.data.summary}
+            </p>
+            <div class="actions">
+              <a class="btn btn-light" href={url(`/sermons/${latest.id}`)}>Watch</a>
+              <a class="btn btn-ghost" href={url('/live')}>Livestream</a>
+            </div>
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">04 — Coming up</p>
+          <h2 class="block-title">On the calendar</h2>
+        </div>
+        <a class="more" href={url('/events')}>All events <span aria-hidden="true">→</span></a>
+      </div>
+      <div class="event-list">
+        {
+          events.map((entry) => (
+            <a class="event-row" href={url(`/events/${entry.id}`)}>
+              <span class="event-day">
+                {dayNum(entry.data.date)}
+                <small>{monthShort(entry.data.date)}</small>
+              </span>
+              <span>
+                <strong>{entry.data.title}</strong>
+                <em>{entry.data.summary}</em>
+              </span>
+              <em>{entry.data.time}</em>
+            </a>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top: 0;">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">05 — Beliefs</p>
+          <h2 class="block-title">What we hold</h2>
+        </div>
+        <a class="more" href={url('/beliefs')}>Sixteen truths <span aria-hidden="true">→</span></a>
+      </div>
+      <div class="truths">
+        {
+          beliefs.slice(0, 4).map((item) => (
+            <a href={url('/beliefs')}>
+              <b>{item.n}</b>
+              <span>{item.title}</span>
+            </a>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="cta">
+    <div class="cta-media">
+      <img src={img('exterior')} alt="The gathering place at dusk, windows warm against a blue evening." />
+    </div>
+    <div class="cta-scrim"></div>
+    <div class="wrap">
+      <p class="eyebrow light">You are welcome</p>
+      <h2>Come and see.</h2>
+      <p class="deck">{lede}</p>
+      <a class="btn btn-light" href={url('/visit')}>Plan your visit</a>
+    </div>
+  </section>
+</Base>
