@@ -12,9 +12,9 @@ const photos = {
 export type PhotoKey = keyof typeof photos;
 
 export function url(path = '/'): string {
-  const base = import.meta.env.BASE_URL;
-  if (!path || path === '/') return base;
-  return `${base}${path.replace(/^\//, '')}`;
+  const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+  if (!path || path === '/') return base === '' ? '/' : `${base}/`;
+  return `${base}/${path.replace(/^\//, '')}`;
 }
 
 export function img(key: string): string {
