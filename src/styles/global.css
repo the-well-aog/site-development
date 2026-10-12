@@ -1094,14 +1094,6 @@ img { height: auto; }
 .connection-panel h3 { font: 500 2rem/1.15 var(--serif); }
 .connection-panel p { margin-block: 1rem 1.5rem; color: var(--muted); }
 .home-invitation { padding-block: 4.5rem; background: #eae6db; }
-.home-map { padding: clamp(3rem, 6vw, 4.5rem) 0 0; }
-.home-map-head { display: flex; align-items: end; justify-content: space-between; gap: 1.5rem 2.5rem; margin-bottom: 1.25rem; }
-.home-map-head p:not(.eyebrow) { margin-top: .35rem; color: var(--muted); }
-.home-map-actions { display: flex; flex-wrap: wrap; gap: .35rem 1.4rem; }
-.home-map-actions a { color: var(--tide); font-size: .95rem; font-weight: 500; text-decoration: none; }
-.home-map-actions a:hover { text-decoration: underline; text-underline-offset: .2em; }
-.home-map-frame { overflow: hidden; border: 1px solid var(--line); border-bottom: 0; border-radius: .8rem .8rem 0 0; background: var(--paper-2); }
-.home-map-frame iframe { display: block; width: 100%; height: min(62vw, 28rem); min-height: 20rem; border: 0; }
 .invitation-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 4rem; align-items: center; }
 .home-invitation h2 { font: 500 clamp(3rem, 5.8vw, 5.5rem)/1 var(--serif); letter-spacing: -.05em; }
 .home-invitation h2 em { color: var(--tide); }
@@ -1200,8 +1192,6 @@ img { height: auto; }
   .invitation-grid > div:last-child { justify-self: start; }
   .home-invitation { padding-block: 3.5rem; }
   .home-invitation h2 { font-size: 3.4rem; }
-  .home-map-head { flex-direction: column; align-items: start; }
-  .home-map-frame iframe { height: 22rem; min-height: 0; }
   .home-invitation .eyebrow { font-size: .62rem; }
   .event-row { grid-template-columns: 3rem 1fr; gap: .8rem; }
   .home-events .event-row { grid-template-columns: 3rem 1fr auto; }
