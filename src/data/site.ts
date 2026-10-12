@@ -11,7 +11,7 @@ export const site = {
   phoneHref: 'tel:+10000000000',
   email: 'hello@example.com',
   // Public Facebook Page URL. The timeline embed loads from Facebook. No app id or token.
-  facebookPage: '',
+  facebookPage: 'https://www.facebook.com/profile.php?id=100083294263196',
   // @handle, channel URL, or UC… id. Latest uploads come from YouTube's public RSS. No API key.
-  youtubeChannel: '',
+  youtubeChannel: 'https://www.youtube.com/@TheWellFoursquareChurch',
 };
