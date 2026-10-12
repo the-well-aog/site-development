@@ -1,31 +1,36 @@
 ---
 import Base from '../layouts/Base.astro';
 import PageHero from '../components/PageHero.astro';
-import { body, lede } from '../data/copy';
-import { site } from '../data/site';
+import { url } from '../lib/url';
 ---
 
-<Base title="Give" description="Give to The Well Assembly of God." image="images/water.jpg">
-  <PageHero kicker="Generosity" title="Give" deck={lede} />
+<Base title="Give" description="Information about giving to The Well Assembly of God." image="images/water.jpg">
+  <PageHero kicker="Generosity" title="Give with purpose." deck="Thank you for considering a gift to The Well. Find the next step for giving below." />
   <section class="section" style="padding-top: 0.5rem;">
     <div class="wrap pair">
       <article>
-        <p class="eyebrow">Online</p>
-        <h2>Give in a minute.</h2>
-        <p>{body}</p>
-        <div class="actions">
-          <span class="btn" aria-disabled="true">Give online</span>
-        </div>
-        <p class="fine" style="margin-top: 0.8rem;">The giving link is not connected. No card details are collected here.</p>
+        <p class="eyebrow">Online giving</p>
+        <h2>A simple way to give.</h2>
+        <p>Online giving is not available on this preview yet. A link to the church's giving provider will be added when it is confirmed.</p>
+        <div class="actions"><button class="btn" type="button" disabled>Online giving coming soon</button></div>
+        <p class="fine" style="margin-top: 1rem;">This website does not collect card or bank details.</p>
       </article>
       <article>
-        <p class="eyebrow">By mail</p>
-        <h2>Send it to the office.</h2>
-        <p>{lede}</p>
-        <p class="meta-row">
-          <span>{site.legal}<br />{site.address}<br />{site.city}</span>
-        </p>
+        <p class="eyebrow">Other ways to give</p>
+        <h2>Begin with a conversation.</h2>
+        <p>Please check with the church about giving in person or by mail. The mailing address and accepted giving methods are still to be confirmed.</p>
+        <div class="actions"><a class="more" href={url('/contact')}>Contact information <span aria-hidden="true">→</span></a></div>
       </article>
     </div>
   </section>
+  <section class="section" style="padding-top: 0;">
+    <div class="wrap measure">
+      <p class="eyebrow">New to The Well?</p>
+      <h2 class="block-title">Start by getting to know us.</h2>
+      <p class="deck" style="margin-top: 1rem;">Explore our beliefs, find a message, or plan a first visit at your own pace.</p>
+      <div class="actions"><a class="btn" href={url('/visit')}>Plan your visit <span aria-hidden="true">↗</span></a><a class="more" href={url('/about')}>About The Well <span aria-hidden="true">→</span></a></div>
+    </div>
+  </section>
 </Base>
+
+<style>button:disabled { cursor: not-allowed; opacity: .55; }</style>

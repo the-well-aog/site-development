@@ -1,6 +1,7 @@
 ---
 import { getCollection, render, type CollectionEntry } from 'astro:content';
 import Base from '../../layouts/Base.astro';
+import { isPlaceholderText } from '../../data/copy';
 import { longDate } from '../../lib/format';
 import { img, url } from '../../lib/url';
 
@@ -18,24 +19,30 @@ interface Props {
 
 const { entry } = Astro.props;
 const { Content } = await render(entry);
+const preview = isPlaceholderText(entry.data.summary) || isPlaceholderText(entry.body);
+const summary = isPlaceholderText(entry.data.summary)
+  ? 'A preview of an event at The Well. Full details will be added once they are confirmed.'
+  : entry.data.summary;
 ---
 
-<Base title={entry.data.title} description={entry.data.summary} image={`images/${entry.data.image}.jpg`}>
+<Base title={entry.data.title} description={summary} image={`images/${entry.data.image}.jpg`}>
   <header class="page-hero">
     <div class="wrap">
+      <p class="fine" style="margin-bottom: 1.4rem;"><a href={url('/events')}>← All events</a></p>
       <p class="eyebrow">{entry.data.place}</p>
       <h1>{entry.data.title}</h1>
-      <p class="deck">{entry.data.summary}</p>
+      <p class="deck">{summary}</p>
+      {preview && <p class="fine" style="margin-top: 1rem;">Preview event. The date, time, and location are sample details.</p>}
     </div>
   </header>
   <section class="section" style="padding-top: 0;">
     <div class="wrap detail">
       <div>
         <div class="detail-hero">
-          <img src={img(entry.data.image)} alt={entry.data.alt} />
+          <img src={img(entry.data.image)} alt={entry.data.alt} loading="lazy" />
         </div>
         <div class="prose">
-          <Content />
+          {isPlaceholderText(entry.body) ? <><h2 class="card-title">More details to come.</h2><p style="margin-top: 1rem;">This event is sample content for the website preview. The church will confirm the description, gathering details, and any registration information before it is announced.</p></> : <Content />}
         </div>
         <p style="margin-top: 1.6rem;">
           <a class="more" href={url('/events')}>All events <span aria-hidden="true">→</span></a>
@@ -56,6 +63,7 @@ const { Content } = await render(entry);
             <dd>{entry.data.place}</dd>
           </div>
         </dl>
+        <a class="btn" href={url('/contact')}>Ask about this event</a>
       </aside>
     </div>
   </section>

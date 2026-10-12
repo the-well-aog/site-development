@@ -1,6 +1,5 @@
 ---
 import Base from '../layouts/Base.astro';
-import { lede } from '../data/copy';
 import { site } from '../data/site';
 import { loadSocial } from '../lib/feeds';
 import { img, url } from '../lib/url';
@@ -13,15 +12,16 @@ const social = await loadSocial();
     <img src={img('night')} alt="People seated in silhouette around a stone basin in evening light." style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;" />
     <div class="live-scrim"></div>
     <div class="wrap">
-      <p class="eyebrow light">We go live</p>
-      <h1>{site.sundayLabel} at {site.sundayTime}</h1>
-      <p class="deck" style="color: rgba(243,239,230,0.86); margin: 1rem 0 1.4rem;">{lede}</p>
+      <p class="eyebrow light">Watch live</p>
+      <h1>Wherever you are,<br />join us here.</h1>
+      <p class="deck" style="color: rgba(243,239,230,0.86); margin: 1rem 0 1.4rem;">Make a little room for worship, a message, and time to reflect.</p>
+      <p class="fine" style="color: rgba(243,239,230,.8);">{site.sundayLabel} · {site.sundayTime} <span style="opacity: .8;">— sample gathering time</span></p>
       <div class="actions">
         {
           social.channelId ? (
             <a class="btn btn-light" href="#service">Watch the service</a>
           ) : (
-            <span class="btn" aria-disabled="true">Stream not connected</span>
+            <span class="fine" style="color: inherit;">The livestream is not connected yet.</span>
           )
         }
         <a class="btn btn-ghost" href={url('/sermons')}>Past messages</a>
@@ -32,8 +32,8 @@ const social = await loadSocial();
     social.channelId ? (
       <section class="section" id="service">
         <div class="wrap">
-          <p class="eyebrow">We go live</p>
-          <h2 class="block-title">The service</h2>
+          <p class="eyebrow">Join the service</p>
+          <h2 class="block-title">Watch together.</h2>
           <div class="video-embed" style="margin-top: 1.4rem;">
             <iframe
               src={`https://www.youtube-nocookie.com/embed/live_stream?channel=${social.channelId}`}
@@ -44,17 +44,18 @@ const social = await loadSocial();
             />
           </div>
           <p class="fine" style="margin-top: 0.8rem;">
-            {site.sundayLabel} {site.sundayTime}. This player is the channel livestream.
-            {social.channelUrl && <a href={social.channelUrl}>Open the channel</a>}
+            If the service is not live, explore a past message or visit the YouTube channel.
+            {social.channelUrl && <a href={social.channelUrl}> Open YouTube <span aria-hidden="true">↗</span></a>}
           </p>
         </div>
       </section>
     ) : (
       <section class="section">
         <div class="wrap measure">
-          <p class="eyebrow">While you wait</p>
-          <h2 class="block-title">The player will sit here.</h2>
-          <p class="deck" style="margin-top: 1rem;">{lede}</p>
+          <p class="eyebrow">Keep exploring</p>
+          <h2 class="block-title">There's more to discover.</h2>
+          <p class="deck" style="margin-top: 1rem;">The livestream is not available yet. Explore our message library or find out about a first visit.</p>
+          <div class="actions"><a class="btn" href={url('/sermons')}>Browse messages</a><a class="more" href={url('/visit')}>Plan a visit <span aria-hidden="true">→</span></a></div>
         </div>
       </section>
     )

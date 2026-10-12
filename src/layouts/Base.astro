@@ -11,10 +11,18 @@ interface Props {
   image?: string;
 }
 
-const { title, description, overlay = false, image = 'images/sanctuary.jpg' } = Astro.props;
+const { title, description, image = 'images/the-well-logo.png' } = Astro.props;
 const fullTitle = title === 'The Well' ? 'The Well Assembly of God' : `${title} · The Well`;
 const canonical = new URL(Astro.url.pathname, Astro.site);
 const ogImage = new URL(url(image), Astro.site);
+const logoUrl = new URL(url('images/the-well-logo.png'), Astro.site);
+const organization = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: 'The Well Assembly of God',
+  url: new URL(url('/'), Astro.site).href,
+  logo: logoUrl.href,
+};
 ---
 
 <!doctype html>
@@ -23,63 +31,40 @@ const ogImage = new URL(url(image), Astro.site);
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={description} />
-    <meta name="theme-color" content="#142826" />
+    <meta name="theme-color" content="#002e4a" />
     <link rel="canonical" href={canonical} />
-    <link rel="icon" href={url('favicon.svg')} type="image/svg+xml" />
+    <link rel="icon" href={url('images/the-well-logo.png')} type="image/png" />
+    <link rel="apple-touch-icon" href={url('images/the-well-logo.png')} />
     <meta property="og:title" content={fullTitle} />
+    <meta property="og:site_name" content="The Well Assembly of God" />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
     <meta property="og:url" content={canonical} />
     <meta property="og:image" content={ogImage} />
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500;1,9..144,600&family=Outfit:wght@300;400;500;600&display=swap"
       rel="stylesheet"
     />
+    <script type="application/ld+json" set:html={JSON.stringify(organization).replace(/</g, '\u003c')} />
     <title>{fullTitle}</title>
   </head>
   <body>
     <a class="skip" href="#content">Skip to content</a>
-    <Header overlay={overlay} />
-    <main id="content">
+    <Header />
+    <main id="content" tabindex="-1">
       <slot />
     </main>
     <Footer />
-    <script>
-      const header = document.querySelector('[data-header]');
-      const toggle = document.querySelector('[data-nav-toggle]');
-
-      const onScroll = () => {
-        header?.classList.toggle('is-scrolled', window.scrollY > 8);
-      };
-      onScroll();
-      window.addEventListener('scroll', onScroll, { passive: true });
-
-      const setOpen = (open: boolean) => {
-        header?.classList.toggle('is-open', open);
-        document.body.classList.toggle('nav-open', open);
-        toggle?.setAttribute('aria-expanded', String(open));
-      };
-
-      toggle?.addEventListener('click', () => {
-        setOpen(!header?.classList.contains('is-open'));
-      });
-
-      document.addEventListener('keydown', (event) => {
-        if (event.key === 'Escape') setOpen(false);
-      });
-
-      document.querySelectorAll('form[data-placeholder]').forEach((form) => {
-        form.addEventListener('submit', (event) => {
-          event.preventDefault();
-          if (!(form instanceof HTMLFormElement)) return;
-          if (!form.reportValidity()) return;
-          form.querySelector('[data-form-body]')?.setAttribute('hidden', '');
-          form.querySelector('[data-form-thanks]')?.removeAttribute('hidden');
-        });
-      });
-    </script>
   </body>
 </html>
+
+<style>
+  main { padding-top: var(--header, 104px); }
+  main:focus { outline: none; }
+</style>

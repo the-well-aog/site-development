@@ -2,26 +2,28 @@
 import { getCollection } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import PageHero from '../components/PageHero.astro';
-import { lede } from '../data/copy';
-import { img } from '../lib/url';
+import { isPlaceholderText } from '../data/copy';
+import { img, url } from '../lib/url';
 
 const leaders = (await getCollection('leaders')).sort((a, b) => a.data.order - b.data.order);
 ---
 
 <Base title="Leadership" description="The people who lead The Well Assembly of God." image="images/chapel.jpg">
-  <PageHero kicker="People" title="Leadership" deck={lede} />
+  <PageHero kicker="People" title="Meet the leadership." deck="Get to know the people who help lead and care for The Well." />
   <section class="section" style="padding-top: 1rem;">
+    {leaders.some((entry) => isPlaceholderText(entry.data.summary)) && <div class="wrap"><p class="fine" style="margin-bottom: 1.8rem;">Preview profiles: names, roles, photographs, and biographies are awaiting confirmation.</p></div>}
     <div class="wrap people">
       {
         leaders.map((entry) => (
           <article>
-            <img src={img(entry.data.image)} alt={entry.data.alt} />
+            <img src={img(entry.data.image)} alt={entry.data.alt} loading="lazy" />
             <p class="eyebrow" style="margin-top: 1rem;">{entry.data.focus}</p>
             <h2 class="card-title">{entry.data.name}</h2>
-            <p class="fine" style="margin-top: 0.55rem;">{entry.data.summary}</p>
+            <p class="fine" style="margin-top: 0.55rem;">{isPlaceholderText(entry.data.summary) ? 'Biography coming soon.' : entry.data.summary}</p>
           </article>
         ))
       }
     </div>
   </section>
+  <section class="section" style="padding-top: 0;"><div class="wrap"><a class="more" href={url('/contact')}>Start a conversation <span aria-hidden="true">→</span></a></div></section>
 </Base>

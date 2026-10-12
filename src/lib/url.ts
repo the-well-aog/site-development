@@ -7,6 +7,7 @@ const photos = {
   chapel: 'images/chapel.jpg',
   night: 'images/night.jpg',
   exterior: 'images/exterior.jpg',
+  church: 'images/church-exterior.jpg',
 } as const;
 
 export type PhotoKey = keyof typeof photos;

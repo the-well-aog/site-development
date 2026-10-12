@@ -23,6 +23,7 @@ const description = video.excerpt || video.title;
 <Base title={video.title} description={description} image="images/night.jpg">
   <header class="page-hero">
     <div class="wrap">
+      <p class="fine" style="margin-bottom: 1.4rem;"><a href={url('/sermons')}>← All messages</a></p>
       <p class="eyebrow">Message</p>
       <h1>{video.title}</h1>
       <p class="meta-row">
@@ -34,7 +35,7 @@ const description = video.excerpt || video.title;
     <div class="wrap">
       <div class="video-embed">
         <iframe
-          src={`https://www.youtube.com/embed/${video.id}`}
+          src={`https://www.youtube-nocookie.com/embed/${video.id}`}
           title={video.title}
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
           allowfullscreen

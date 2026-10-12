@@ -1,4 +1,6 @@
 ---
+import { url } from '../lib/url';
+
 interface Props {
   kicker: string;
   title: string;
@@ -10,8 +12,28 @@ const { kicker, title, deck } = Astro.props;
 
 <header class="page-hero">
   <div class="wrap">
-    <p class="eyebrow">{kicker}</p>
-    <h1>{title}</h1>
-    <p class="deck">{deck}</p>
+    <div class="page-hero-meta"><a href={url('/')}>Home</a><span aria-hidden="true">/</span><p class="eyebrow">{kicker}</p></div>
+    <div class="page-hero-layout">
+      <h1>{title}</h1>
+      <p class="deck">{deck}</p>
+    </div>
   </div>
 </header>
+
+<style>
+  .page-hero { padding: clamp(3rem, 6vw, 5.5rem) 0 clamp(2.5rem, 4vw, 4rem); }
+  .page-hero-meta { display: flex; align-items: center; gap: .85rem; margin-bottom: 2rem; color: var(--muted); }
+  .page-hero-meta a { font-size: .72rem; text-decoration: none; }
+  .page-hero-meta a:hover { text-decoration: underline; text-underline-offset: .25em; }
+  .page-hero-meta > span { opacity: .5; font-size: .7rem; }
+  .page-hero-meta .eyebrow { margin: 0; font-size: .67rem; }
+  .page-hero-layout { display: grid; grid-template-columns: 1.15fr 1fr; align-items: end; gap: 3rem; }
+  .page-hero h1 { max-width: 13ch; color: var(--well); font-size: clamp(3rem, 6.5vw, 5.2rem); line-height: 1.02; }
+  .page-hero .deck { margin: 0; max-width: 35ch; padding-bottom: .15rem; font-size: 1.1rem; }
+  @media (max-width: 800px) {
+    .page-hero-layout { grid-template-columns: 1fr; gap: 1.5rem; }
+    .page-hero-meta { margin-bottom: 1.5rem; }
+    .page-hero h1 { font-size: clamp(2.9rem, 9vw, 4.8rem); }
+    .page-hero .deck { max-width: 48ch; font-size: 1.02rem; }
+  }
+</style>
