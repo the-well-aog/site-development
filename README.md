@@ -47,6 +47,10 @@ Build-time only. Copy `.env.example` to `.env` if you want `npm run build` to pi
 | --- | --- | --- |
 | `SITE_URL` | Optional | Public origin, no trailing slash. Default `https://the-well-aog.github.io`. |
 | `BASE_PATH` | Optional | URL prefix. Default `/` for local dev. The Pages workflow sets `/site-development`. Use `/` on a custom domain. |
+| `FACEBOOK_PAGE` | Optional | Overrides `facebookPage` in `src/data/site.ts` for this build. A public Facebook Page URL. |
+| `YOUTUBE_CHANNEL` | Optional | Overrides `youtubeChannel` in `src/data/site.ts`. An `@handle`, channel URL, or `UC…` id. |
+
+Facebook and YouTube are set in `src/data/site.ts` (`facebookPage`, `youtubeChannel`). Leave them blank until the real profiles exist. YouTube titles and thumbnails are read from the channel's public RSS feed at build time, with no API key. The Pages workflow also runs once a day so a new upload shows up without a manual edit. Facebook is the official Page plugin: the timeline loads in the visitor's browser, and it does not use an app id or token.
 
 There is no runtime environment and no `.env` secrets.
 

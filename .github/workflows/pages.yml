@@ -4,6 +4,9 @@ on:
   push:
     branches: [main]
   pull_request:
+  schedule:
+    # Republish so the YouTube RSS feed is fetched again. No API key.
+    - cron: '17 14 * * *'
 
 permissions:
   contents: read
@@ -30,12 +33,12 @@ jobs:
           BASE_PATH: /site-development
           ASTRO_TELEMETRY_DISABLED: 1
       - uses: actions/upload-pages-artifact@v3
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        if: github.event_name == 'schedule' || (github.event_name == 'push' && github.ref == 'refs/heads/main')
         with:
           path: dist
 
   deploy:
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    if: github.event_name == 'schedule' || (github.event_name == 'push' && github.ref == 'refs/heads/main')
     needs: build
     runs-on: ubuntu-latest
     environment:

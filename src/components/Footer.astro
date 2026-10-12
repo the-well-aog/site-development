@@ -1,8 +1,10 @@
 ---
 import { site } from '../data/site';
+import { loadSocial } from '../lib/feeds';
 import { url } from '../lib/url';
 
 const year = new Date().getFullYear();
+const social = await loadSocial();
 ---
 
 <footer class="site-footer">
@@ -26,6 +28,7 @@ const year = new Date().getFullYear();
       <ul>
         <li><a href={url('/sermons')}>Sermons</a></li>
         <li><a href={url('/live')}>Livestream</a></li>
+        {social.channelUrl && <li><a href={social.channelUrl}>YouTube</a></li>}
         <li><a href={url('/events')}>Events</a></li>
         <li><a href={url('/ministries')}>Ministries</a></li>
       </ul>
@@ -39,6 +42,7 @@ const year = new Date().getFullYear();
         <li><a href={url('/beliefs')}>Beliefs</a></li>
         <li><a href={url('/leadership')}>Leadership</a></li>
         <li><a href={url('/contact')}>Contact</a></li>
+        {social.facebookPage && <li><a href={social.facebookPage}>Facebook</a></li>}
         <li><a href={`mailto:${site.email}`}>{site.email}</a></li>
         <li><a href={site.phoneHref}>{site.phoneDisplay}</a></li>
       </ul>

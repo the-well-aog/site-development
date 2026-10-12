@@ -1,0 +1,51 @@
+---
+import Base from '../../layouts/Base.astro';
+import { loadSocial, type YoutubeVideo } from '../../lib/feeds';
+import { longDate } from '../../lib/format';
+import { url } from '../../lib/url';
+
+export async function getStaticPaths() {
+  const social = await loadSocial();
+  return social.videos.map((video) => ({
+    params: { id: video.id },
+    props: { video },
+  }));
+}
+
+interface Props {
+  video: YoutubeVideo;
+}
+
+const { video } = Astro.props;
+const description = video.excerpt || video.title;
+---
+
+<Base title={video.title} description={description} image="images/night.jpg">
+  <header class="page-hero">
+    <div class="wrap">
+      <p class="eyebrow">Message</p>
+      <h1>{video.title}</h1>
+      <p class="meta-row">
+        <span>{longDate(new Date(video.published))}</span>
+      </p>
+    </div>
+  </header>
+  <section class="section" style="padding-top: 0;">
+    <div class="wrap">
+      <div class="video-embed">
+        <iframe
+          src={`https://www.youtube-nocookie.com/embed/${video.id}`}
+          title={video.title}
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowfullscreen
+          referrerpolicy="strict-origin-when-cross-origin"
+        />
+      </div>
+      {video.excerpt && <p class="deck" style="margin-top: 1.4rem;">{video.excerpt}</p>}
+      <p class="watch-links">
+        <a class="more" href={url('/sermons')}>All sermons <span aria-hidden="true">→</span></a>
+        <a class="more" href={video.watchUrl}>On YouTube</a>
+      </p>
+    </div>
+  </section>
+</Base>

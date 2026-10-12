@@ -3,6 +3,7 @@ import { getCollection } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import PageHero from '../../components/PageHero.astro';
 import { lede } from '../../data/copy';
+import { loadSocial } from '../../lib/feeds';
 import { longDate } from '../../lib/format';
 import { img, url } from '../../lib/url';
 
@@ -10,29 +11,53 @@ const sermons = (await getCollection('sermons')).sort(
   (a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
 );
 const series = [...new Set(sermons.map((entry) => entry.data.series))];
+const social = await loadSocial();
+const videos = social.videos;
 ---
 
 <Base title="Sermons" description="Messages from The Well Assembly of God." image="images/night.jpg">
-  <PageHero kicker="Watch" title="Sermons" deck={lede} />
+  <PageHero
+    kicker="Watch"
+    title="Sermons"
+    deck={videos.length ? 'The latest messages, pulled from YouTube whenever the site publishes.' : lede}
+  />
   <section class="section" style="padding-top: 0.4rem;">
     <div class="wrap">
-      <p class="meta-row" style="margin-top: 0; margin-bottom: 1.6rem;">
-        {series.map((name) => <span>{name}</span>)}
-      </p>
-      <div class="sermon-grid">
-        {
-          sermons.map((entry) => (
-            <a class="sermon-card" href={url(`/sermons/${entry.id}`)}>
-              <img src={img(entry.data.image)} alt={entry.data.alt} />
-              <p class="eyebrow" style="margin-top: 0.9rem;">{entry.data.series}</p>
-              <h2 class="card-title">{entry.data.title}</h2>
-              <p class="fine" style="margin-top: 0.4rem;">
-                {longDate(entry.data.date)} · {entry.data.speaker}
-              </p>
-            </a>
-          ))
-        }
-      </div>
+      {
+        videos.length > 0 ? (
+          <div class="sermon-grid">
+            {
+              videos.map((video) => (
+                <a class="sermon-card" href={url(`/watch/${video.id}`)}>
+                  <img src={video.thumbnail} alt={video.title} />
+                  <h2 class="card-title">{video.title}</h2>
+                  <p class="fine" style="margin-top: 0.4rem;">{longDate(new Date(video.published))}</p>
+                </a>
+              ))
+            }
+          </div>
+        ) : (
+          <>
+            <p class="meta-row" style="margin-top: 0; margin-bottom: 1.6rem;">
+              {series.map((name) => <span>{name}</span>)}
+            </p>
+            <div class="sermon-grid">
+              {
+                sermons.map((entry) => (
+                  <a class="sermon-card" href={url(`/sermons/${entry.id}`)}>
+                    <img src={img(entry.data.image)} alt={entry.data.alt} />
+                    <p class="eyebrow" style="margin-top: 0.9rem;">{entry.data.series}</p>
+                    <h2 class="card-title">{entry.data.title}</h2>
+                    <p class="fine" style="margin-top: 0.4rem;">
+                      {longDate(entry.data.date)} · {entry.data.speaker}
+                    </p>
+                  </a>
+                ))
+              }
+            </div>
+          </>
+        )
+      }
     </div>
   </section>
 </Base>

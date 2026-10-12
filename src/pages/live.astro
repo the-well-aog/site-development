@@ -2,7 +2,10 @@
 import Base from '../layouts/Base.astro';
 import { lede } from '../data/copy';
 import { site } from '../data/site';
+import { loadSocial } from '../lib/feeds';
 import { img, url } from '../lib/url';
+
+const social = await loadSocial();
 ---
 
 <Base title="Livestream" description="Watch The Well Assembly of God when you cannot be in the room." image="images/night.jpg">
@@ -14,16 +17,46 @@ import { img, url } from '../lib/url';
       <h1>{site.sundayLabel} at {site.sundayTime}</h1>
       <p class="deck" style="color: rgba(243,239,230,0.86); margin: 1rem 0 1.4rem;">{lede}</p>
       <div class="actions">
-        <span class="btn" aria-disabled="true">Stream not connected</span>
+        {
+          social.channelId ? (
+            <a class="btn btn-light" href="#service">Watch the service</a>
+          ) : (
+            <span class="btn" aria-disabled="true">Stream not connected</span>
+          )
+        }
         <a class="btn btn-ghost" href={url('/sermons')}>Past messages</a>
       </div>
     </div>
   </section>
-  <section class="section">
-    <div class="wrap measure">
-      <p class="eyebrow">While you wait</p>
-      <h2 class="block-title">The player will sit here.</h2>
-      <p class="deck" style="margin-top: 1rem;">{lede}</p>
-    </div>
-  </section>
+  {
+    social.channelId ? (
+      <section class="section" id="service">
+        <div class="wrap">
+          <p class="eyebrow">We go live</p>
+          <h2 class="block-title">The service</h2>
+          <div class="video-embed" style="margin-top: 1.4rem;">
+            <iframe
+              src={`https://www.youtube-nocookie.com/embed/live_stream?channel=${social.channelId}`}
+              title="Livestream"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowfullscreen
+              referrerpolicy="strict-origin-when-cross-origin"
+            />
+          </div>
+          <p class="fine" style="margin-top: 0.8rem;">
+            {site.sundayLabel} {site.sundayTime}. This player is the channel livestream.
+            {social.channelUrl && <a href={social.channelUrl}>Open the channel</a>}
+          </p>
+        </div>
+      </section>
+    ) : (
+      <section class="section">
+        <div class="wrap measure">
+          <p class="eyebrow">While you wait</p>
+          <h2 class="block-title">The player will sit here.</h2>
+          <p class="deck" style="margin-top: 1rem;">{lede}</p>
+        </div>
+      </section>
+    )
+  }
 </Base>

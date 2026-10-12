@@ -4,7 +4,8 @@ import Base from '../layouts/Base.astro';
 import { beliefs } from '../data/beliefs';
 import { lede } from '../data/copy';
 import { site } from '../data/site';
-import { dayNum, iso, monthShort, todayIso } from '../lib/format';
+import { loadSocial } from '../lib/feeds';
+import { dayNum, iso, longDate, monthShort, todayIso } from '../lib/format';
 import { img, url } from '../lib/url';
 
 const today = todayIso();
@@ -22,6 +23,10 @@ const notes = (await getCollection('announcements'))
 const ministries = await getCollection('ministries');
 const byId = Object.fromEntries(ministries.map((entry) => [entry.id, entry]));
 const bento = [byId.groups, byId.kids, byId.students].filter((entry) => entry !== undefined);
+const social = await loadSocial();
+const featuredVideo = social.videos[0];
+const moreVideos = social.videos.slice(1, 4);
+const showFollow = moreVideos.length > 0 || Boolean(social.facebookPlugin);
 ---
 
 <Base
@@ -127,24 +132,102 @@ const bento = [byId.groups, byId.kids, byId.students].filter((entry) => entry !=
   </section>
 
   {
-    latest && (
+    featuredVideo ? (
       <section class="band-dark">
         <div class="wrap sermon-feature">
-          <a class="frame" href={url(`/sermons/${latest.id}`)}>
-            <img src={img(latest.data.image)} alt={latest.data.alt} />
+          <a class="frame" href={url(`/watch/${featuredVideo.id}`)}>
+            <img src={featuredVideo.thumbnail} alt={featuredVideo.title} />
             <span class="play" aria-hidden="true"></span>
           </a>
           <div>
             <p class="eyebrow light">03 — Latest message</p>
-            <h2>{latest.data.title}</h2>
-            <p class="passage">{latest.data.passage}</p>
-            <p class="deck" style="color: rgba(243,239,230,0.78); margin-top: 1rem;">
-              {latest.data.summary}
-            </p>
+            <h2>{featuredVideo.title}</h2>
+            <p class="passage">{longDate(new Date(featuredVideo.published))}</p>
+            {
+              featuredVideo.excerpt && (
+                <p class="deck" style="color: rgba(243,239,230,0.78); margin-top: 1rem;">
+                  {featuredVideo.excerpt}
+                </p>
+              )
+            }
             <div class="actions">
-              <a class="btn btn-light" href={url(`/sermons/${latest.id}`)}>Watch</a>
+              <a class="btn btn-light" href={url(`/watch/${featuredVideo.id}`)}>Watch</a>
               <a class="btn btn-ghost" href={url('/live')}>Livestream</a>
             </div>
+          </div>
+        </div>
+      </section>
+    ) : (
+      latest && (
+        <section class="band-dark">
+          <div class="wrap sermon-feature">
+            <a class="frame" href={url(`/sermons/${latest.id}`)}>
+              <img src={img(latest.data.image)} alt={latest.data.alt} />
+              <span class="play" aria-hidden="true"></span>
+            </a>
+            <div>
+              <p class="eyebrow light">03 — Latest message</p>
+              <h2>{latest.data.title}</h2>
+              <p class="passage">{latest.data.passage}</p>
+              <p class="deck" style="color: rgba(243,239,230,0.78); margin-top: 1rem;">
+                {latest.data.summary}
+              </p>
+              <div class="actions">
+                <a class="btn btn-light" href={url(`/sermons/${latest.id}`)}>Watch</a>
+                <a class="btn btn-ghost" href={url('/live')}>Livestream</a>
+              </div>
+            </div>
+          </div>
+        </section>
+      )
+    )
+  }
+
+  {
+    showFollow && (
+      <section class="section">
+        <div class="wrap">
+          <div class="section-head">
+            <div>
+              <p class="eyebrow">Around the church</p>
+              <h2 class="block-title">Keep up</h2>
+            </div>
+            {moreVideos.length > 0 && (
+              <a class="more" href={url('/sermons')}>All messages <span aria-hidden="true">→</span></a>
+            )}
+          </div>
+          <div class:list={['feed-layout', { 'is-single': moreVideos.length === 0 || !social.facebookPlugin }]}>
+            {
+              moreVideos.length > 0 && (
+                <div class="feed-videos">
+                  {
+                    moreVideos.map((video) => (
+                      <a class="sermon-card" href={url(`/watch/${video.id}`)}>
+                        <img src={video.thumbnail} alt={video.title} />
+                        <h3 class="card-title">{video.title}</h3>
+                        <p class="fine" style="margin-top: 0.4rem;">{longDate(new Date(video.published))}</p>
+                      </a>
+                    ))
+                  }
+                </div>
+              )
+            }
+            {
+              social.facebookPlugin && social.facebookPage && (
+                <aside class="fb-shell">
+                  <iframe
+                    src={social.facebookPlugin}
+                    title="Facebook timeline"
+                    width="500"
+                    height="680"
+                    loading="lazy"
+                    allow="encrypted-media; clipboard-write; web-share"
+                    referrerpolicy="strict-origin-when-cross-origin"
+                  />
+                  <p style="margin-top: 0.75rem;"><a class="more" href={social.facebookPage}>Facebook <span aria-hidden="true">→</span></a></p>
+                </aside>
+              )
+            }
           </div>
         </div>
       </section>
