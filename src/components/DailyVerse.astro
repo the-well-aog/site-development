@@ -5,6 +5,7 @@ import { verses } from '../data/verses';
 import { backgroundFor } from '../data/verse-backgrounds';
 import { dailyVerse } from '../lib/daily-verse';
 import { url } from '../lib/url';
+import { verseVersion } from '../lib/og-verse';
 
 /*
   The verse of the day, full screen, at /#today so a shared link lands right here.
@@ -18,7 +19,7 @@ const config = {
   verses: today.source === 'fallback' ? verses : [],
   base: url('verse/'),
   // Shared links go through /today/, whose link preview shows today's verse.
-  share: url('today/'),
+  share: `${url('today/')}?v=${verseVersion}`,
   logo: url('images/the-well-logo-white.png'),
   legal: site.legal,
 };
@@ -175,9 +176,8 @@ const dateLabel = new Intl.DateTimeFormat('en-US', { timeZone: site.timeZone, we
 
     const verseText = () => (text.textContent || '').replace(/^[“"]|[”"]$/g, '');
     const reference = () => ref.textContent || '';
-    // Dated, so each day's share gets a fresh preview instead of one a social network cached earlier.
-    const stamp = new Intl.DateTimeFormat('en-CA', { timeZone: config.zone }).format(new Date()).replace(/-/g, '');
-    const link = () => `${location.origin}${config.share}?d=${stamp}`;
+    // Versioned per build (see lib/og-verse.ts), so each share gets a fresh preview, never a cached one.
+    const link = () => `${location.origin}${config.share}`;
     const say = (message: string) => {
       status.textContent = message;
       window.clearTimeout(Number(status.dataset.timer));

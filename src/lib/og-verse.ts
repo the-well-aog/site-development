@@ -87,7 +87,9 @@ export async function verseOgImage(verse: DailyVerse): Promise<Buffer> {
   return sharp(Buffer.from(svg)).jpeg({ quality: 86, mozjpeg: true }).toBuffer();
 }
 
-/** Today's date on the church's clock, as 20261013: a cache key so link previews refresh daily. */
-export function verseStamp(): string {
-  return new Intl.DateTimeFormat('en-CA', { timeZone: site.timeZone }).format(new Date()).replace(/-/g, '');
-}
+/**
+ * A version for today's share link and preview image: the date on the church's clock plus this build.
+ * Facebook and others cache a preview per exact URL for weeks, so every build (the nightly one, or any
+ * fix) hands out addresses they have never seen and must fetch fresh.
+ */
+export const verseVersion = `${new Intl.DateTimeFormat('en-CA', { timeZone: site.timeZone }).format(new Date()).replace(/-/g, '')}-${Date.now().toString(36)}`;
