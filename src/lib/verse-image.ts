@@ -82,13 +82,14 @@ export async function paintVerseCard(card: VerseCard): Promise<HTMLCanvasElement
     ctx.drawImage(photo, (WIDTH - w) / 2, (HEIGHT - h) / 2, w, h);
   }
 
-  // A deep navy veil, lightest where the light comes in, so cream type always reads.
-  const strength = card.dark ? 0.75 : 1;
+  // A light veil, as in The Word, so the photograph stays the picture: just enough, deepest behind
+  // the verse, for cream type to read. Already-dark photos get less.
+  const opacity = card.dark ? 0.22 : 0.34;
   const veil = ctx.createLinearGradient(0, 0, 0, HEIGHT);
-  veil.addColorStop(0, `rgba(0, 20, 34, ${0.5 * strength})`);
-  veil.addColorStop(0.35, `rgba(0, 31, 51, ${0.62 * strength})`);
-  veil.addColorStop(0.72, `rgba(0, 25, 42, ${0.72 * strength})`);
-  veil.addColorStop(1, `rgba(0, 16, 28, ${0.86 * strength})`);
+  veil.addColorStop(0, `rgba(6, 18, 28, ${opacity * 0.42})`);
+  veil.addColorStop(0.34, `rgba(6, 18, 28, ${opacity * 0.5 + 0.1})`);
+  veil.addColorStop(0.7, `rgba(6, 18, 28, ${opacity * 0.62 + 0.16})`);
+  veil.addColorStop(1, `rgba(6, 18, 28, ${opacity * 0.48 + 0.08})`);
   ctx.fillStyle = veil;
   ctx.fillRect(0, 0, WIDTH, HEIGHT);
   const glow = ctx.createRadialGradient(WIDTH / 2, HEIGHT * 0.42, 0, WIDTH / 2, HEIGHT * 0.42, WIDTH * 0.75);
@@ -148,8 +149,8 @@ export async function paintVerseCard(card: VerseCard): Promise<HTMLCanvasElement
   ctx.save();
   ctx.fillStyle = CREAM;
   ctx.textAlign = 'center';
-  ctx.shadowColor = 'rgba(0, 10, 18, 0.55)';
-  ctx.shadowBlur = 18;
+  ctx.shadowColor = 'rgba(0, 10, 18, 0.65)';
+  ctx.shadowBlur = 26;
   ctx.shadowOffsetY = 2;
   ctx.font = `italic 500 ${size}px ${SERIF}`;
   lines.forEach((line, index) => ctx.fillText(line, WIDTH / 2, start + lineHeight * (index + 0.5)));

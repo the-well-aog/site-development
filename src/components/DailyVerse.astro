@@ -74,7 +74,7 @@ const dateLabel = new Intl.DateTimeFormat('en-US', { timeZone: site.timeZone, we
     inset: 0;
     background:
       radial-gradient(ellipse at 50% 42%, rgb(226 187 114 / 12%), transparent 60%),
-      linear-gradient(180deg, rgb(0 20 34 / 55%), rgb(0 31 51 / 66%) 35%, rgb(0 25 42 / 76%) 72%, rgb(0 16 28 / 90%));
+      linear-gradient(180deg, rgb(6 18 28 / 22%), rgb(6 18 28 / 34%) 34%, rgb(6 18 28 / 44%) 70%, rgb(6 18 28 / 58%));
   }
   .today[data-dark] .today-photo::after { opacity: 0.8; }
   .today-rings { position: absolute; left: 50%; top: 45%; z-index: -1; width: max(60rem, 120vmax); transform: translate(-50%, -50%); fill: none; stroke: #fff; stroke-width: 1; pointer-events: none; }
@@ -203,7 +203,10 @@ const dateLabel = new Intl.DateTimeFormat('en-US', { timeZone: site.timeZone, we
       imageButton.disabled = true;
       say('Making your image…');
       try {
-        const art = backgroundFor(reference()) ?? verseBackgrounds[0];
+        // A different photograph each time, as in The Word (never the same one twice in a row).
+        const choices = verseBackgrounds.filter((item) => item.file !== root.dataset.lastImage);
+        const art = choices[Math.floor(Math.random() * choices.length)];
+        root.dataset.lastImage = art.file;
         const canvas = await paintVerseCard({
           text: verseText(),
           reference: reference(),
