@@ -12,7 +12,7 @@ alt: "A room full of people from The Well around round tables in the fellowship 
 
 ## What to expect
 
-Classes meet at 10:00 AM, an hour before our 11:00 AM worship service. Each class opens the Bible, talks honestly about what it says, and prays together. There is room for questions, whether you have followed Jesus for decades or are just starting to read.
+Classes meet at 10:00 AM, before our 10:45 AM worship service. Each class opens the Bible, talks honestly about what it says, and prays together. There is room for questions, whether you have followed Jesus for decades or are just starting to read.
 
 ## A class for every age
 

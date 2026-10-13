@@ -20,8 +20,8 @@ export const site = {
   district: 'Oklahoma Ministry Network',
   // Confirmed by the church.
   services: [
-    { day: 'Sunday', time: '10:00 AM', name: 'Sunday School', detail: 'Bible classes for every age', minutes: 55 },
-    { day: 'Sunday', time: '11:00 AM', name: 'Sunday Worship', detail: 'Worship, the Word, and Kids', minutes: 90 },
+    { day: 'Sunday', time: '10:00 AM', name: 'Sunday School', detail: 'Bible classes for every age', minutes: 40 },
+    { day: 'Sunday', time: '10:45 AM', name: 'Sunday Worship', detail: 'Worship, the Word, and Kids', minutes: 90 },
     { day: 'Tuesday', time: '7:00 PM', name: 'Prayer Meeting', detail: 'Seeking God together in prayer', minutes: 60 },
     { day: 'Wednesday', time: '7:00 PM', name: 'Wednesday Service', detail: 'Worship and the Word', minutes: 75 },
   ] satisfies Service[],

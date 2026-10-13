@@ -1,7 +1,7 @@
 ---
 title: Kids
 order: 1
-when: Sundays at 11:00 AM, during the service
+when: Sundays at 10:45 AM, during the service
 who: Nursery through 5th grade
 image: youth
 summary: A safe, joyful place where children learn that God made them, Jesus loves them, and the Holy Spirit is with them.

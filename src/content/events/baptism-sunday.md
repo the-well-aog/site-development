@@ -1,7 +1,7 @@
 ---
 title: Baptism Sunday
 date: 2026-11-15
-time: 11:00 AM
+time: 10:45 AM
 place: The Well
 image: water
 draft: true
