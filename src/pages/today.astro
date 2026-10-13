@@ -7,19 +7,19 @@ import { url } from '../lib/url';
 
 /*
   The address shared with the verse of the day. Link previews (Facebook, iMessage, X) read this page's
-  tags: today's verse and its picture. People are sent straight on to the verse on the home page.
+  tags: today's verse and its picture. People are sent straight on to the home page: the preview carries the verse, the click brings them to the church.
   Shared links carry a version (/today/?v=20261013-…) that changes with every build, so a share never
   gets a preview a social network cached from an earlier one.
 */
 const verse = await dailyVerse();
 const image = `${url('og/today.jpg')}?v=${verseVersion}`;
-const home = `${url('/')}#today`;
+const home = url('/');
 ---
 
 <Base title={`A word for today: ${verse.reference}`} description={`“${verse.text}” ${verse.reference} (KJV). Today’s verse from ${site.legal}.`} image={image} canonical={false} imageMeta={{ width: 1200, height: 630, type: 'image/jpeg', alt: `${verse.reference}: “${verse.text}”` }}>
   <script is:inline define:vars={{ home }}>location.replace(home);</script>
   <section class="wrap today-forward">
-    <p>Taking you to today’s verse… <a href={home}>Go now</a></p>
+    <p>Taking you to The Well… <a href={home}>Go now</a></p>
   </section>
 </Base>
 
