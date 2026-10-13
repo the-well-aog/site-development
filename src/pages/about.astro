@@ -70,7 +70,7 @@ const initials = (name: string) => name.split(/\s+/).map((part) => part[0]).join
       {leaders.map((entry) => (
         <li>
           {hasPhotos ? (
-            <div class="team-photo">
+            <div class="team-photo tint">
               {entry.data.photo ? (
                 <img src={url(entry.data.photo)} alt={entry.data.name} width="600" height="750" loading="lazy" />
               ) : (

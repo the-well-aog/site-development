@@ -176,6 +176,38 @@ p { text-wrap: pretty; }
   .swipe-row > * { scroll-snap-align: start; }
 }
 
+/*
+  Photos rest under a soft blue wash and come into full colour when you hover them (or the card or link
+  they sit in). Only on devices that can hover; touch screens always see the true colours.
+*/
+@media (hover: hover) {
+  .tint { position: relative; isolation: isolate; }
+  .tint::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    border-radius: inherit;
+    background: linear-gradient(160deg, rgb(201 225 240 / 70%), rgb(140 185 214 / 70%));
+    mix-blend-mode: color;
+    pointer-events: none;
+    transition: opacity 0.9s var(--ease);
+  }
+  .tint::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    border-radius: inherit;
+    background: rgb(214 232 243 / 22%);
+    pointer-events: none;
+    transition: opacity 0.9s var(--ease);
+  }
+  .tint:hover::after, .tint:hover::before,
+  a:hover .tint::after, a:hover .tint::before,
+  a:focus-visible .tint::after, a:focus-visible .tint::before { opacity: 0; }
+}
+
 main:focus { outline: none; }
 .skip-link {
   position: absolute; left: 1rem; top: -5rem; z-index: 100;

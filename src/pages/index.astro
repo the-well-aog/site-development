@@ -68,7 +68,7 @@ const firstVisit = [
         {[0, 1, 2, 3].map((n) => <circle cx="300" cy="300" r="150" style={`--n: ${n}`} />)}
       </svg>
       <figure class="hero-media">
-        <Photo src={img('church')} alt="The Well Assembly of God: a long brick building with a red metal roof and a covered front entrance, at sunset." sizes="(min-width: 1000px) 45vw, 100vw" priority />
+        <div class="hero-tint tint"><Photo src={img('church')} alt="The Well Assembly of God: a long brick building with a red metal roof and a covered front entrance, at sunset." sizes="(min-width: 1000px) 45vw, 100vw" priority /></div>
         <figcaption>The door is open. Come thirsty.</figcaption>
       </figure>
       </div>
@@ -82,7 +82,7 @@ const firstVisit = [
 
   <Section tone="sand" width="wide" labelledby="story-title">
     <div class="story" data-reveal>
-      <div class="story-media">
+      <div class="story-media tint">
         <Photo src={img('worship')} alt="The sanctuary at The Well: a carpeted platform with a wooden pulpit, a grand piano, guitars, and a cross draped in purple." sizes="(min-width: 1000px) 40vw, 100vw" />
       </div>
       <div class="story-copy">
@@ -175,8 +175,9 @@ const firstVisit = [
   }
   .hero-media { position: relative; margin: 0; overflow: hidden; aspect-ratio: 1; max-height: calc(100svh - var(--header-h) - 4rem); border-radius: 999px 999px var(--radius-lg) var(--radius-lg); background: var(--sand-2); }
   .hero-media :global(img) { width: 100%; height: 100%; object-fit: cover; object-position: center 45%; }
-  .hero-media::after { content: ''; position: absolute; inset: 55% 0 0; background: linear-gradient(transparent, rgb(0 30 48 / 70%)); }
-  .hero-media figcaption { position: absolute; z-index: 1; left: 1.75rem; bottom: 1.5rem; color: #fff; font: italic 500 1.1rem var(--serif); }
+  .hero-tint { position: absolute; inset: 0; }
+  .hero-media::after { z-index: 2; pointer-events: none; content: ''; position: absolute; inset: 55% 0 0; background: linear-gradient(transparent, rgb(0 30 48 / 70%)); }
+  .hero-media figcaption { position: absolute; z-index: 3; left: 1.75rem; bottom: 1.5rem; color: #fff; font: italic 500 1.1rem var(--serif); }
 
   .story { display: grid; grid-template-columns: 0.9fr 1.1fr; gap: clamp(2rem, 6vw, 6rem); align-items: center; }
   .story-media { overflow: hidden; aspect-ratio: 4 / 3; border-radius: var(--radius-lg); }

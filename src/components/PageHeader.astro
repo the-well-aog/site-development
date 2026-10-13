@@ -44,9 +44,9 @@ const hasAside = Boolean(lede) || Astro.slots.has('aside');
     {Astro.slots.has('actions') && <div class="page-header-actions"><slot name="actions" /></div>}
   </div>
   {image && (
-    <figure class="wrap-wide page-header-image">
+    <figure class="wrap-wide page-header-image"><div class="tint">
       <Photo src={image.src} alt={image.alt} width={1600} height={800} sizes="(min-width: 1320px) 1320px, 100vw" priority style={image.position ? `object-position: ${image.position}` : undefined} />
-    </figure>
+    </div></figure>
   )}
 </header>
 
@@ -98,6 +98,7 @@ const hasAside = Boolean(lede) || Astro.slots.has('aside');
   .page-header-meta { display: flex; flex-wrap: wrap; gap: 0.5rem 1.75rem; color: var(--fg-muted); font-size: 0.95rem; }
   .page-header-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem 1.5rem; margin-top: 0.5rem; }
   .page-header-image { margin-top: clamp(2.5rem, 5vw, 4rem); }
+  .page-header-image .tint { overflow: hidden; border-radius: var(--radius-lg); }
   .page-header-image :global(img) {
     width: 100%;
     aspect-ratio: 21 / 9;

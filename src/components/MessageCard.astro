@@ -19,7 +19,7 @@ const { href, image, alt = '', title, meta, eyebrow, summary, video = false, siz
 ---
 
 <a class:list={['message-card', `size-${size}`]} href={url(href)}>
-  <div class="message-thumb">
+  <div class="message-thumb tint">
     <Photo src={image} alt={alt} width={640} height={360} sizes={size === 'lg' ? '(min-width: 1000px) 60vw, 100vw' : '(min-width: 1000px) 30vw, (min-width: 620px) 50vw, 100vw'} />
     {video && <span class="message-play"><Icon name="play" size={size === 'lg' ? 22 : 16} /></span>}
   </div>
