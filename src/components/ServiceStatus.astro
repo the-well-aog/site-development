@@ -64,7 +64,10 @@ const watch = site.features.livestream ? url('/watch') : '';
   }
 
   const roots = Array.from(document.querySelectorAll<HTMLElement>('[data-service-status]'));
-  const update = () => roots.forEach(render);
+  // The status bar's height, so the home hero can fill exactly what is left of the screen.
+  const measure = () => document.documentElement.style.setProperty('--status-h', `${roots.find((root) => !root.hidden)?.offsetHeight ?? 0}px`);
+  const update = () => { roots.forEach(render); measure(); };
+  addEventListener('resize', measure);
   update();
   setInterval(update, 60_000);
 </script>
