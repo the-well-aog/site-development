@@ -9,6 +9,6 @@ summary: Worship, Scripture, and candlelight as we celebrate the birth of our Sa
 alt: Evening gathering around a stone basin in warm window light.
 ---
 
-“For there is born to you this day in the city of David a Savior, who is Christ the Lord” (Luke 2:11).
+“For unto you is born this day in the city of David a Saviour, which is Christ the Lord” (Luke 2:11).
 
 Join us for carols, the Christmas story, a short message, and candlelight worship. The service is about an hour and is perfect for the whole family. Invite someone who has not been to church in a while; Christmas Eve is a great night to come home.

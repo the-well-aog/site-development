@@ -8,7 +8,7 @@ summary: An hour in the Bible before worship, with classes for every age. Come w
 alt: "Students from The Well smiling around a dinner table in the fellowship hall."
 ---
 
-“All Scripture is given by inspiration of God, and is profitable for doctrine, for reproof, for correction, for instruction in righteousness” (2 Timothy 3:16). Sunday School is where we slow down and study it together.
+“All scripture is given by inspiration of God, and is profitable for doctrine, for reproof, for correction, for instruction in righteousness” (2 Timothy 3:16). Sunday School is where we slow down and study it together.
 
 ## What to expect
 

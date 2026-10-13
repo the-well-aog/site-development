@@ -1,12 +1,12 @@
-import { getCollection } from 'astro:content';
 import { online } from './site';
+import { ministries as listMinistries } from '../lib/ministries';
 
 export type NavLink = { href: string; label: string; note?: string };
 export type NavGroup = { id: string; label: string; href: string; links: NavLink[] };
 
 /** One navigation model for the header, the mobile menu, and the footer. */
 export async function getNav() {
-  const ministries = (await getCollection('ministries')).sort((a, b) => a.data.order - b.data.order);
+  const ministries = await listMinistries();
 
   const groups: NavGroup[] = [
     {

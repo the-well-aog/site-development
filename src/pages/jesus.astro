@@ -1,6 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
-import FeatureGrid from '../components/FeatureGrid.astro';
+import FeatureGrid, { type Feature } from '../components/FeatureGrid.astro';
 import NumberedList from '../components/NumberedList.astro';
 import PageHeader from '../components/PageHeader.astro';
 import StillToggle from '../components/StillToggle.astro';
@@ -8,36 +8,39 @@ import Respond from '../components/Respond.astro';
 import Scripture from '../components/Scripture.astro';
 import Section from '../components/Section.astro';
 import SectionHeader from '../components/SectionHeader.astro';
+import { site } from '../data/site';
 
 const story = [
   {
     title: 'God made you, and He loves you.',
     text: 'You are not an accident. God created you on purpose and for a purpose, and He wants to know you personally.',
-    verse: { text: 'For God so loved the world that He gave His only begotten Son, that whoever believes in Him should not perish but have everlasting life.', reference: 'John 3:16' },
+    verse: { text: 'For God so loved the world, that he gave his only begotten Son, that whosoever believeth in him should not perish, but have everlasting life.', reference: 'John 3:16' },
   },
   {
     title: 'Sin separates us from God.',
     text: 'Every one of us has gone our own way. The Bible calls that sin, and its result is separation from God. No amount of good works can close that gap.',
-    verse: { text: 'For all have sinned and fall short of the glory of God.', reference: 'Romans 3:23' },
+    verse: { text: 'For all have sinned, and come short of the glory of God.', reference: 'Romans 3:23' },
   },
   {
     title: 'Jesus paid the price.',
     text: 'Jesus, the Son of God, lived the sinless life we could not live. He died on the cross in our place and rose again on the third day, defeating sin and death.',
-    verse: { text: 'For the wages of sin is death, but the gift of God is eternal life in Christ Jesus our Lord.', reference: 'Romans 6:23' },
+    verse: { text: 'For the wages of sin is death; but the gift of God is eternal life through Jesus Christ our Lord.', reference: 'Romans 6:23' },
   },
   {
     title: 'You can receive Him today.',
     text: 'Salvation is a gift. You receive it by turning from sin and trusting Jesus as your Savior and Lord. It is grace, not something you earn.',
-    verse: { text: 'If you confess with your mouth the Lord Jesus and believe in your heart that God has raised Him from the dead, you will be saved.', reference: 'Romans 10:9' },
+    verse: { text: 'That if thou shalt confess with thy mouth the Lord Jesus, and shalt believe in thine heart that God hath raised him from the dead, thou shalt be saved.', reference: 'Romans 10:9' },
   },
 ];
 
-const nextSteps = [
+const nextSteps: Feature[] = [
   { icon: 'message', title: 'Tell someone', text: 'Let us know. We want to celebrate with you, pray with you, and help you take your next steps.', href: '/contact', label: 'Tell a pastor' },
   { icon: 'heart', title: 'Get baptized', text: 'Water baptism is a public declaration that you belong to Jesus. Ask about our next baptism service.', href: '/next-steps#baptism', label: 'About baptism' },
-  { icon: 'book', title: 'Read the Bible', text: 'Start with the Gospel of John. Read a chapter a day and ask God to speak to you.', href: 'https://www.biblegateway.com/passage/?search=John+4&version=NKJV', label: 'Start in John 4' },
-  { icon: 'kids', title: 'Find your people', text: 'Faith grows best in community. Join us on Sunday and find a group to walk with.', href: '/ministries/groups', label: 'Find a group' },
-] as const;
+  { icon: 'book', title: 'Read the Bible', text: 'Start with the Gospel of John. Read a chapter a day and ask God to speak to you.', href: 'https://www.biblegateway.com/passage/?search=John+4&version=KJV', label: 'Start in John 4' },
+  site.features.groups
+    ? { icon: 'kids', title: 'Find your people', text: 'Faith grows best in community. Join us on Sunday and find a group to walk with.', href: '/ministries/groups', label: 'Find a group' }
+    : { icon: 'kids', title: 'Find your people', text: 'Faith grows best in community. Join us on Sunday and Wednesday, and get to know the people who will walk with you.', href: '/visit', label: 'Plan your visit' },
+];
 ---
 
 <Base still title="Know Jesus" description="The good news of Jesus Christ: God loves you, Jesus paid the price for sin, and you can receive new life today.">
@@ -47,7 +50,7 @@ const nextSteps = [
 
   <Section space="flush-top" labelledby="well-title">
     <div class="well" data-reveal>
-      <Scripture text="Whoever drinks of the water that I shall give him will never thirst." reference="John 4:14" size="lg" />
+      <Scripture text="Whosoever drinketh of the water that I shall give him shall never thirst." reference="John 4:14" size="lg" />
       <div class="stack">
         <h2 id="well-title" class="sr-only">The woman at the well</h2>
         <p class="lede">In John 4, Jesus sat down by a well in Samaria and spoke with a woman everyone else avoided. He knew her whole story, and He still offered her life.</p>

@@ -2,24 +2,22 @@
 import Icon from './Icon.astro';
 import { site } from '../data/site';
 import { verses } from '../data/verses';
+import { dailyVerse } from '../lib/daily-verse';
 
-// The build picks today's verse; the browser re-picks on its own date, so the verse still changes
-// daily between rebuilds. Both count days on the church's clock.
-const dayNumber = (date: Date) => {
-  const [y, m, d] = new Intl.DateTimeFormat('en-CA', { timeZone: site.timeZone }).format(date).split('-').map(Number);
-  return Math.floor(Date.UTC(y, m - 1, d) / 86400000);
-};
-const today = verses[dayNumber(new Date()) % verses.length];
+// Today's verse comes from the daily verse service at build time (see lib/daily-verse.ts).
+// When the build had to fall back to the built-in list, the browser re-picks from that list on its
+// own date, so the verse still changes daily between rebuilds.
+const today = await dailyVerse();
 ---
 
-<figure class="daily-verse" data-daily-verse data-verses={JSON.stringify(verses)} data-zone={site.timeZone}>
+<figure class="daily-verse" data-daily-verse data-verses={today.source === 'fallback' ? JSON.stringify(verses) : undefined} data-zone={site.timeZone}>
   <svg class="daily-pool" viewBox="0 0 400 400" aria-hidden="true" focusable="false">
     {[50, 100, 150, 200].map((r) => <circle cx="200" cy="200" r={r} />)}
   </svg>
   <p class="eyebrow">A word for today</p>
   <blockquote><p data-verse-text>“{today.text}”</p></blockquote>
   <figcaption>
-    <span class="ref" data-verse-ref>{today.reference}</span> <span class="version">NKJV</span>
+    <span class="ref" data-verse-ref>{today.reference}</span> <span class="version">KJV</span>
   </figcaption>
   <button class="daily-share" type="button" data-verse-share>
     <Icon name="share" size={16} /><span data-verse-share-label>Share this verse</span>
@@ -54,12 +52,12 @@ const today = verses[dayNumber(new Date()) % verses.length];
 
 <script>
   document.querySelectorAll<HTMLElement>('[data-daily-verse]').forEach((root) => {
-    const verses: { text: string; reference: string }[] = JSON.parse(root.dataset.verses || '[]');
+    const verses: { text: string; reference: string }[] = root.dataset.verses ? JSON.parse(root.dataset.verses) : [];
     const zone = root.dataset.zone || 'America/Chicago';
     const text = root.querySelector<HTMLElement>('[data-verse-text]');
     const ref = root.querySelector<HTMLElement>('[data-verse-ref]');
     const [y, m, d] = new Intl.DateTimeFormat('en-CA', { timeZone: zone }).format(new Date()).split('-').map(Number);
-    const verse = verses[Math.floor(Date.UTC(y, m - 1, d) / 86400000) % verses.length];
+    const verse = verses.length ? verses[Math.floor(Date.UTC(y, m - 1, d) / 86400000) % verses.length] : undefined;
     if (verse && text && ref) {
       text.textContent = `“${verse.text}”`;
       ref.textContent = verse.reference;
@@ -68,7 +66,7 @@ const today = verses[dayNumber(new Date()) % verses.length];
     const button = root.querySelector<HTMLButtonElement>('[data-verse-share]');
     const label = root.querySelector<HTMLElement>('[data-verse-share-label]');
     button?.addEventListener('click', async () => {
-      const message = `${text?.textContent ?? ''} ${ref?.textContent ?? ''} (NKJV)`;
+      const message = `${text?.textContent ?? ''} ${ref?.textContent ?? ''} (KJV)`;
       try {
         if (navigator.share) {
           await navigator.share({ text: message, url: location.href });

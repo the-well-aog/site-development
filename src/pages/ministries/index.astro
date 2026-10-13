@@ -1,20 +1,20 @@
 ---
-import { getCollection } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import CtaBand from '../../components/CtaBand.astro';
 import MinistryCard from '../../components/MinistryCard.astro';
 import PageHeader from '../../components/PageHeader.astro';
 import Section from '../../components/Section.astro';
 import { site } from '../../data/site';
+import { ministries as listMinistries } from '../../lib/ministries';
 
-const ministries = (await getCollection('ministries')).sort((a, b) => a.data.order - b.data.order);
+const ministries = await listMinistries();
 ---
 
-<Base title="Ministries" description={`Kids, students, and adult groups at ${site.legal}: a place for every generation to know Jesus and grow.`}>
+<Base title="Ministries" description={`Kids, Sunday School, and students at ${site.legal}: a place for every generation to know Jesus and grow.`}>
   <PageHeader eyebrow="Ministries" title="Find your people." lede="The church is a family for every generation. From the nursery to the grandparents, there is a place for you to know Jesus and grow." />
 
   <Section width="wide" space="flush-top" label="All ministries">
-    <div class="grid" data-reveal>
+    <div class="grid" style={`--count: ${ministries.length}`} data-reveal>
       {ministries.map((entry) => <MinistryCard entry={entry} />)}
     </div>
   </Section>
@@ -23,7 +23,7 @@ const ministries = (await getCollection('ministries')).sort((a, b) => a.data.ord
 </Base>
 
 <style>
-  .grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1.25rem; }
+  .grid { display: grid; grid-template-columns: repeat(var(--count, 4), minmax(0, 1fr)); gap: 1.25rem; }
   @media (max-width: 1240px) { .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
   @media (max-width: 640px) { .grid { grid-template-columns: 1fr; } }
 </style>

@@ -8,12 +8,12 @@ summary: A safe, joyful place where children learn that God made them, Jesus lov
 alt: "Students from The Well smiling around a dinner table in the fellowship hall."
 ---
 
-Jesus said, “Let the little children come to Me, and do not forbid them; for of such is the kingdom of God” (Mark 10:14). We take that seriously. Every Sunday your kids will worship, hear a Bible story told for their age, and learn to pray and hide God’s Word in their hearts.
+Jesus said, “Suffer the little children to come unto me, and forbid them not: for of such is the kingdom of God” (Mark 10:14). We take that seriously. Every Sunday your kids will worship, hear a Bible story told for their age, and learn to pray and hide God’s Word in their hearts.
 
 ## What to expect
 
 - **Nursery (birth to age 3):** a calm, clean room with caring adults, so parents can worship with peace of mind.
-- **Preschool and elementary:** worship songs, a Bible lesson, a memory verse, small-group activities, and time to pray together.
+- **Preschool and elementary:** worship songs, a Bible lesson, a memory verse, activities, and time to pray together.
 - **Safe and cared for:** kids learn in their own classes with caring adults, and our security team is on site during every service.
 
 ## Your first Sunday

@@ -8,7 +8,7 @@ summary: Bible study, prayer, and real friendship. Groups are where Sunday faith
 alt: "A volunteer serving bowls of food at a table spread for a church meal."
 ---
 
-The first believers “continued steadfastly in the apostles’ doctrine and fellowship, in the breaking of bread, and in prayers” (Acts 2:42). That is still the pattern. On Sundays we gather as one church. In groups, we grow together.
+The first believers “continued stedfastly in the apostles’ doctrine and fellowship, and in breaking of bread, and in prayers” (Acts 2:42). That is still the pattern. On Sundays we gather as one church. In groups, we grow together.
 
 ## Through the week
 

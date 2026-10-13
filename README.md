@@ -52,7 +52,9 @@ Build-time only. Copy `.env.example` to `.env` if you want `npm run build` to pi
 
 Facebook and YouTube are set in `src/data/site.ts` (`facebookPage`, `youtubeChannel`). Leave them blank until the real profiles exist.
 
-Online worship has two independent switches in `site.features` (`src/data/site.ts`): `youtube` shows recent videos and `livestream` shows the live-stream panel and "Watch live" links. Both are off for now; while both are off, the Watch link leaves the navigation and the build fetches nothing from YouTube. YouTube titles and thumbnails are read from the channel's public RSS feed at build time, with no API key. The Pages workflow also runs once a day so a new upload shows up without a manual edit. Facebook is the official Page plugin: the timeline loads in the visitor's browser, and it does not use an app id or token.
+Features have independent switches in `site.features` (`src/data/site.ts`): `youtube` shows recent videos, `livestream` shows the live-stream panel and "Watch live" links, and `groups` shows the Groups ministry and every "find a group" link. All are off for now; while both online switches are off, the Watch link leaves the navigation and the build fetches nothing from YouTube.
+
+The home page verse of the day comes from discoverybiblestudy.org at build time (`src/lib/daily-verse.ts`), always in the King James Version: if the service names another translation, the KJV text for the same reference is looked up at bible-api.com. If neither answers, a verse from the KJV list in `src/data/verses.ts` is used. The Pages workflow rebuilds just after midnight Central so the verse changes with the date. YouTube titles and thumbnails are read from the channel's public RSS feed at build time, with no API key. The Pages workflow also runs once a day so a new upload shows up without a manual edit. Facebook is the official Page plugin: the timeline loads in the visitor's browser, and it does not use an app id or token.
 
 There is no runtime environment and no `.env` secrets.
 

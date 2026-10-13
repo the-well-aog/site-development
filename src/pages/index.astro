@@ -16,11 +16,12 @@ import ServiceTimes from '../components/ServiceTimes.astro';
 import { cardinal } from '../data/beliefs';
 import { midweek, online, prayerMeeting, site, sunday, sundaySchool } from '../data/site';
 import { upcomingEvents } from '../lib/events';
+import { ministries as listMinistries } from '../lib/ministries';
 import { loadSocial } from '../lib/feeds';
 import { iso, longDate, todayIso } from '../lib/format';
 import { img } from '../lib/url';
 
-const ministries = (await getCollection('ministries')).sort((a, b) => a.data.order - b.data.order);
+const ministries = await listMinistries();
 const events = (await upcomingEvents()).slice(0, 3);
 const [note] = (await getCollection('announcements'))
   .filter((entry) => iso(entry.data.expires) >= todayIso())
@@ -101,7 +102,7 @@ const firstVisit = [
 
   <Section width="wide" labelledby="ministries-title">
     <SectionHeader id="ministries-title" align="split" eyebrow="For every generation" title="Find your people." lede="From the nursery to the grandparents, there is a place at The Well for you to know Jesus and grow." action={{ href: '/ministries', label: 'All ministries' }} />
-    <div class="ministry-grid swipe-row" data-reveal>
+    <div class="ministry-grid swipe-row" style={`--count: ${ministries.length}`} data-reveal>
       {ministries.map((entry) => <MinistryCard entry={entry} />)}
     </div>
   </Section>
@@ -141,7 +142,7 @@ const firstVisit = [
   <Section tone="navy" width="narrow" labelledby="invite-title" class="invite">
     <div class="invite-inner" data-reveal>
       <p class="eyebrow" id="invite-title">An invitation</p>
-      <Scripture text="If anyone thirsts, let him come to Me and drink." reference="John 7:37" size="lg" align="center" />
+      <Scripture text="If any man thirst, let him come unto me, and drink." reference="John 7:37" size="lg" align="center" />
       <p class="lede">Whoever you are and wherever you have been, Jesus offers you forgiveness, new life, and a family. You can begin today.</p>
       <div class="invite-actions">
         <Button href="/jesus" size="lg">Begin with Jesus</Button>
@@ -190,7 +191,7 @@ const firstVisit = [
   .convictions span { color: var(--fg-muted); font-size: 0.93rem; }
   .story-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem 1.5rem; }
 
-  .ministry-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1.25rem; }
+  .ministry-grid { display: grid; grid-template-columns: repeat(var(--count, 4), minmax(0, 1fr)); gap: 1.25rem; }
   @media (max-width: 1240px) { .ministry-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 
   .watch-grid { display: grid; grid-template-columns: 1.5fr 1fr; gap: clamp(1.5rem, 3vw, 2.5rem); align-items: center; }

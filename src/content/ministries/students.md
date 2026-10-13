@@ -8,11 +8,11 @@ summary: A place for middle and high school students to encounter God, ask real 
 alt: "Students and leaders from The Well in matching red shirts on a church trip."
 ---
 
-“Let no one despise your youth, but be an example to the believers” (1 Timothy 4:12). Students are not the church of tomorrow. They are part of the church today.
+“Let no man despise thy youth; but be thou an example of the believers” (1 Timothy 4:12). Students are not the church of tomorrow. They are part of the church today.
 
 ## Wednesday nights
 
-We gather for worship, a Bible message that speaks to real life, and small groups where students can talk honestly and pray for one another. There are games, food, and plenty of time to hang out, but the center of the night is always Jesus.
+We gather for worship, a Bible message that speaks to real life, and time for students to talk honestly and pray for one another. There are games, food, and plenty of time to hang out, but the center of the night is always Jesus.
 
 ## What we want for every student
 

@@ -34,6 +34,8 @@ export const site = {
     youtube: false,
     // "Watch live" links and the live-stream panel.
     livestream: false,
+    // The Groups ministry and every "find a group" link, until groups are meeting.
+    groups: false,
   },
   address: '2902 S Pocola Blvd',
   city: 'Pocola, OK 74902',
