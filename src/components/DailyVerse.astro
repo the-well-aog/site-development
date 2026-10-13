@@ -200,7 +200,7 @@ const chapterHref = (reference: string) => `https://www.biblegateway.com/passage
           return;
         } catch { /* closed the share sheet */ }
       }
-      say(copied ? 'Copied the verse and a link back here. Paste it into any post or message.' : 'Your browser blocked copying. Select the verse above to copy it.');
+      say(copied ? 'Copied' : 'Your browser blocked copying. Select the verse above to copy it.');
     });
 
     // Image share: paint the card, then share it as a file where the device can, or download it.
@@ -226,7 +226,7 @@ const chapterHref = (reference: string) => `https://www.biblegateway.com/passage
         if (navigator.canShare?.({ files: [file] })) {
           try {
             await navigator.share({ files: [file], text: caption });
-            say('Shared. The caption with a link back here is on your clipboard too.');
+            say('Shared');
             return;
           } catch { /* closed the share sheet; fall back to saving */ }
         }
@@ -238,7 +238,7 @@ const chapterHref = (reference: string) => `https://www.biblegateway.com/passage
         anchor.click();
         anchor.remove();
         window.setTimeout(() => URL.revokeObjectURL(href), 60_000);
-        say('Image saved. A caption with a link back here is on your clipboard.');
+        say('Image saved');
       } catch {
         say('Sorry, that image didn’t work. Try “Share this verse” instead.');
       } finally {
