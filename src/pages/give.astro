@@ -9,8 +9,7 @@ import Section from '../components/Section.astro';
 import SectionHeader from '../components/SectionHeader.astro';
 import { midweek, site, sunday } from '../data/site';
 
-// The church's giving provider (Tithe.ly, Pushpay, Planning Center…). Blank shows in-person and mail options only.
-const givingUrl = '';
+const { givingUrl } = site;
 
 const impact = [
   { icon: 'heart', title: 'Reaching our community', text: `Outreach events, serving families in need, and sharing the gospel across ${site.locality} and the Fort Smith area.` },

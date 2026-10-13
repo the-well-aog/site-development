@@ -12,7 +12,7 @@ const social = await loadSocial();
 const { groups, links, cta } = await getNav();
 const columns = [
   ...groups.map((group) => ({ label: group.label, links: group.links })),
-  { label: 'Connect', links: [cta, ...links, { href: '/contact', label: 'Contact' }] },
+  { label: 'Connect', links: [cta, ...links, ...(site.givingUrl ? [{ href: '/give', label: 'Other ways to give' }] : []), { href: '/contact', label: 'Contact' }] },
 ];
 ---
 

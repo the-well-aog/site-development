@@ -1,4 +1,4 @@
-import { online } from './site';
+import { online, site } from './site';
 import { ministries as listMinistries } from '../lib/ministries';
 
 export type NavLink = { href: string; label: string; note?: string };
@@ -40,7 +40,7 @@ export async function getNav() {
   const links: NavLink[] = [
     ...(online ? [{ href: '/watch', label: 'Watch' }] : []),
     { href: '/events', label: 'Events' },
-    { href: '/give', label: 'Give' },
+    { href: site.givingUrl || '/give', label: 'Give' },
   ];
 
   const cta: NavLink = { href: '/visit', label: 'Plan a visit' };

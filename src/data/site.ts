@@ -52,6 +52,8 @@ export const site = {
   // A form host endpoint (Formspree, Basin, Getform). Leave blank and the site offers call,
   // message, and directions instead of a form. Forms post straight to the host; nothing is stored here.
   formEndpoint: '',
+  // Online giving (Zeffy). The Give links in the menu and footer open it directly.
+  givingUrl: 'https://www.zeffy.com/en-US/donation-form/fd612afb-2973-43d9-90c4-d9be3049fa8a',
   // Public Facebook Page URL. No app id or token.
   facebookPage: 'https://www.facebook.com/profile.php?id=100083294263196',
   // @handle, channel URL, or UC… id. Latest uploads come from YouTube's public RSS. No API key.
