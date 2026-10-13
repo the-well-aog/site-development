@@ -29,6 +29,11 @@ export function img(key: string): string {
   return url(path);
 }
 
+/** An entry's picture: its CMS upload when there is one, otherwise its stock photo. */
+export function photoFor(data: { image: string; photo?: string }): string {
+  return data.photo ?? img(data.image);
+}
+
 export function isActive(pathname: string, hrefPath: string): boolean {
   const base = import.meta.env.BASE_URL.replace(/\/$/, '');
   let path = pathname.replace(/\/$/, '') || '/';

@@ -7,7 +7,7 @@ import Section from '../../components/Section.astro';
 import SectionHeader from '../../components/SectionHeader.astro';
 import VideoEmbed from '../../components/VideoEmbed.astro';
 import { longDate } from '../../lib/format';
-import { img } from '../../lib/url';
+import { photoFor } from '../../lib/url';
 
 export async function getStaticPaths() {
   const sermons = await getCollection('sermons');
@@ -25,13 +25,13 @@ const series = (await getCollection('sermons'))
   .sort((a, b) => a.data.date.valueOf() - b.data.date.valueOf());
 ---
 
-<Base title={entry.data.title} description={entry.data.summary} image={`images/${entry.data.image}.jpg`}>
+<Base title={entry.data.title} description={entry.data.summary} image={photoFor(entry.data)}>
   <PageHeader
     back={{ href: '/watch', label: 'All messages' }}
     eyebrow={`${entry.data.series} · ${entry.data.passage}`}
     title={entry.data.title}
     lede={entry.data.summary}
-    image={entry.data.video ? undefined : { src: img(entry.data.image), alt: entry.data.alt }}
+    image={entry.data.video ? undefined : { src: photoFor(entry.data), alt: entry.data.alt }}
   >
     <Fragment slot="meta"><span>{longDate(entry.data.date)}</span><span>{entry.data.speaker}</span></Fragment>
   </PageHeader>
@@ -48,7 +48,7 @@ const series = (await getCollection('sermons'))
     <Section tone="sand" width="wide" labelledby="series-title">
       <SectionHeader id="series-title" eyebrow={`Series · ${entry.data.series}`} title="More in this series." action={{ href: '/watch', label: 'All messages' }} align="split" />
       <ul class="grid" role="list">
-        {series.map((other) => <li><MessageCard href={`/sermons/${other.id}`} image={img(other.data.image)} alt={other.data.alt} eyebrow={other.data.passage} title={other.data.title} meta={longDate(other.data.date)} /></li>)}
+        {series.map((other) => <li><MessageCard href={`/sermons/${other.id}`} image={photoFor(other.data)} alt={other.data.alt} eyebrow={other.data.passage} title={other.data.title} meta={longDate(other.data.date)} /></li>)}
       </ul>
     </Section>
   )}

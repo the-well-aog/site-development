@@ -11,7 +11,7 @@ import VideoEmbed from '../../components/VideoEmbed.astro';
 import { site, sunday } from '../../data/site';
 import { loadSocial } from '../../lib/feeds';
 import { longDate } from '../../lib/format';
-import { img } from '../../lib/url';
+import { photoFor } from '../../lib/url';
 
 const social = await loadSocial();
 const [latest, ...older] = social.videos;
@@ -58,7 +58,7 @@ const series = [...new Set(sermons.map((entry) => entry.data.series))];
       <SectionHeader id="notes-title" align="split" eyebrow={series.length === 1 ? `Series · ${series[0]}` : 'Sermon notes'} title="Read and reflect." lede="Outlines and discussion questions to take a message deeper, on your own or with your group." />
       <ul class="grid" role="list" data-reveal>
         {sermons.map((entry) => (
-          <li><MessageCard href={`/sermons/${entry.id}`} image={img(entry.data.image)} alt={entry.data.alt} eyebrow={entry.data.passage} title={entry.data.title} summary={entry.data.summary} meta={`${longDate(entry.data.date)} · ${entry.data.speaker}`} video={Boolean(entry.data.video)} /></li>
+          <li><MessageCard href={`/sermons/${entry.id}`} image={photoFor(entry.data)} alt={entry.data.alt} eyebrow={entry.data.passage} title={entry.data.title} summary={entry.data.summary} meta={`${longDate(entry.data.date)} · ${entry.data.speaker}`} video={Boolean(entry.data.video)} /></li>
         ))}
       </ul>
     </Section>

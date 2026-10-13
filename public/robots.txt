@@ -1,4 +1,0 @@
-User-agent: *
-Allow: /
-
-Sitemap: https://the-well-aog.github.io/site-development/sitemap-index.xml

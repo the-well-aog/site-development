@@ -1,19 +1,31 @@
 import { defineCollection, z } from 'astro:content';
-import { glob } from 'astro/loaders';
+import { altFor, cmsLoader, mediaUrl } from './lib/cms';
 
-const image = z.enum([
-  'sanctuary',
-  'water',
-  'table',
-  'kids',
-  'lounge',
-  'chapel',
-  'night',
-  'exterior',
-]);
+// Stock photos in public/images. An uploaded CMS photo (`photo`, an absolute URL) takes precedence.
+const image = z.enum(['sanctuary', 'water', 'table', 'kids', 'lounge', 'chapel', 'night', 'exterior', 'church']);
+const photo = z.string().url().optional();
 
 const sermons = defineCollection({
-  loader: glob({ pattern: '**/*.md', base: './src/content/sermons' }),
+  loader: cmsLoader({
+    endpoint: 'sermons',
+    photo: true,
+    map: (item) => ({
+      id: item.slug,
+      body: item.body,
+      data: {
+        title: item.title,
+        date: item.date,
+        speaker: item.speaker,
+        series: item.series,
+        passage: item.passage,
+        image: item.stockPhoto,
+        photo: mediaUrl(item.photo),
+        summary: item.summary,
+        alt: altFor(item, item.title),
+        video: item.video || undefined,
+      },
+    }),
+  }),
   schema: z.object({
     title: z.string(),
     date: z.coerce.date(),
@@ -21,6 +33,7 @@ const sermons = defineCollection({
     series: z.string(),
     passage: z.string(),
     image,
+    photo,
     summary: z.string(),
     alt: z.string(),
     // YouTube video id (the 11 characters after watch?v=). Optional.
@@ -29,14 +42,33 @@ const sermons = defineCollection({
 });
 
 const events = defineCollection({
-  loader: glob({ pattern: '**/*.md', base: './src/content/events' }),
+  loader: cmsLoader({
+    endpoint: 'events',
+    photo: true,
+    map: (item) => ({
+      id: item.slug,
+      body: item.body,
+      data: {
+        title: item.title,
+        date: item.date,
+        time: item.time,
+        place: item.place,
+        image: item.stockPhoto,
+        photo: mediaUrl(item.photo),
+        summary: item.summary,
+        alt: altFor(item, item.title),
+      },
+    }),
+  }),
   schema: z.object({
     title: z.string(),
     date: z.coerce.date(),
     time: z.string(),
     place: z.string(),
     image,
-    // Draft events only appear while site.preview is true, labelled as samples.
+    photo,
+    // Markdown fallback only: draft events appear while site.preview is true, labelled as samples.
+    // In Strapi, drafts are simply unpublished and never reach the site.
     draft: z.boolean().default(false),
     summary: z.string(),
     alt: z.string(),
@@ -44,32 +76,63 @@ const events = defineCollection({
 });
 
 const ministries = defineCollection({
-  loader: glob({ pattern: '**/*.md', base: './src/content/ministries' }),
+  loader: cmsLoader({
+    endpoint: 'ministries',
+    photo: true,
+    map: (item) => ({
+      id: item.slug,
+      body: item.body,
+      data: {
+        title: item.title,
+        order: item.order,
+        when: item.when,
+        who: item.who,
+        image: item.stockPhoto,
+        photo: mediaUrl(item.photo),
+        summary: item.summary,
+        alt: altFor(item, item.title),
+      },
+    }),
+  }),
   schema: z.object({
     title: z.string(),
     order: z.number(),
     when: z.string(),
     who: z.string(),
     image,
+    photo,
     summary: z.string(),
     alt: z.string(),
   }),
 });
 
 const leaders = defineCollection({
-  loader: glob({ pattern: '**/*.md', base: './src/content/leaders' }),
+  loader: cmsLoader({
+    endpoint: 'leaders',
+    photo: true,
+    map: (item) => ({
+      id: item.documentId,
+      data: { name: item.name, role: item.role, order: item.order, photo: mediaUrl(item.photo), summary: item.summary },
+    }),
+  }),
   schema: z.object({
     name: z.string(),
     role: z.string(),
     order: z.number(),
-    // Path under public/, e.g. images/team/jane.jpg. Without one the site shows a branded placeholder.
+    // An absolute URL (CMS upload) or a path under public/. Without one the site shows initials.
     photo: z.string().optional(),
     summary: z.string(),
   }),
 });
 
 const announcements = defineCollection({
-  loader: glob({ pattern: '**/*.md', base: './src/content/announcements' }),
+  loader: cmsLoader({
+    endpoint: 'announcements',
+    map: (item) => ({
+      id: item.documentId,
+      data: { title: item.title, date: item.date, expires: item.expires, summary: item.summary },
+    }),
+  }),
   schema: z.object({
     title: z.string(),
     date: z.coerce.date(),

@@ -1,19 +1,19 @@
 ---
 import type { CollectionEntry } from 'astro:content';
 import Icon from './Icon.astro';
-import { img, url } from '../lib/url';
+import { photoFor, url } from '../lib/url';
 
 interface Props {
   entry: CollectionEntry<'ministries'>;
 }
 
 const { entry } = Astro.props;
-const { title, who, when, summary, image, alt } = entry.data;
+const { title, who, when, summary, alt } = entry.data;
 ---
 
 <a class="ministry-card" href={url(`/ministries/${entry.id}`)}>
   <div class="ministry-photo">
-    <img src={img(image)} alt={alt} width="800" height="600" loading="lazy" />
+    <img src={photoFor(entry.data)} alt={alt} width="800" height="600" loading="lazy" />
     <span class="ministry-tag">{who}</span>
   </div>
   <div class="ministry-body">

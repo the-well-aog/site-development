@@ -73,7 +73,8 @@ Sermons, events, ministries, leaders, and announcements are Markdown files under
 .github/workflows/pages.yml   build on pull request, deploy on main
 public/                       images, favicon, robots.txt
 src/components                the component library (see below)
-src/content                   sermons, events, ministries, leaders, announcements
+src/content                   Markdown fallback for sermons, events, ministries, leaders, announcements
+deploy/thewell                server builder, compose file, and Apache vhost
 src/data                      church facts and service times, navigation, beliefs
 src/layouts/Base.astro        document shell
 src/pages                     one route per file
@@ -81,6 +82,36 @@ src/styles/global.css         design tokens, tone variables, base type and layou
 scripts/check-links.mjs       fails the build on a broken local link
 astro.config.mjs              site URL, base path, sitemap
 ```
+
+## Content (Strapi)
+
+Sermons, events, ministries, leaders, and announcements are edited in Strapi at
+https://cms.wellspringstudiollc.com/admin (behind the Wellspring login, then a Strapi account).
+The Strapi project lives in `C:\Users\roger\dev\wellspring-cms` and runs on the Wellspring server
+in `/opt/strapi` (SQLite, container `strapi`, 127.0.0.1:1337).
+
+- A build reads Strapi when `STRAPI_URL` is set (`src/lib/cms.ts`, wired in `src/content.config.ts`).
+  Without it, the Markdown in `src/content` is used, so local dev works offline. If `STRAPI_URL` is
+  set and Strapi is unreachable, the build fails rather than publishing stale content.
+- Only published entries reach the site. The sample events were imported as drafts.
+- Uploaded photos override the stock photo chosen in each entry's `stockPhoto` field.
+- Service times stay in `src/data/site.ts`.
+
+## Hosting on the Wellspring server
+
+The live site is https://thewell.wellspringstudiollc.com (temporary, until the church has its own
+domain). Files in `deploy/thewell/` are copied to `/opt/thewell` on the server:
+
+- `thewell-builder` clones this repo and builds against Strapi over the private `cms` Docker
+  network. It rebuilds when published content changes (checked every minute), when `main` changes
+  (checked every 5 minutes), and nightly. Each build is a new release folder; `site/current` is
+  swapped atomically and a failed build leaves the live site as it was.
+- Apache serves `/opt/thewell/site/current` (`deploy/thewell/thewell.conf`, TLS by certbot).
+- Force a rebuild: `docker restart thewell-builder`. Logs: `docker logs -f thewell-builder`.
+- Moving to the church's own domain: change `SITE_URL` in `/opt/thewell/docker-compose.yml`, add
+  the domain to the vhost, run certbot, and redirect the subdomain to it.
+
+GitHub Pages still builds from `main` (also from Strapi) as a backup copy.
 
 ## Components
 

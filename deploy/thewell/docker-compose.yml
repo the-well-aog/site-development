@@ -1,0 +1,29 @@
+# Server copy: /opt/thewell/docker-compose.yml (with Dockerfile and builder.mjs beside it).
+# Joins the `cms` network created by /opt/strapi so it can reach Strapi as http://strapi:1337.
+services:
+  builder:
+    build: .
+    image: thewell-builder
+    container_name: thewell-builder
+    restart: unless-stopped
+    environment:
+      REPO_URL: https://github.com/the-well-aog/site-development.git
+      BRANCH: main
+      SITE_URL: https://thewell.wellspringstudiollc.com
+      BASE_PATH: /
+      STRAPI_URL: http://strapi:1337
+      STRAPI_PUBLIC_URL: https://cms.wellspringstudiollc.com
+      POLL_SECONDS: "60"
+    volumes:
+      - ./site:/srv/site
+      - work:/srv/work
+    mem_limit: 1g
+    cpus: 1.5
+    networks: [cms]
+
+volumes:
+  work:
+
+networks:
+  cms:
+    external: true

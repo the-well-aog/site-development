@@ -16,7 +16,7 @@ import { midweek, prayerMeeting, site, sunday, sundaySchool } from '../data/site
 import { upcomingEvents } from '../lib/events';
 import { loadSocial } from '../lib/feeds';
 import { iso, longDate, todayIso } from '../lib/format';
-import { img, url } from '../lib/url';
+import { img, photoFor, url } from '../lib/url';
 
 const ministries = (await getCollection('ministries')).sort((a, b) => a.data.order - b.data.order);
 const events = (await upcomingEvents()).slice(0, 3);
@@ -29,7 +29,7 @@ const sermons = (await getCollection('sermons')).sort((a, b) => b.data.date.valu
 // Latest messages: YouTube uploads when the feed is connected, otherwise the sermon-notes library.
 const messages = social.videos.length
   ? social.videos.slice(0, 4).map((video) => ({ href: `/watch/${video.id}`, image: video.thumbnail, title: video.title, meta: longDate(new Date(video.published)), video: true }))
-  : sermons.slice(0, 4).map((entry) => ({ href: `/sermons/${entry.id}`, image: img(entry.data.image), title: entry.data.title, meta: `${entry.data.passage} · ${longDate(entry.data.date)}`, video: Boolean(entry.data.video) }));
+  : sermons.slice(0, 4).map((entry) => ({ href: `/sermons/${entry.id}`, image: photoFor(entry.data), title: entry.data.title, meta: `${entry.data.passage} · ${longDate(entry.data.date)}`, video: Boolean(entry.data.video) }));
 const [featured, ...recent] = messages;
 
 const firstVisit = [

@@ -31,6 +31,7 @@ jobs:
         env:
           SITE_URL: https://the-well-aog.github.io
           BASE_PATH: /site-development
+          STRAPI_URL: https://cms.wellspringstudiollc.com
           ASTRO_TELEMETRY_DISABLED: 1
       - uses: actions/upload-pages-artifact@v3
         if: github.event_name == 'schedule' || (github.event_name == 'push' && github.ref == 'refs/heads/main')

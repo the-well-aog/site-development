@@ -14,7 +14,8 @@ interface Props {
 const { title, description, image = 'images/church-exterior.jpg' } = Astro.props;
 const fullTitle = title === 'Home' ? site.legal : `${title} · ${site.name}`;
 const canonical = new URL(Astro.url.pathname, Astro.site);
-const ogImage = /^https?:/.test(image) ? new URL(image) : new URL(url(image), Astro.site);
+// Absolute URLs and already-resolved site paths ("/…") pass through; bare paths get the base prefix.
+const ogImage = /^https?:/.test(image) ? new URL(image) : new URL(image.startsWith('/') ? image : url(image), Astro.site);
 const organization = {
   '@context': 'https://schema.org',
   '@type': 'Church',
