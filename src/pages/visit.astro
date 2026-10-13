@@ -5,6 +5,7 @@ import Button from '../components/Button.astro';
 import ContactOptions from '../components/ContactOptions.astro';
 import Icon from '../components/Icon.astro';
 import PageHeader from '../components/PageHeader.astro';
+import Photo from '../components/Photo.astro';
 import Section from '../components/Section.astro';
 import SectionHeader from '../components/SectionHeader.astro';
 import ServiceTimes from '../components/ServiceTimes.astro';
@@ -72,7 +73,7 @@ const questions = [
 
   <Section width="wide" labelledby="kids-title">
     <div class="kids" data-reveal>
-      <div class="kids-media"><img src={img('kids')} alt="A bright children's classroom with low shelves and small tables." width="1280" height="720" loading="lazy" /></div>
+      <div class="kids-media"><Photo src={img('kids')} alt="A bright children's classroom with low shelves and small tables." sizes="(min-width: 1000px) 50vw, 100vw" /></div>
       <div class="kids-copy">
         <p class="eyebrow">Coming with kids?</p>
         <h2 id="kids-title">Your kids will love it here.</h2>
@@ -109,7 +110,7 @@ const questions = [
 </Base>
 
 <style>
-  .glance { display: grid; gap: 1rem; }
+  .glance { display: grid; gap: clamp(1.75rem, 3vw, 2.5rem); }
   .location { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1.25rem 2rem; padding: clamp(1.5rem, 3vw, 2rem); border-radius: var(--radius); background: var(--bg); color: var(--fg); }
   .location-label { font: 600 0.72rem / 1.4 var(--sans); letter-spacing: 0.16em; text-transform: uppercase; color: var(--fg-muted); }
   .location-address { font: 500 1.6rem / 1.25 var(--serif); letter-spacing: -0.02em; }
@@ -124,7 +125,7 @@ const questions = [
 
   .kids { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(2rem, 5vw, 5rem); align-items: center; }
   .kids-media { overflow: hidden; aspect-ratio: 4 / 3; border-radius: var(--radius-lg); }
-  .kids-media img { width: 100%; height: 100%; object-fit: cover; }
+  .kids-media :global(img) { width: 100%; height: 100%; object-fit: cover; }
   .kids-copy { display: grid; gap: 1.25rem; justify-items: start; }
 
   .faq { display: grid; grid-template-columns: 0.8fr 1.2fr; gap: clamp(2rem, 5vw, 5rem); align-items: start; }

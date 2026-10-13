@@ -1,0 +1,43 @@
+---
+import Embed from './Embed.astro';
+import Icon from './Icon.astro';
+import { site } from '../data/site';
+
+interface Props {
+  compact?: boolean;
+}
+
+const { compact = false } = Astro.props;
+---
+
+<div class:list={['map-card', { compact }]}>
+  <Embed class="map-frame" src={site.mapsEmbed} title={`Map showing ${site.legal} at ${site.address}, ${site.city}`} label="Show map" icon="pin" referrerpolicy="no-referrer-when-downgrade">
+    <svg class="map-art" viewBox="0 0 320 320" aria-hidden="true" focusable="false" preserveAspectRatio="xMidYMid slice">
+      <path class="road" d="M-10 175 C 80 150 140 190 330 130" />
+      <path class="road" d="M150 -10 C 160 90 140 200 175 330" />
+      <path class="street" d="M-10 90 L 330 120 M40 -10 L 70 330 M250 -10 L 230 330 M-10 280 L 330 250" />
+      {[24, 48, 72].map((r) => <circle class="ring" cx="160" cy="150" r={r} />)}
+    </svg>
+    <span class="map-pin"><Icon name="pin" size={22} /></span>
+    <span class="map-address">{site.address}<br />{site.city}</span>
+  </Embed>
+  <p class="map-links">
+    <a href={site.mapsHref}>Google Maps <Icon name="arrow-up-right" size={14} /></a>
+    <a href={site.appleMapsHref}>Apple Maps <Icon name="arrow-up-right" size={14} /></a>
+  </p>
+</div>
+
+<style>
+  .map-card :global(.map-frame) { aspect-ratio: 4 / 3; border: 1px solid var(--line); }
+  .compact :global(.map-frame) { aspect-ratio: 1; }
+  .map-art { position: absolute; inset: 0; width: 100%; height: 100%; fill: none; pointer-events: none; }
+  .road { stroke: var(--line-strong); stroke-width: 10; stroke-linecap: round; }
+  .street { stroke: var(--line); stroke-width: 3; }
+  .ring { stroke: var(--accent-ink); stroke-opacity: 0.35; stroke-width: 1; }
+  .map-pin { position: relative; display: grid; place-items: center; width: 3rem; height: 3rem; border-radius: 50%; background: var(--accent-ink); color: var(--bg); box-shadow: 0 6px 18px rgb(0 0 0 / 18%); }
+  .map-address { position: relative; padding: 0.35rem 0.8rem; border-radius: 10px; background: var(--bg); font: 500 1.05rem / 1.35 var(--serif); color: var(--heading); }
+  .map-links { display: flex; flex-wrap: wrap; gap: 0.25rem 1.25rem; margin-top: 0.75rem; }
+  .map-links a { display: inline-flex; align-items: center; gap: 0.3rem; min-height: 40px; font-size: 0.9rem; font-weight: 500; color: var(--heading); text-decoration: none; }
+  .map-links a:hover { text-decoration: underline; }
+  @media (max-width: 1100px) { .compact :global(.map-frame) { aspect-ratio: 4 / 3; } }
+</style>

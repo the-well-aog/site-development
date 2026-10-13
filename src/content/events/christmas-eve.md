@@ -1,7 +1,7 @@
 ---
 title: Christmas Eve Candlelight Service
 date: 2026-12-24
-time: 6:00p
+time: 6:00 PM
 place: The Well
 image: night
 draft: true

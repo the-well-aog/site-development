@@ -1,7 +1,7 @@
 ---
 title: Thanksgiving Fellowship Meal
 date: 2026-11-22
-time: After the 11:00a service
+time: After the 11:00 AM service
 place: The Well fellowship hall
 image: table
 draft: true

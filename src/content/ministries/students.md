@@ -1,7 +1,7 @@
 ---
 title: Students
 order: 3
-when: Wednesdays at 7:00p
+when: Wednesdays at 7:00 PM
 who: 6th through 12th grade
 image: lounge
 summary: A place for middle and high school students to encounter God, ask real questions, and build friendships that point them to Jesus.

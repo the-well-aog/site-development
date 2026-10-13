@@ -1,6 +1,7 @@
 ---
 import type { CollectionEntry } from 'astro:content';
 import Icon from './Icon.astro';
+import Photo from './Photo.astro';
 import { photoFor, url } from '../lib/url';
 
 interface Props {
@@ -13,15 +14,17 @@ const { title, who, when, summary, alt } = entry.data;
 
 <a class="ministry-card" href={url(`/ministries/${entry.id}`)}>
   <div class="ministry-photo">
-    <img src={photoFor(entry.data)} alt={alt} width="800" height="600" loading="lazy" />
+    <Photo src={photoFor(entry.data)} alt={alt} width={800} height={600} sizes="(min-width: 1240px) 320px, (min-width: 640px) 50vw, 85vw" />
     <span class="ministry-tag">{who}</span>
   </div>
   <div class="ministry-body">
     <h3>{title}</h3>
     <p class="ministry-summary">{summary}</p>
-    <p class="ministry-when"><Icon name="clock" size={16} />{when}</p>
+    <div class="ministry-foot">
+      <p class="ministry-when"><Icon name="clock" size={16} />{when}</p>
+      <span class="ministry-arrow" aria-hidden="true"><Icon name="arrow-right" size={18} /></span>
+    </div>
   </div>
-  <span class="ministry-arrow" aria-hidden="true"><Icon name="arrow-right" size={18} /></span>
 </a>
 
 <style>
@@ -40,8 +43,8 @@ const { title, who, when, summary, alt } = entry.data;
   }
   .ministry-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
   .ministry-photo { position: relative; aspect-ratio: 4 / 3; overflow: hidden; background: var(--sand-2); }
-  .ministry-photo img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.7s var(--ease); }
-  .ministry-card:hover .ministry-photo img { transform: scale(1.04); }
+  .ministry-photo :global(img) { width: 100%; height: 100%; object-fit: cover; transition: transform 0.7s var(--ease); }
+  .ministry-card:hover .ministry-photo :global(img) { transform: scale(1.04); }
   .ministry-tag {
     position: absolute;
     left: 1rem;
@@ -54,15 +57,16 @@ const { title, who, when, summary, alt } = entry.data;
     font-weight: 500;
     backdrop-filter: blur(6px);
   }
-  .ministry-body { display: grid; gap: 0.6rem; padding: 1.4rem 1.5rem 1.6rem; padding-right: 4.5rem; }
+  .ministry-body { display: flex; flex: 1; flex-direction: column; gap: 0.6rem; padding: 1.4rem 1.5rem 1.5rem; }
   .ministry-body h3 { font-size: 1.6rem; }
   .ministry-summary { color: var(--fg-muted); font-size: 0.95rem; }
-  .ministry-when { display: flex; align-items: center; gap: 0.45rem; color: var(--fg); font-size: 0.88rem; font-weight: 500; }
+  /* Pinned to the bottom so the arrows line up across a row of cards. */
+  .ministry-foot { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-top: auto; padding-top: 0.9rem; border-top: 1px solid var(--line); }
+  .ministry-when { display: flex; align-items: flex-start; gap: 0.45rem; color: var(--fg); font-size: 0.88rem; font-weight: 500; line-height: 1.4; }
+  .ministry-when :global(.icon) { margin-top: 0.1rem; }
   .ministry-when :global(.icon) { color: var(--accent-ink); flex: none; }
   .ministry-arrow {
-    position: absolute;
-    right: 1.4rem;
-    bottom: 1.5rem;
+    flex: none;
     display: grid;
     place-items: center;
     width: 2.5rem;

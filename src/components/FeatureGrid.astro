@@ -77,4 +77,14 @@ const { items, columns = 3, variant = 'rules', numbered = false, as: Heading = '
     transition: transform 0.25s var(--ease), box-shadow 0.25s var(--ease), border-color 0.25s var(--ease);
   }
   .variant-cards a.feature:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); border-color: transparent; }
+
+  /* Phones: icon cards become compact rows, icon beside the text. */
+  @media (max-width: 620px) {
+    .variant-cards { gap: 0.75rem; }
+    .variant-cards .feature:has(.feature-icon) { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 0.3rem 1rem; padding: 1.1rem 1.2rem; }
+    .variant-cards .feature:has(.feature-icon) > :not(.feature-icon) { grid-column: 2; }
+    .variant-cards .feature-icon { grid-row: 1 / span 4; width: 2.5rem; height: 2.5rem; }
+    .variant-cards .feature :is(h3, h4) { font-size: 1.2rem; }
+    .variant-cards .feature-text { font-size: 0.92rem; }
+  }
 </style>

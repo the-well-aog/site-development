@@ -7,6 +7,7 @@ import FeatureGrid from '../components/FeatureGrid.astro';
 import Icon from '../components/Icon.astro';
 import MessageCard from '../components/MessageCard.astro';
 import MinistryCard from '../components/MinistryCard.astro';
+import Photo from '../components/Photo.astro';
 import Scripture from '../components/Scripture.astro';
 import Section from '../components/Section.astro';
 import SectionHeader from '../components/SectionHeader.astro';
@@ -33,7 +34,7 @@ const messages = social.videos.length
 const [featured, ...recent] = messages;
 
 const firstVisit = [
-  { icon: 'clock', title: `${sunday.day}s at ${sunday.time}`, text: `Worship, a Bible message, and prayer. ${sundaySchool.name} for every age starts at ${sundaySchool.time}.` },
+  { icon: 'clock', title: `${site.serviceLength[0].toUpperCase()}${site.serviceLength.slice(1)}`, text: `Worship, a Bible message, and prayer. ${sundaySchool.name} for every age meets the hour before.` },
   { icon: 'shirt', title: 'Come as you are', text: 'Jeans or Sunday best. No one will single you out or ask you to stand.' },
   { icon: 'kids', title: 'Kids are covered', text: 'Safe check-in and Bible lessons made for nursery through 5th grade.' },
   { icon: 'flame', title: 'Spirit-filled worship', text: 'Heartfelt songs, practical preaching, and an open altar for prayer.' },
@@ -58,7 +59,7 @@ const firstVisit = [
         </div>
       </div>
       <figure class="hero-media">
-        <img src={img('church')} alt="The Well Assembly of God: a long brick building with a red metal roof and a covered front entrance, at sunset." width="1254" height="1254" fetchpriority="high" />
+        <Photo src={img('church')} alt="The Well Assembly of God: a long brick building with a red metal roof and a covered front entrance, at sunset." sizes="(min-width: 1000px) 45vw, 100vw" priority />
         <figcaption>The door is open. Come thirsty.</figcaption>
       </figure>
     </div>
@@ -72,7 +73,7 @@ const firstVisit = [
   <Section tone="sand" width="wide" labelledby="story-title">
     <div class="story" data-reveal>
       <div class="story-media">
-        <img src={img('water')} alt="Morning light on the rippling surface of water in a stone well." width="1280" height="720" loading="lazy" />
+        <Photo src={img('water')} alt="Morning light on the rippling surface of water in a stone well." sizes="(min-width: 1000px) 40vw, 100vw" />
       </div>
       <div class="story-copy">
         <p class="eyebrow">Who we are</p>
@@ -91,7 +92,7 @@ const firstVisit = [
 
   <Section width="wide" labelledby="ministries-title">
     <SectionHeader id="ministries-title" align="split" eyebrow="For every generation" title="Find your people." lede="From the nursery to the grandparents, there is a place at The Well for you to know Jesus and grow." action={{ href: '/ministries', label: 'All ministries' }} />
-    <div class="ministry-grid" data-reveal>
+    <div class="ministry-grid swipe-row" data-reveal>
       {ministries.map((entry) => <MinistryCard entry={entry} />)}
     </div>
   </Section>
@@ -137,7 +138,8 @@ const firstVisit = [
 </Base>
 
 <style>
-  .hero { padding: clamp(1.5rem, 3vw, 2.5rem) 0 clamp(3rem, 6vw, 5rem); }
+  .hero { padding: clamp(1.5rem, 3vw, 2.5rem) 0 clamp(2rem, 4vw, 3.5rem); }
+  .hero + :global(.section) { padding-top: calc(var(--section) * 0.45); }
   .hero-grid { display: grid; grid-template-columns: 1.05fr 0.95fr; gap: clamp(2rem, 5vw, 5rem); align-items: center; }
   .hero-copy { display: grid; gap: 1.5rem; justify-items: start; }
   .hero h1 { font-size: clamp(3rem, 1.8rem + 4.6vw, 5.75rem); }
@@ -148,13 +150,13 @@ const firstVisit = [
   .hero-address :global(.icon) { color: var(--accent-ink); }
   .hero-address:hover { color: var(--heading); text-decoration: underline; }
   .hero-media { position: relative; margin: 0; overflow: hidden; aspect-ratio: 1; max-height: calc(100svh - var(--header-h) - 4rem); border-radius: 999px 999px var(--radius-lg) var(--radius-lg); background: var(--sand-2); }
-  .hero-media img { width: 100%; height: 100%; object-fit: cover; object-position: center 45%; }
+  .hero-media :global(img) { width: 100%; height: 100%; object-fit: cover; object-position: center 45%; }
   .hero-media::after { content: ''; position: absolute; inset: 55% 0 0; background: linear-gradient(transparent, rgb(0 30 48 / 70%)); }
   .hero-media figcaption { position: absolute; z-index: 1; left: 1.75rem; bottom: 1.5rem; color: #fff; font: italic 500 1.1rem var(--serif); }
 
   .story { display: grid; grid-template-columns: 0.9fr 1.1fr; gap: clamp(2rem, 6vw, 6rem); align-items: center; }
   .story-media { overflow: hidden; aspect-ratio: 4 / 5; border-radius: var(--radius-lg); }
-  .story-media img { width: 100%; height: 100%; object-fit: cover; }
+  .story-media :global(img) { width: 100%; height: 100%; object-fit: cover; }
   .story-copy { display: grid; gap: 1.5rem; justify-items: start; }
   .convictions { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem 2rem; width: 100%; }
   .convictions li { display: grid; gap: 0.3rem; padding-top: 1rem; border-top: 1px solid var(--line-strong); }
@@ -165,7 +167,7 @@ const firstVisit = [
   .ministry-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1.25rem; }
   @media (max-width: 1240px) { .ministry-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 
-  .watch-grid { display: grid; grid-template-columns: 1.5fr 1fr; gap: clamp(1.5rem, 3vw, 2.5rem); align-items: start; }
+  .watch-grid { display: grid; grid-template-columns: 1.5fr 1fr; gap: clamp(1.5rem, 3vw, 2.5rem); align-items: center; }
   .watch-recent { display: grid; gap: 1.25rem; }
   .watch-recent :global(.message-card) { grid-template-columns: 9.5rem 1fr; align-items: center; gap: 1rem; }
 
@@ -179,14 +181,20 @@ const firstVisit = [
 
   @media (max-width: 1000px) {
     .hero-grid, .story, .watch-grid, .events-layout { grid-template-columns: 1fr; }
-    .hero-media { aspect-ratio: 16 / 10; border-radius: 12rem 12rem var(--radius-lg) var(--radius-lg); }
+    /* The building leads on small screens, so the first view always shows the church. */
+    .hero-media { order: -1; aspect-ratio: 16 / 9; max-height: 34svh; width: 100%; border-radius: 12rem 12rem var(--radius-lg) var(--radius-lg); }
+    .hero-media figcaption { display: none; }
     .story-media { aspect-ratio: 16 / 9; }
   }
   @media (max-width: 640px) {
+    .hero { padding-top: 1rem; }
+    .hero-grid { gap: 1.5rem; }
+    .hero-copy { gap: 1.25rem; }
     .hero h1 { font-size: clamp(2.6rem, 11vw, 3.4rem); }
     .hero-actions { width: 100%; }
     .hero-actions > :global(*) { flex: 1 1 100%; }
-    .convictions, .ministry-grid { grid-template-columns: 1fr; }
+    .hero-times { margin-top: 0.25rem; }
+    .convictions { grid-template-columns: 1fr; }
     .watch-recent :global(.message-card) { grid-template-columns: 7.5rem 1fr; }
   }
 </style>

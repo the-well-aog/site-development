@@ -1,5 +1,6 @@
 import { defineCollection, z } from 'astro:content';
 import { altFor, cmsLoader, mediaUrl } from './lib/cms';
+import { clock } from './lib/format';
 
 // Stock photos in public/images. An uploaded CMS photo (`photo`, an absolute URL) takes precedence.
 const image = z.enum(['sanctuary', 'water', 'table', 'kids', 'lounge', 'chapel', 'night', 'exterior', 'church']);
@@ -47,15 +48,15 @@ const events = defineCollection({
     photo: true,
     map: (item) => ({
       id: item.slug,
-      body: item.body,
+      body: clock(item.body),
       data: {
         title: item.title,
         date: item.date,
-        time: item.time,
+        time: clock(item.time),
         place: item.place,
         image: item.stockPhoto,
         photo: mediaUrl(item.photo),
-        summary: item.summary,
+        summary: clock(item.summary),
         alt: altFor(item, item.title),
       },
     }),
@@ -81,15 +82,15 @@ const ministries = defineCollection({
     photo: true,
     map: (item) => ({
       id: item.slug,
-      body: item.body,
+      body: clock(item.body),
       data: {
         title: item.title,
         order: item.order,
-        when: item.when,
+        when: clock(item.when),
         who: item.who,
         image: item.stockPhoto,
         photo: mediaUrl(item.photo),
-        summary: item.summary,
+        summary: clock(item.summary),
         alt: altFor(item, item.title),
       },
     }),
@@ -130,7 +131,7 @@ const announcements = defineCollection({
     endpoint: 'announcements',
     map: (item) => ({
       id: item.documentId,
-      data: { title: item.title, date: item.date, expires: item.expires, summary: item.summary },
+      data: { title: item.title, date: item.date, expires: item.expires, summary: clock(item.summary) },
     }),
   }),
   schema: z.object({

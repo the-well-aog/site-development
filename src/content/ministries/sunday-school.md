@@ -1,7 +1,7 @@
 ---
 title: Sunday School
 order: 2
-when: Sundays at 10:00a
+when: Sundays at 10:00 AM
 who: Every age, kids through adults
 image: chapel
 summary: An hour in the Bible before worship, with classes for every age. Come with questions and leave with a Word for your week.
@@ -12,7 +12,7 @@ alt: Morning light across a quiet classroom with a wooden chair.
 
 ## What to expect
 
-Classes meet at 10:00a, an hour before our 11:00a worship service. Each class opens the Bible, talks honestly about what it says, and prays together. There is room for questions, whether you have followed Jesus for decades or are just starting to read.
+Classes meet at 10:00 AM, an hour before our 11:00 AM worship service. Each class opens the Bible, talks honestly about what it says, and prays together. There is room for questions, whether you have followed Jesus for decades or are just starting to read.
 
 ## A class for every age
 

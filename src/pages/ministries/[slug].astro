@@ -47,7 +47,7 @@ const others = (await getCollection('ministries')).filter((other) => other.id !=
   {others.length > 0 && (
     <Section tone="sand" width="wide" labelledby="more-title">
       <SectionHeader id="more-title" eyebrow="Ministries" title="There’s more for your family." />
-      <div class="others">{others.map((other) => <MinistryCard entry={other} />)}</div>
+      <div class="others swipe-row">{others.map((other) => <MinistryCard entry={other} />)}</div>
     </Section>
   )}
 </Base>

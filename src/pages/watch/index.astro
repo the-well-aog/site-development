@@ -23,8 +23,8 @@ const series = [...new Set(sermons.map((entry) => entry.data.series))];
 <Base title="Watch" description={`Watch ${site.legal} live on ${sunday.day}s at ${sunday.time}, catch up on recent messages, and read sermon notes.`} image={latest?.thumbnail}>
   <PageHeader eyebrow="Watch" title="Worship with us," accent="wherever you are." lede={`Join the service live every ${sunday.day} at ${sunday.time}, or catch up on a recent message any time.`}>
     <Fragment slot="actions">
-      {liveUrl && <Button href={liveUrl} leading="play" icon="none" size="lg">Watch live on YouTube</Button>}
-      <span class="live-when"><Icon name="clock" size={18} />Live {sunday.day}s at {sunday.time}</span>
+      {latest && liveUrl && <Button href={liveUrl} leading="play" icon="none" size="lg">Watch live on YouTube</Button>}
+      {latest && <span class="live-when"><Icon name="clock" size={18} />Live {sunday.day}s at {sunday.time}</span>}
     </Fragment>
   </PageHeader>
 
@@ -37,6 +37,27 @@ const series = [...new Set(sermons.map((entry) => entry.data.series))];
           <h2 id="latest-title">{latest.title}</h2>
           {latest.excerpt && <p class="muted">{latest.excerpt}</p>}
           <Button href={`/watch/${latest.id}`} variant="text">Open message page</Button>
+        </div>
+      </div>
+    </Section>
+  )}
+
+  {!latest && (
+    <Section space="flush-top" width="wide" labelledby="live-title">
+      <div class="live tone-navy" data-reveal>
+        <svg class="live-rings" viewBox="0 0 400 400" aria-hidden="true" focusable="false">
+          {[50, 100, 150, 200].map((r) => <circle cx="200" cy="200" r={r} />)}
+        </svg>
+        <span class="live-badge"><Icon name="play" size={28} /></span>
+        <div class="live-copy">
+          <p class="ref">Every {sunday.day} · {sunday.time}</p>
+          <h2 id="live-title">Worship live with us.</h2>
+          <p class="muted">The service streams each week. Join from home, then come and see us in person when you can.</p>
+        </div>
+        <div class="live-actions">
+          {liveUrl && <Button href={liveUrl} leading="play" icon="none">Watch on YouTube</Button>}
+          {social.facebookPage && <Button href={social.facebookPage} variant="secondary" leading="facebook" icon="none">Follow on Facebook</Button>}
+          {!liveUrl && !social.facebookPage && <Button href="/visit">Plan your visit</Button>}
         </div>
       </div>
     </Section>
@@ -75,6 +96,14 @@ const series = [...new Set(sermons.map((entry) => entry.data.series))];
 <style>
   .live-when { display: inline-flex; align-items: center; gap: 0.5rem; color: var(--fg-muted); font-size: 0.95rem; }
   .live-when :global(.icon) { color: var(--accent-ink); }
+  .live { position: relative; display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 1.5rem clamp(1.5rem, 4vw, 3rem); overflow: hidden; padding: clamp(1.75rem, 4vw, 3rem); border-radius: var(--radius-lg); background: var(--bg); color: var(--fg); }
+  .live-rings { position: absolute; width: 34rem; left: -8rem; top: 50%; transform: translateY(-50%); fill: none; stroke: #fff; stroke-opacity: 0.08; pointer-events: none; }
+  .live-badge { position: relative; display: grid; place-items: center; width: 5.5rem; height: 5.5rem; padding-left: 4px; border-radius: 50%; background: var(--paper); color: var(--navy); box-shadow: 0 0 0 10px rgb(255 255 255 / 8%); }
+  .live-copy { position: relative; display: grid; gap: 0.5rem; }
+  .live-copy h2 { font-size: clamp(1.8rem, 1.4rem + 1.6vw, 2.75rem); }
+  .live-actions { position: relative; display: flex; flex-wrap: wrap; gap: 0.75rem; }
+  @media (max-width: 1000px) { .live { grid-template-columns: auto minmax(0, 1fr); } .live-actions { grid-column: 1 / -1; } }
+  @media (max-width: 560px) { .live { grid-template-columns: 1fr; } .live-badge { width: 4.25rem; height: 4.25rem; } }
   .latest { display: grid; grid-template-columns: 1.6fr 1fr; gap: clamp(1.5rem, 4vw, 3.5rem); align-items: center; }
   .latest-copy { display: grid; gap: 1rem; justify-items: start; }
   .latest-copy h2 { font-size: clamp(1.75rem, 1.4rem + 1.4vw, 2.6rem); overflow-wrap: anywhere; }

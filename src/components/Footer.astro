@@ -1,5 +1,7 @@
 ---
+import Clock from './Clock.astro';
 import Icon from './Icon.astro';
+import MapCard from './MapCard.astro';
 import { getNav } from '../data/nav';
 import { site } from '../data/site';
 import { loadSocial } from '../lib/feeds';
@@ -14,15 +16,15 @@ const columns = [
 ];
 ---
 
-<footer class="site-footer">
+<footer class="site-footer tone-navy">
   <div class="wrap-wide footer-top">
     <div class="footer-brand">
       <a class="footer-logo" href={url('/')} aria-label={`${site.legal}, home`}>
-        <img src={url('images/the-well-logo-192.png')} width="192" height="192" alt="" loading="lazy" />
+        <img src={url('images/the-well-logo-light.png')} width="309" height="320" alt="" loading="lazy" />
       </a>
       <p class="footer-tagline">{site.tagline}</p>
       <ul class="footer-times" role="list">
-        {site.services.map((service) => <li><span>{service.day}</span><strong>{service.time}</strong><em>{service.name}</em></li>)}
+        {site.services.map((service) => <li><span>{service.day}</span><strong><Clock time={service.time} /></strong><em>{service.name}</em></li>)}
       </ul>
       <address>
         <a href={site.mapsHref}>{site.address}<br />{site.city}</a>
@@ -48,13 +50,7 @@ const columns = [
     </nav>
 
     <div class="footer-map">
-      <div class="footer-map-frame">
-        <iframe title={`Map showing ${site.legal} at ${site.address}, ${site.city}`} src={site.mapsEmbed} loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
-      </div>
-      <p class="footer-map-links">
-        <a href={site.mapsHref}>Google Maps <Icon name="arrow-up-right" size={14} /></a>
-        <a href={site.appleMapsHref}>Apple Maps <Icon name="arrow-up-right" size={14} /></a>
-      </p>
+      <MapCard compact />
     </div>
   </div>
 
@@ -65,42 +61,35 @@ const columns = [
 </footer>
 
 <style>
-  .site-footer { padding-top: clamp(3.5rem, 6vw, 5.5rem); background: var(--sand); color: var(--ink); border-top: 1px solid var(--line); }
+  .site-footer { padding-top: clamp(3.5rem, 6vw, 5.5rem); background: var(--navy-deep); color: var(--fg); }
   .footer-top { display: grid; grid-template-columns: minmax(14rem, 1fr) minmax(0, 2.2fr) minmax(16rem, 1fr); gap: clamp(2rem, 4vw, 4rem); align-items: start; }
 
   .footer-brand { display: grid; gap: 1.25rem; justify-items: start; }
-  .footer-logo img { width: 84px; height: 84px; }
-  .footer-tagline { font: italic 500 1.15rem / 1.4 var(--serif); color: var(--navy); max-width: 18ch; }
+  .footer-logo img { width: 92px; height: auto; }
+  .footer-tagline { font: italic 500 1.15rem / 1.4 var(--serif); color: var(--heading); max-width: 18ch; }
   .footer-times { display: grid; grid-template-columns: 1fr 1fr; gap: 0.9rem 1.5rem; }
   .footer-times li { display: grid; }
-  .footer-times em { font-style: normal; font-size: 0.82rem; color: var(--muted); }
-  .footer-times span { font: 600 0.66rem / 1.4 var(--sans); letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); }
-  .footer-times strong { font: 500 1.25rem / 1.2 var(--serif); color: var(--navy); }
+  .footer-times em { font-style: normal; font-size: 0.82rem; color: var(--fg-muted); }
+  .footer-times span { font: 600 0.66rem / 1.4 var(--sans); letter-spacing: 0.14em; text-transform: uppercase; color: var(--fg-muted); }
+  .footer-times strong { font: 500 1.25rem / 1.2 var(--serif); color: var(--heading); }
   address { display: grid; gap: 0.5rem; font-style: normal; font-size: 0.95rem; }
   address a { text-decoration: none; }
   address a:hover { text-decoration: underline; }
   .footer-social { display: flex; gap: 0.5rem; }
-  .footer-social a { display: grid; place-items: center; width: 2.75rem; height: 2.75rem; border: 1px solid var(--line-strong); border-radius: 50%; color: var(--navy); transition: background-color 0.2s var(--ease), color 0.2s var(--ease); }
-  .footer-social a:hover { background: var(--navy); color: #fff; border-color: var(--navy); }
+  .footer-social a { display: grid; place-items: center; width: 2.75rem; height: 2.75rem; border: 1px solid var(--line-strong); border-radius: 50%; color: var(--heading); transition: background-color 0.2s var(--ease), color 0.2s var(--ease); }
+  .footer-social a:hover { background: var(--paper); color: var(--navy); border-color: var(--paper); }
 
   .footer-nav { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 2rem 1.5rem; }
-  .footer-heading { margin-bottom: 0.75rem; font: 600 0.7rem / 1.4 var(--sans); letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); }
+  .footer-heading { margin-bottom: 0.75rem; font: 600 0.7rem / 1.4 var(--sans); letter-spacing: 0.16em; text-transform: uppercase; color: var(--accent-ink); }
   .footer-nav a { display: inline-block; padding: 0.35rem 0; font-size: 0.95rem; text-decoration: none; }
-  .footer-nav a:hover { color: var(--navy); text-decoration: underline; }
+  .footer-nav a:hover { color: var(--heading); text-decoration: underline; }
 
-  .footer-map-frame { overflow: hidden; aspect-ratio: 1; border-radius: var(--radius); background: var(--sand-2); }
-  .footer-map-frame iframe { width: 100%; height: 100%; border: 0; }
-  .footer-map-links { display: flex; flex-wrap: wrap; gap: 0.5rem 1.25rem; margin-top: 0.75rem; }
-  .footer-map-links a { display: inline-flex; align-items: center; gap: 0.3rem; min-height: 40px; font-size: 0.9rem; font-weight: 500; color: var(--navy); text-decoration: none; }
-  .footer-map-links a:hover { text-decoration: underline; }
-
-  .footer-bottom { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.5rem 2rem; margin-top: clamp(3rem, 5vw, 4.5rem); padding: 1.5rem 0 calc(1.5rem + env(safe-area-inset-bottom)); border-top: 1px solid var(--line); color: var(--muted); font-size: 0.82rem; }
+  .footer-bottom { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.5rem 2rem; margin-top: clamp(3rem, 5vw, 4.5rem); padding: 1.5rem 0 calc(1.5rem + env(safe-area-inset-bottom)); border-top: 1px solid var(--line); color: var(--fg-muted); font-size: 0.82rem; }
   .footer-verse { font-style: italic; }
 
   @media (max-width: 1100px) {
     .footer-top { grid-template-columns: 1fr 1fr; }
     .footer-nav { grid-column: 1 / -1; order: 3; }
-    .footer-map-frame { aspect-ratio: 4 / 3; }
   }
   @media (max-width: 640px) {
     .footer-top { grid-template-columns: 1fr; }

@@ -25,32 +25,31 @@ const impact = [
 
   <Section space="flush-top" labelledby="ways-title">
     <h2 id="ways-title" class="sr-only">Ways to give</h2>
-    <div class="ways" data-reveal>
-      <article class:list={['way', { 'way-online': givingUrl }]}>
-        <span class="way-icon"><Icon name="heart" size={22} /></span>
-        <h3>Give online</h3>
-        {givingUrl ? (
-          <>
-            <p>Give once or set up recurring giving through our secure giving partner.</p>
-            <Button href={givingUrl} size="lg">Give online</Button>
-          </>
-        ) : (
-          <p>Online giving is coming soon. Until then, you are welcome to give during a service or by mail.</p>
-        )}
-        <p class="way-note">This website never collects card or bank details.</p>
-      </article>
+    <div class:list={['ways', { 'ways-online': givingUrl }]} data-reveal>
+      {givingUrl && (
+        <article class="way way-online">
+          <span class="way-icon"><Icon name="heart" size={22} /></span>
+          <h3>Give online</h3>
+          <p>Give once or set up recurring giving through our secure giving partner.</p>
+          <Button href={givingUrl} size="lg">Give online</Button>
+          <p class="way-note">This website never collects card or bank details.</p>
+        </article>
+      )}
       <article class="way">
         <span class="way-icon"><Icon name="hands" size={22} /></span>
         <h3>During a service</h3>
         <p>Place your gift in the offering during worship on {sunday.day}s at {sunday.time} or {midweek.day}s at {midweek.time}.</p>
       </article>
       <article class="way">
-        <span class="way-icon"><Icon name="pin" size={22} /></span>
+        <span class="way-icon"><Icon name="mail" size={22} /></span>
         <h3>By mail</h3>
         <p>Make checks payable to <strong>{site.legal}</strong> and mail them to:</p>
         <address>{site.address}<br />{site.city}</address>
       </article>
     </div>
+    {!givingUrl && (
+      <p class="online-soon"><Icon name="heart" size={18} />Online giving is coming soon. This website never collects card or bank details.</p>
+    )}
   </Section>
 
   <Section tone="navy" labelledby="why-title">
@@ -68,13 +67,16 @@ const impact = [
   </Section>
 
   <Section labelledby="impact-title">
-    <SectionHeader id="impact-title" align="split" eyebrow="Your gift at work" title="Where your giving goes." lede="We handle every gift with integrity and accountability. If you have a question about how The Well stewards its finances, please ask." action={{ href: '/contact', label: 'Questions about giving' }} />
+    <SectionHeader id="impact-title" align="center" eyebrow="Your gift at work" title="Where your giving goes." lede="We handle every gift with integrity and accountability. If you have a question about how The Well stewards its finances, please ask." action={{ href: '/contact', label: 'Questions about giving' }} />
     <FeatureGrid items={impact} columns={4} />
   </Section>
 </Base>
 
 <style>
-  .ways { display: grid; grid-template-columns: 1.3fr 1fr 1fr; gap: 1rem; }
+  .ways { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .ways-online { grid-template-columns: 1.3fr 1fr 1fr; }
+  .online-soon { display: flex; align-items: center; gap: 0.6rem; margin-top: 1.25rem; color: var(--fg-muted); font-size: 0.92rem; }
+  .online-soon :global(.icon) { color: var(--accent-ink); flex: none; }
   .way { display: grid; align-content: start; justify-items: start; gap: 0.9rem; padding: clamp(1.5rem, 3vw, 2rem); border: 1px solid var(--line); border-radius: var(--radius-lg); background: var(--surface); }
   .way-online { background: var(--sand); }
   .way h3 { font-size: 1.6rem; }

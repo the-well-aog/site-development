@@ -18,10 +18,10 @@ export const site = {
   district: 'Oklahoma Ministry Network',
   // Confirmed by the church.
   services: [
-    { day: 'Sunday', time: '10:00a', name: 'Sunday School', detail: 'Bible classes for every age' },
-    { day: 'Sunday', time: '11:00a', name: 'Sunday Worship', detail: 'Worship, the Word, and Kids' },
-    { day: 'Tuesday', time: '7:00p', name: 'Prayer Meeting', detail: 'Seeking God together in prayer' },
-    { day: 'Wednesday', time: '7:00p', name: 'Wednesday Service', detail: 'Worship and the Word' },
+    { day: 'Sunday', time: '10:00 AM', name: 'Sunday School', detail: 'Bible classes for every age' },
+    { day: 'Sunday', time: '11:00 AM', name: 'Sunday Worship', detail: 'Worship, the Word, and Kids' },
+    { day: 'Tuesday', time: '7:00 PM', name: 'Prayer Meeting', detail: 'Seeking God together in prayer' },
+    { day: 'Wednesday', time: '7:00 PM', name: 'Wednesday Service', detail: 'Worship and the Word' },
   ] satisfies Service[],
   serviceLength: 'about 90 minutes',
   address: '2902 S Pocola Blvd',

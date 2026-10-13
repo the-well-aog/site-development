@@ -1,0 +1,11 @@
+---
+import { splitTime } from '../lib/format';
+
+interface Props {
+  time: string;
+}
+
+const [numerals, suffix] = splitTime(Astro.props.time);
+---
+
+{numerals}{suffix && <span class="time-suffix">{" "}{suffix}</span>}

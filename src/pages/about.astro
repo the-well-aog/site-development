@@ -8,7 +8,7 @@ import PageHeader from '../components/PageHeader.astro';
 import Section from '../components/Section.astro';
 import SectionHeader from '../components/SectionHeader.astro';
 import { site, sunday } from '../data/site';
-import { img, url } from '../lib/url';
+import { url } from '../lib/url';
 
 const leaders = (await getCollection('leaders')).sort((a, b) => a.data.order - b.data.order);
 
@@ -21,6 +21,7 @@ const values = [
   { title: 'Sent to our community', text: `We share the gospel and show the love of Jesus in ${site.locality}, the Fort Smith area, and to the ends of the earth.`, ref: 'Matthew 28:19–20' },
 ];
 
+const hasPhotos = leaders.some((entry) => entry.data.photo);
 const initials = (name: string) => name.split(/\s+/).map((part) => part[0]).join('').slice(0, 2).toUpperCase();
 ---
 
@@ -29,7 +30,15 @@ const initials = (name: string) => name.split(/\s+/).map((part) => part[0]).join
 
   <Section width="wide" space="flush-top" labelledby="name-title">
     <div class="story" data-reveal>
-      <div class="story-media"><img src={img('chapel')} alt="Morning light across a quiet room with a wooden chair." width="1280" height="900" loading="lazy" /></div>
+      <figure class="story-verse">
+        <svg class="story-rings" viewBox="0 0 400 400" aria-hidden="true" focusable="false">
+          {[40, 80, 120, 160, 200].map((r) => <circle cx="200" cy="200" r={r} />)}
+        </svg>
+        <blockquote>
+          <p>“The water that I shall give him will become in him a fountain of water springing up into everlasting life.”</p>
+        </blockquote>
+        <figcaption><span class="ref">John 4:14</span> <span class="version">NKJV</span></figcaption>
+      </figure>
       <div class="story-copy">
         <p class="eyebrow">Why “The Well”</p>
         <h2 id="name-title">Where thirsty people <em>meet Jesus.</em></h2>
@@ -50,23 +59,27 @@ const initials = (name: string) => name.split(/\s+/).map((part) => part[0]).join
   </Section>
 
   <Section labelledby="values-title">
-    <SectionHeader id="values-title" align="split" eyebrow="What we value" title="What shapes us." lede="Six convictions guide how we worship, how we decide, and how we treat one another." action={{ href: '/beliefs', label: 'Read what we believe' }} />
+    <SectionHeader id="values-title" align="center" eyebrow="What we value" title="What shapes us." lede="Six convictions guide how we worship, how we decide, and how we treat one another." action={{ href: '/beliefs', label: 'Read what we believe' }} />
     <FeatureGrid items={values} columns={3} />
   </Section>
 
   <Section tone="sand" id="team" labelledby="team-title">
     <SectionHeader id="team-title" align="split" eyebrow="Our team" title="Shepherds who serve." lede="Our pastors and leaders are called to love God, preach His Word, and care for the people of The Well." />
     {site.preview && <p class="team-note">Names, photos, and biographies are coming soon.</p>}
-    <ul class="team" role="list" data-reveal>
+    <ul class:list={['team', { 'team-compact': !hasPhotos }]} role="list" data-reveal>
       {leaders.map((entry) => (
         <li>
-          <div class="team-photo">
-            {entry.data.photo ? (
-              <img src={url(entry.data.photo)} alt={entry.data.name} width="600" height="750" loading="lazy" />
-            ) : (
-              <span class="team-placeholder" aria-hidden="true"><span>{initials(entry.data.name)}</span></span>
-            )}
-          </div>
+          {hasPhotos ? (
+            <div class="team-photo">
+              {entry.data.photo ? (
+                <img src={url(entry.data.photo)} alt={entry.data.name} width="600" height="750" loading="lazy" />
+              ) : (
+                <span class="team-placeholder" aria-hidden="true"><span>{initials(entry.data.name)}</span></span>
+              )}
+            </div>
+          ) : (
+            <span class="team-initials" aria-hidden="true">{initials(entry.data.name)}</span>
+          )}
           <h3>{entry.data.name}</h3>
           <p class="ref">{entry.data.role}</p>
           <p class="team-summary">{entry.data.summary}</p>
@@ -97,11 +110,15 @@ const initials = (name: string) => name.split(/\s+/).map((part) => part[0]).join
 
 <style>
   .story { display: grid; grid-template-columns: 0.9fr 1.1fr; gap: clamp(2rem, 6vw, 6rem); align-items: center; }
-  .story-media { overflow: hidden; aspect-ratio: 4 / 5; border-radius: var(--radius-lg); }
-  .story-media img { width: 100%; height: 100%; object-fit: cover; }
+  .story-verse { position: relative; display: grid; align-content: center; gap: 1.25rem; min-height: 26rem; margin: 0; overflow: hidden; padding: clamp(2rem, 5vw, 3.5rem); border-radius: var(--radius-lg); background: var(--sand); }
+  .story-rings { position: absolute; width: 140%; left: -20%; top: 30%; fill: none; stroke: var(--navy); stroke-opacity: 0.08; pointer-events: none; }
+  .story-verse blockquote { position: relative; margin: 0; }
+  .story-verse blockquote p { font: italic 500 clamp(1.6rem, 1.2rem + 1.6vw, 2.5rem) / 1.25 var(--serif); letter-spacing: -0.02em; color: var(--heading); text-wrap: balance; }
+  .story-verse figcaption { position: relative; display: flex; gap: 0.6rem; align-items: baseline; }
+  .story-verse .version { font: 600 0.68rem / 1.4 var(--sans); letter-spacing: 0.12em; color: var(--fg-muted); }
   .story-copy { display: grid; gap: 1.5rem; }
 
-  .mission { display: grid; gap: 1.5rem; max-width: 60rem; }
+  .mission { display: grid; gap: 1.5rem; justify-items: center; max-width: 60rem; margin-inline: auto; text-align: center; }
   .mission-line { font: 500 clamp(1.8rem, 1.3rem + 2.2vw, 3.1rem) / 1.22 var(--serif); letter-spacing: -0.03em; color: var(--heading); text-wrap: balance; }
   .mission-line em { color: var(--accent-ink); }
 
@@ -114,14 +131,17 @@ const initials = (name: string) => name.split(/\s+/).map((part) => part[0]).join
   .team-placeholder span { display: grid; place-items: center; width: 5.5rem; height: 5.5rem; border: 1px solid var(--line-strong); border-radius: 50%; background: var(--paper); color: var(--navy); font: 500 1.8rem var(--serif); letter-spacing: 0.02em; box-shadow: var(--shadow-sm); }
   .team h3 { font-size: 1.4rem; }
   .team-summary { color: var(--fg-muted); font-size: 0.93rem; }
+  .team-compact { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1.25rem; }
+  .team-compact li { padding: 1.5rem; border: 1px solid var(--line); border-radius: var(--radius); background: var(--paper); }
+  .team-initials { display: grid; place-items: center; width: 3.25rem; height: 3.25rem; margin-bottom: 0.75rem; border-radius: 50%; background: var(--navy); color: var(--paper); font: 500 1.1rem var(--serif); letter-spacing: 0.04em; }
   .team-contact { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 1.5rem; margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--line-strong); }
 
   .family { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(2rem, 5vw, 5rem); align-items: end; }
 
   @media (max-width: 1000px) {
     .story, .family { grid-template-columns: 1fr; }
-    .story-media { aspect-ratio: 16 / 10; }
+    .story-verse { min-height: 0; }
     .team { grid-template-columns: 1fr 1fr; }
   }
-  @media (max-width: 480px) { .team { grid-template-columns: 1fr; } }
+  @media (max-width: 480px) { .team, .team-compact { grid-template-columns: 1fr; } }
 </style>

@@ -4,8 +4,7 @@ import Button from '../components/Button.astro';
 import ContactOptions from '../components/ContactOptions.astro';
 import PageHeader from '../components/PageHeader.astro';
 import Section from '../components/Section.astro';
-import ServiceTimes from '../components/ServiceTimes.astro';
-import { site } from '../data/site';
+import { midweek, prayerMeeting, site, sunday, sundaySchool } from '../data/site';
 ---
 
 <Base title="Contact" description={`Contact ${site.legal} in ${site.locality}, Oklahoma: address, phone, service times, and how to reach a pastor.`}>
@@ -29,7 +28,8 @@ import { site } from '../data/site';
         </div>
         <div>
           <p class="label">Gather</p>
-          <ServiceTimes />
+          <p class="gather">{sundaySchool.name} at {sundaySchool.time}, worship at {sunday.time}, and midweek gatherings on {prayerMeeting.day} and {midweek.day} evenings.</p>
+          <Button href="/visit" variant="text">Service times and what to expect</Button>
         </div>
       </div>
       <ContactOptions title="Send us a note" text="Not an emergency line. If you are in danger, call 911, or call or text 988." subject="Website message" submit="Send message">
@@ -49,6 +49,7 @@ import { site } from '../data/site';
   .big { font: 500 clamp(1.6rem, 1.3rem + 1.2vw, 2.2rem) / 1.2 var(--serif); letter-spacing: -0.025em; color: var(--heading); }
   .big a { text-decoration: none; }
   .big a:hover { text-decoration: underline; text-decoration-thickness: 1px; }
+  .gather { max-width: 34ch; margin-bottom: 0.5rem; color: var(--fg-muted); }
   .row { display: flex; flex-wrap: wrap; gap: 0 1.5rem; }
   @media (max-width: 1000px) { .layout { grid-template-columns: 1fr; } }
 </style>

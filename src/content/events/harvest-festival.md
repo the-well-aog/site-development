@@ -1,7 +1,7 @@
 ---
 title: Harvest Festival
 date: 2026-10-31
-time: 5:00p–7:30p
+time: 5:00 PM–7:30 PM
 place: The Well parking lot
 image: exterior
 draft: true

@@ -15,7 +15,7 @@ merge to main →  GitHub Actions build  →  GitHub Pages
 
 ## Architecture
 
-Astro compiles `src/pages` and the Markdown in `src/content` into `dist/`. Shared chrome lives in `src/layouts` and `src/components`. Photographs sit in `public/images` and are copied through as-is.
+Astro compiles `src/pages` and the Markdown in `src/content` into `dist/`. Shared chrome lives in `src/layouts` and `src/components`. Stock photographs sit in `src/assets/photos`; the build serves each as AVIF/WebP at the sizes it is shown (`src/components/Photo.astro`). Logos stay in `public/images`.
 
 GitHub Pages serves `dist/` at `https://the-well-aog.github.io/site-development/` until a custom domain is attached. Forms post to an external form host once `site.formEndpoint` is set; until then the site offers call, message, and directions. Giving links out to the church's provider. Nothing here calls n8n, and the repo holds no secrets.
 

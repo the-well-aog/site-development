@@ -1,14 +1,16 @@
-const photos = {
-  sanctuary: 'images/sanctuary.jpg',
-  water: 'images/water.jpg',
-  table: 'images/table.jpg',
-  kids: 'images/kids.jpg',
-  lounge: 'images/lounge.jpg',
-  chapel: 'images/chapel.jpg',
-  night: 'images/night.jpg',
-  exterior: 'images/exterior.jpg',
-  church: 'images/church-exterior.jpg',
-} as const;
+import type { ImageMetadata } from 'astro';
+import chapel from '../assets/photos/chapel.jpg';
+import church from '../assets/photos/church-exterior.jpg';
+import exterior from '../assets/photos/exterior.jpg';
+import kids from '../assets/photos/kids.jpg';
+import lounge from '../assets/photos/lounge.jpg';
+import night from '../assets/photos/night.jpg';
+import sanctuary from '../assets/photos/sanctuary.jpg';
+import table from '../assets/photos/table.jpg';
+import water from '../assets/photos/water.jpg';
+
+// Stock photos live in src/assets so the build can serve each one at the size it is shown.
+const photos = { sanctuary, water, table, kids, lounge, chapel, night, exterior, church } satisfies Record<string, ImageMetadata>;
 
 export type PhotoKey = keyof typeof photos;
 
@@ -24,9 +26,18 @@ export function isExternal(href: string): boolean {
   return /^https?:\/\//.test(href);
 }
 
+/** A stock photo's built URL (already carries the deploy base). */
 export function img(key: string): string {
-  const path = key in photos ? photos[key as PhotoKey] : photos.sanctuary;
-  return url(path);
+  return photoMeta(key).src;
+}
+
+export function photoMeta(key: string): ImageMetadata {
+  return key in photos ? photos[key as PhotoKey] : photos.sanctuary;
+}
+
+/** The stock photo behind a built URL, so <Photo> can serve it responsively. Uploads return undefined. */
+export function localPhoto(src: string): ImageMetadata | undefined {
+  return Object.values(photos).find((meta) => meta.src === src);
 }
 
 /** An entry's picture: its CMS upload when there is one, otherwise its stock photo. */
