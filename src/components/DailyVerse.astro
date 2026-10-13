@@ -186,7 +186,7 @@ const dateLabel = new Intl.DateTimeFormat('en-US', { timeZone: site.timeZone, we
 
     // Text share: the full verse and a link back here go to the clipboard, ready to paste into any post.
     root.querySelector('[data-verse-share]')?.addEventListener('click', async () => {
-      const message = `“${verseText()}”\n— ${reference()} (KJV)\n\nToday’s verse from ${config.legal}:\n${link()}`;
+      const message = `“${verseText()}”\n— ${reference()} (KJV)\n\n${link()}`;
       let copied = false;
       try {
         await navigator.clipboard.writeText(message);
@@ -224,7 +224,7 @@ const dateLabel = new Intl.DateTimeFormat('en-US', { timeZone: site.timeZone, we
         const blob = await canvasBlob(canvas);
         const name = `the-well-${reference().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')}.png`;
         const file = new File([blob], name, { type: 'image/png' });
-        const caption = `${reference()} (KJV)\nToday’s verse from ${config.legal}: ${link()}`;
+        const caption = `${reference()} (KJV)\n${link()}`;
         try { await navigator.clipboard.writeText(caption); } catch { /* optional */ }
         if (navigator.canShare?.({ files: [file] })) {
           try {
