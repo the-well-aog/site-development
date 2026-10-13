@@ -3,9 +3,9 @@ title: Students
 order: 3
 when: Wednesdays at 7:00 PM
 who: 6th through 12th grade
-image: youth
+image: family
 summary: A place for middle and high school students to encounter God, ask real questions, and build friendships that point them to Jesus.
-alt: "Students from The Well smiling around a dinner table in the fellowship hall."
+alt: "Students and leaders from The Well in matching red shirts on a church trip."
 ---
 
 “Let no one despise your youth, but be an example to the believers” (1 Timothy 4:12). Students are not the church of tomorrow. They are part of the church today.

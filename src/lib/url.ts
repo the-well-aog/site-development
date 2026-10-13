@@ -24,7 +24,7 @@ const photos = {
   exterior,
   church,
   sanctuary: worship,
-  lounge: youth,
+  lounge: family,
   table: fellowship,
 } satisfies Record<string, ImageMetadata>;
 
