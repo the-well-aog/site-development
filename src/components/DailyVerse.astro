@@ -2,84 +2,257 @@
 import Icon from './Icon.astro';
 import { site } from '../data/site';
 import { verses } from '../data/verses';
+import { backgroundFor, chapterOf } from '../data/verse-backgrounds';
 import { dailyVerse } from '../lib/daily-verse';
+import { url } from '../lib/url';
 
-// Today's verse comes from the daily verse service at build time (see lib/daily-verse.ts).
-// When the build had to fall back to the built-in list, the browser re-picks from that list on its
-// own date, so the verse still changes daily between rebuilds.
+/*
+  The verse of the day, full screen, at /#today so a shared link lands right here.
+  Today's verse comes from the daily verse service at build time (lib/daily-verse.ts). When the build
+  had to fall back to the built-in list, the browser re-picks from that list on its own date.
+*/
 const today = await dailyVerse();
+const art = backgroundFor(today.reference);
+const config = {
+  zone: site.timeZone,
+  verses: today.source === 'fallback' ? verses : [],
+  base: url('verse/'),
+  logo: url('images/the-well-logo-white.png'),
+  legal: site.legal,
+};
+const dateLabel = new Intl.DateTimeFormat('en-US', { timeZone: site.timeZone, weekday: 'long', month: 'long', day: 'numeric' }).format(new Date());
+const chapterHref = (reference: string) => `https://www.biblegateway.com/passage/?search=${encodeURIComponent(chapterOf(reference))}&version=KJV`;
 ---
 
-<figure class="daily-verse" data-daily-verse data-verses={today.source === 'fallback' ? JSON.stringify(verses) : undefined} data-zone={site.timeZone}>
-  <svg class="daily-pool" viewBox="0 0 400 400" aria-hidden="true" focusable="false">
-    {[50, 100, 150, 200].map((r) => <circle cx="200" cy="200" r={r} />)}
+<section class="today" id="today" aria-labelledby="today-title" data-daily-verse data-config={JSON.stringify(config)} data-dark={art.dark || undefined} style={`--photo: url('${url(`verse/${art.file}`)}')`}>
+  <div class="today-photo" aria-hidden="true"></div>
+  <svg class="today-rings" viewBox="0 0 800 800" aria-hidden="true" focusable="false">
+    {[1, 2, 3, 4, 5, 6].map((n) => <circle cx="400" cy="400" r={n * 66} style={`--n: ${n}`} />)}
   </svg>
-  <p class="eyebrow">A word for today</p>
-  <blockquote><p data-verse-text>“{today.text}”</p></blockquote>
-  <figcaption>
-    <span class="ref" data-verse-ref>{today.reference}</span> <span class="version">KJV</span>
-  </figcaption>
-  <button class="daily-share" type="button" data-verse-share>
-    <Icon name="share" size={16} /><span data-verse-share-label>Share this verse</span>
-  </button>
-</figure>
+  <div class="today-frame" aria-hidden="true"></div>
+
+  <figure class="today-inner">
+    <h2 class="today-eyebrow" id="today-title"><span>A word for today</span></h2>
+    <p class="today-date" data-verse-date>{dateLabel}</p>
+    <blockquote class="today-verse"><p data-verse-text>“{today.text}”</p></blockquote>
+    <figcaption class="today-ref">
+      <span class="today-rule" aria-hidden="true"></span>
+      <cite data-verse-ref>{today.reference}</cite>
+      <span class="today-version">King James Version</span>
+    </figcaption>
+
+    <div class="today-actions">
+      <button class="today-button today-primary" type="button" data-verse-share>
+        <Icon name="share" size={18} /><span>Share this verse</span>
+      </button>
+      <button class="today-button" type="button" data-verse-image>
+        <Icon name="image" size={18} /><span>Share as image</span>
+      </button>
+    </div>
+    <p class="today-status" role="status" aria-live="polite" data-verse-status></p>
+    <a class="today-chapter" href={chapterHref(today.reference)} data-verse-chapter>Read the whole chapter <Icon name="arrow-up-right" size={14} /></a>
+  </figure>
+</section>
 
 <style>
-  .daily-verse { position: relative; display: grid; justify-items: center; gap: 1.25rem; margin: 0; padding: clamp(1rem, 3vw, 2rem) 0; text-align: center; }
-  .daily-pool { position: absolute; left: 50%; top: 50%; width: min(36rem, 120%); transform: translate(-50%, -50%); fill: none; stroke: var(--navy); stroke-opacity: 0.07; pointer-events: none; }
-  blockquote { position: relative; margin: 0; }
-  blockquote p { max-width: 30ch; font: italic 500 clamp(1.6rem, 1.2rem + 1.6vw, 2.5rem) / 1.3 var(--serif); letter-spacing: -0.02em; color: var(--heading); text-wrap: balance; }
-  figcaption { position: relative; display: flex; gap: 0.6rem; align-items: baseline; }
-  .version { font: 600 0.68rem / 1.4 var(--sans); letter-spacing: 0.12em; color: var(--fg-muted); }
-  .daily-share {
+  .today {
+    position: relative;
+    display: grid;
+    place-items: center;
+    min-height: calc(100svh - var(--header-h));
+    overflow: hidden;
+    padding: clamp(3.5rem, 6vw, 4.5rem) var(--gutter);
+    background: var(--navy-deep);
+    color: #fbf8f1;
+    isolation: isolate;
+    /* The page already pads anchors by the header plus 1.5rem; land flush under the header instead. */
+    scroll-margin-top: -1.5rem;
+  }
+  /* The day's photograph under a deep navy veil, lightest where the light comes in. */
+  .today-photo { position: absolute; inset: 0; z-index: -2; background: var(--photo) center / cover no-repeat; transform: scale(1.04); }
+  .today-photo::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 50% 42%, rgb(226 187 114 / 12%), transparent 60%),
+      linear-gradient(180deg, rgb(0 20 34 / 55%), rgb(0 31 51 / 66%) 35%, rgb(0 25 42 / 76%) 72%, rgb(0 16 28 / 90%));
+  }
+  .today[data-dark] .today-photo::after { opacity: 0.8; }
+  .today-rings { position: absolute; left: 50%; top: 45%; z-index: -1; width: max(60rem, 120vmax); transform: translate(-50%, -50%); fill: none; stroke: #fff; stroke-width: 1; pointer-events: none; }
+  .today-rings circle { opacity: calc(0.11 - var(--n) * 0.014); transform-origin: 400px 400px; }
+  .today-frame { position: absolute; inset: clamp(0.9rem, 2.5vw, 2rem); z-index: -1; border: 1px solid rgb(255 255 255 / 22%); border-radius: 4px; pointer-events: none; }
+
+  .today-inner { display: grid; justify-items: center; gap: 1.1rem; width: min(100%, 58rem); margin: 0; text-align: center; }
+  .today-eyebrow { display: flex; align-items: center; gap: 1.1rem; font: 600 0.78rem / 1.4 var(--sans); letter-spacing: 0.32em; text-transform: uppercase; color: #fbf8f1; }
+  .today-eyebrow::before, .today-eyebrow::after { content: ''; width: 2.25rem; height: 1px; background: #e2bb72; }
+  .today-date { margin-top: -0.4rem; font: 500 0.78rem / 1.4 var(--sans); letter-spacing: 0.2em; text-transform: uppercase; color: rgb(251 248 241 / 70%); }
+  .today-verse { margin: clamp(1rem, 3vw, 2rem) 0 0; }
+  .today-verse p {
+    max-width: 28ch;
+    margin-inline: auto;
+    font: italic 500 clamp(1.9rem, 1.1rem + 2.4vw, 3.4rem) / 1.24 var(--serif);
+    letter-spacing: -0.02em;
+    color: #fbf8f1;
+    text-shadow: 0 2px 24px rgb(0 10 18 / 45%);
+    text-wrap: balance;
+  }
+  .today-ref { display: grid; justify-items: center; gap: 0.6rem; margin-top: 0.75rem; }
+  .today-rule { width: 2.75rem; height: 1px; background: #e2bb72; }
+  .today-ref cite { font: 600 1rem / 1.3 var(--sans); font-style: normal; letter-spacing: 0.24em; text-transform: uppercase; color: #e2bb72; }
+  .today-version { font: 500 0.7rem / 1.3 var(--sans); letter-spacing: 0.24em; text-transform: uppercase; color: rgb(251 248 241 / 60%); }
+
+  .today-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.75rem; margin-top: clamp(1.25rem, 3vw, 2rem); }
+  .today-button {
     position: relative;
     display: inline-flex;
     align-items: center;
-    gap: 0.5rem;
-    min-height: 44px;
-    padding: 0 1.1rem;
-    border: 1px solid var(--line-strong);
+    gap: 0.6rem;
+    min-height: 52px;
+    padding: 0 1.6rem;
+    overflow: hidden;
+    border: 1px solid rgb(255 255 255 / 40%);
     border-radius: 999px;
-    background: transparent;
-    color: var(--heading);
-    font-size: 0.9rem;
-    font-weight: 500;
+    background: rgb(255 255 255 / 6%);
+    color: #fff;
+    font: 500 0.98rem / 1.2 var(--sans);
     cursor: pointer;
-    transition: border-color 0.2s var(--ease);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    transition: background-color 0.2s var(--ease), border-color 0.2s var(--ease), transform 0.2s var(--ease);
   }
-  .daily-share:hover { border-color: var(--heading); }
+  .today-button:hover { border-color: #fff; background: rgb(255 255 255 / 12%); transform: translateY(-1px); }
+  .today-primary { border-color: #fbf8f1; background: #fbf8f1; color: var(--navy); }
+  .today-primary:hover { background: #fff; }
+  .today-button[disabled] { opacity: 0.7; cursor: progress; }
+  .today-status { min-height: 1.4em; color: rgb(251 248 241 / 85%); font-size: 0.92rem; }
+  .today-chapter { display: inline-flex; align-items: center; gap: 0.35rem; color: rgb(251 248 241 / 75%); font-size: 0.88rem; text-decoration: underline; text-decoration-color: rgb(255 255 255 / 30%); text-underline-offset: 0.3em; }
+  .today-chapter:hover { color: #fff; }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .today-photo { animation: today-drift 40s ease-in-out infinite alternate; }
+    .today-rings circle { animation: today-breathe 10s ease-in-out infinite; animation-delay: calc(var(--n) * -1.6s); }
+    /* Arriving from a shared link: the verse rises in. */
+    .today.is-arrived .today-inner > * { animation: today-rise 1.1s var(--ease) both; }
+    .today.is-arrived .today-inner > :nth-child(2) { animation-delay: 0.1s; }
+    .today.is-arrived .today-inner > :nth-child(3) { animation-delay: 0.25s; }
+    .today.is-arrived .today-inner > :nth-child(n + 4) { animation-delay: 0.5s; }
+  }
+  @keyframes today-drift { from { transform: scale(1.04); } to { transform: scale(1.12) translateY(-1.5%); } }
+  @keyframes today-breathe { 0%, 100% { transform: scale(0.97); } 50% { transform: scale(1.03); } }
+  @keyframes today-rise { from { opacity: 0; transform: translateY(16px); } }
+
+  @media (max-width: 560px) {
+    .today-eyebrow { letter-spacing: 0.24em; }
+    .today-actions { width: 100%; }
+    .today-button { flex: 1 1 100%; justify-content: center; }
+  }
 </style>
 
 <script>
+  import { verseBackgrounds, backgroundFor, chapterOf } from '../data/verse-backgrounds';
+  import { canvasBlob, paintVerseCard } from '../lib/verse-image';
+
+  type Config = { zone: string; verses: { text: string; reference: string }[]; base: string; logo: string; legal: string };
+
   document.querySelectorAll<HTMLElement>('[data-daily-verse]').forEach((root) => {
-    const verses: { text: string; reference: string }[] = root.dataset.verses ? JSON.parse(root.dataset.verses) : [];
-    const zone = root.dataset.zone || 'America/Chicago';
-    const text = root.querySelector<HTMLElement>('[data-verse-text]');
-    const ref = root.querySelector<HTMLElement>('[data-verse-ref]');
-    const [y, m, d] = new Intl.DateTimeFormat('en-CA', { timeZone: zone }).format(new Date()).split('-').map(Number);
-    const verse = verses.length ? verses[Math.floor(Date.UTC(y, m - 1, d) / 86400000) % verses.length] : undefined;
-    if (verse && text && ref) {
+    const config: Config = JSON.parse(root.dataset.config || '{}');
+    const text = root.querySelector<HTMLElement>('[data-verse-text]')!;
+    const ref = root.querySelector<HTMLElement>('[data-verse-ref]')!;
+    const date = root.querySelector<HTMLElement>('[data-verse-date]')!;
+    const chapter = root.querySelector<HTMLAnchorElement>('[data-verse-chapter]')!;
+    const status = root.querySelector<HTMLElement>('[data-verse-status]')!;
+
+    // Today on the church's clock, so the label and (fallback) verse match Pocola's date.
+    const now = new Date();
+    date.textContent = new Intl.DateTimeFormat('en-US', { timeZone: config.zone, weekday: 'long', month: 'long', day: 'numeric' }).format(now);
+    if (config.verses.length) {
+      const [y, m, d] = new Intl.DateTimeFormat('en-CA', { timeZone: config.zone }).format(now).split('-').map(Number);
+      const verse = config.verses[Math.floor(Date.UTC(y, m - 1, d) / 86400000) % config.verses.length];
       text.textContent = `“${verse.text}”`;
       ref.textContent = verse.reference;
+      chapter.href = `https://www.biblegateway.com/passage/?search=${encodeURIComponent(chapterOf(verse.reference))}&version=KJV`;
+      const art = backgroundFor(verse.reference);
+      root.style.setProperty('--photo', `url('${config.base}${art.file}')`);
+      root.toggleAttribute('data-dark', art.dark);
     }
 
-    const button = root.querySelector<HTMLButtonElement>('[data-verse-share]');
-    const label = root.querySelector<HTMLElement>('[data-verse-share-label]');
-    button?.addEventListener('click', async () => {
-      const message = `${text?.textContent ?? ''} ${ref?.textContent ?? ''} (KJV)`;
+    const verseText = () => (text.textContent || '').replace(/^[“"]|[”"]$/g, '');
+    const reference = () => ref.textContent || '';
+    const link = () => `${location.origin}${location.pathname}#today`;
+    const say = (message: string) => {
+      status.textContent = message;
+      window.clearTimeout(Number(status.dataset.timer));
+      status.dataset.timer = String(window.setTimeout(() => { status.textContent = ''; }, 6000));
+    };
+
+    // Text share: the full verse and a link back here go to the clipboard, ready to paste into any post.
+    root.querySelector('[data-verse-share]')?.addEventListener('click', async () => {
+      const message = `“${verseText()}”\n— ${reference()} (KJV)\n\nToday’s verse from ${config.legal}:\n${link()}`;
+      let copied = false;
       try {
-        if (navigator.share) {
-          await navigator.share({ text: message, url: location.href });
+        await navigator.clipboard.writeText(message);
+        copied = true;
+      } catch { /* clipboard blocked: the share sheet below still carries the text */ }
+      if (navigator.share && matchMedia('(pointer: coarse)').matches) {
+        try {
+          await navigator.share({ text: message });
           return;
+        } catch { /* closed the share sheet */ }
+      }
+      say(copied ? 'Copied the verse and a link back here. Paste it into any post or message.' : 'Your browser blocked copying. Select the verse above to copy it.');
+    });
+
+    // Image share: paint the card, then share it as a file where the device can, or download it.
+    const imageButton = root.querySelector<HTMLButtonElement>('[data-verse-image]');
+    imageButton?.addEventListener('click', async () => {
+      imageButton.disabled = true;
+      say('Making your image…');
+      try {
+        const art = backgroundFor(reference()) ?? verseBackgrounds[0];
+        const canvas = await paintVerseCard({
+          text: verseText(),
+          reference: reference(),
+          date: date.textContent || '',
+          background: `${config.base}${art.file}`,
+          dark: art.dark,
+          logo: config.logo,
+        });
+        const blob = await canvasBlob(canvas);
+        const name = `the-well-${reference().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')}.png`;
+        const file = new File([blob], name, { type: 'image/png' });
+        const caption = `${reference()} (KJV)\nToday’s verse from ${config.legal}: ${link()}`;
+        try { await navigator.clipboard.writeText(caption); } catch { /* optional */ }
+        if (navigator.canShare?.({ files: [file] })) {
+          try {
+            await navigator.share({ files: [file], text: caption });
+            say('Shared. The caption with a link back here is on your clipboard too.');
+            return;
+          } catch { /* closed the share sheet; fall back to saving */ }
         }
-        await navigator.clipboard.writeText(`${message}\n${location.href}`);
-        if (label) {
-          label.textContent = 'Copied';
-          setTimeout(() => { label.textContent = 'Share this verse'; }, 2000);
-        }
+        const href = URL.createObjectURL(blob);
+        const anchor = document.createElement('a');
+        anchor.href = href;
+        anchor.download = name;
+        document.body.append(anchor);
+        anchor.click();
+        anchor.remove();
+        window.setTimeout(() => URL.revokeObjectURL(href), 60_000);
+        say('Image saved. A caption with a link back here is on your clipboard.');
       } catch {
-        // The visitor closed the share sheet, or the clipboard is unavailable. Nothing to do.
+        say('Sorry, that image didn’t work. Try “Share this verse” instead.');
+      } finally {
+        imageButton.disabled = false;
       }
     });
+
+    // Arriving from a shared link: let the verse rise in, and settle on the section once photos above it
+    // have loaded and pushed it down the page.
+    if (location.hash === '#today') {
+      root.classList.add('is-arrived');
+      const settle = () => root.scrollIntoView({ block: 'start' });
+      if (document.readyState === 'complete') requestAnimationFrame(settle);
+      else window.addEventListener('load', () => requestAnimationFrame(settle), { once: true });
+    }
   });
 </script>
