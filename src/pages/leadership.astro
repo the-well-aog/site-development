@@ -3,15 +3,16 @@ import { getCollection } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import PageHero from '../components/PageHero.astro';
 import { isPlaceholderText } from '../data/copy';
+import { site } from '../data/site';
 import { img, url } from '../lib/url';
 
 const leaders = (await getCollection('leaders')).sort((a, b) => a.data.order - b.data.order);
 ---
 
 <Base title="Leadership" description="The people who lead The Well Assembly of God." image="images/chapel.jpg">
-  <PageHero kicker="People" title="Meet the leadership." deck="Get to know the people who help lead and care for The Well." />
+  <PageHero kicker="Our team" title="Shepherds who serve." deck="Our pastors and leaders are called to love God, preach His Word, and care for the people of The Well." />
   <section class="section" style="padding-top: 1rem;">
-    {leaders.some((entry) => isPlaceholderText(entry.data.summary)) && <div class="wrap"><p class="fine" style="margin-bottom: 1.8rem;">Preview profiles: names, roles, photographs, and biographies are awaiting confirmation.</p></div>}
+    {site.preview && <div class="wrap"><p class="fine" style="margin-bottom: 1.8rem;">Names, photographs, and biographies are coming soon.</p></div>}
     <div class="wrap people">
       {
         leaders.map((entry) => (
@@ -25,5 +26,5 @@ const leaders = (await getCollection('leaders')).sort((a, b) => a.data.order - b
       }
     </div>
   </section>
-  <section class="section" style="padding-top: 0;"><div class="wrap"><a class="more" href={url('/contact')}>Start a conversation <span aria-hidden="true">→</span></a></div></section>
+  <section class="section" style="padding-top: 0;"><div class="wrap measure"><p class="eyebrow">Need a pastor?</p><h2 class="block-title">We’re here for you.</h2><p class="deck" style="margin-top: 1rem;">For prayer, counsel, a hospital visit, a wedding, a baby dedication, or simply a conversation about faith, reach out. A pastor will get back to you.</p><div class="actions"><a class="btn" href={url('/contact')}>Contact a pastor <span aria-hidden="true">↗</span></a></div></div></section>
 </Base>

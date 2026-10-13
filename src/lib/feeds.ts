@@ -151,13 +151,19 @@ function parseFeed(xml: string, limit: number): YoutubeVideo[] {
   return videos;
 }
 
-async function fetchVideos(channelId: string): Promise<YoutubeVideo[]> {
-  const response = await fetch(`https://www.youtube.com/feeds/videos.xml?channel_id=${channelId}`, {
-    signal: AbortSignal.timeout(12000),
-    headers: { 'User-Agent': 'Mozilla/5.0 (compatible; TheWellSite/1.0)' },
-  });
-  if (!response.ok) return [];
-  return parseFeed(await response.text(), 12);
+// YouTube's RSS endpoint intermittently answers 404/5xx. Retry so a daily rebuild
+// does not publish an empty sermon list.
+async function fetchVideos(channelId: string, attempts = 3): Promise<YoutubeVideo[]> {
+  for (let attempt = 1; attempt <= attempts; attempt++) {
+    const response = await fetch(`https://www.youtube.com/feeds/videos.xml?channel_id=${channelId}`, {
+      signal: AbortSignal.timeout(12000),
+      headers: { 'User-Agent': 'Mozilla/5.0 (compatible; TheWellSite/1.0)' },
+    });
+    if (response.ok) return parseFeed(await response.text(), 12);
+    console.warn(`YouTube feed returned ${response.status} (attempt ${attempt}/${attempts}).`);
+    if (attempt < attempts) await new Promise((resolve) => setTimeout(resolve, 1500 * attempt));
+  }
+  return [];
 }
 
 async function load(): Promise<SocialFeeds> {

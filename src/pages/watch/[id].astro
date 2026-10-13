@@ -20,7 +20,7 @@ const { video } = Astro.props;
 const description = video.excerpt || video.title;
 ---
 
-<Base title={video.title} description={description} image="images/night.jpg">
+<Base title={video.title} description={description} image={video.thumbnail}>
   <header class="page-hero">
     <div class="wrap">
       <p class="fine" style="margin-bottom: 1.4rem;"><a href={url('/sermons')}>← All messages</a></p>

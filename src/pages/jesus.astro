@@ -1,0 +1,130 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import { url } from '../lib/url';
+
+const story = [
+  {
+    n: '01',
+    title: 'God made you, and He loves you.',
+    text: 'You are not an accident. God created you on purpose and for a purpose, and He wants to know you personally.',
+    verse: '“For God so loved the world that He gave His only begotten Son, that whoever believes in Him should not perish but have everlasting life.”',
+    ref: 'John 3:16',
+  },
+  {
+    n: '02',
+    title: 'Sin separates us from God.',
+    text: 'Every one of us has gone our own way. The Bible calls that sin, and its result is separation from God. No amount of good works can close that gap.',
+    verse: '“For all have sinned and fall short of the glory of God.”',
+    ref: 'Romans 3:23',
+  },
+  {
+    n: '03',
+    title: 'Jesus paid the price.',
+    text: 'Jesus, the Son of God, lived the sinless life we could not live. He died on the cross in our place and rose again on the third day, defeating sin and death.',
+    verse: '“For the wages of sin is death, but the gift of God is eternal life in Christ Jesus our Lord.”',
+    ref: 'Romans 6:23',
+  },
+  {
+    n: '04',
+    title: 'You can receive Him today.',
+    text: 'Salvation is a gift. You receive it by turning from sin and putting your trust in Jesus as your Savior and Lord. It is grace, not something you earn.',
+    verse: '“If you confess with your mouth the Lord Jesus and believe in your heart that God has raised Him from the dead, you will be saved.”',
+    ref: 'Romans 10:9',
+  },
+];
+
+const nextSteps = [
+  { title: 'Tell someone', text: 'Let us know. We want to celebrate with you, pray with you, and help you take your next steps.', href: '/contact', label: 'Tell a pastor' },
+  { title: 'Get baptized', text: 'Water baptism is a public declaration that you belong to Jesus. Ask about our next baptism service.', href: '/next-steps#baptism', label: 'About baptism' },
+  { title: 'Read the Bible', text: 'Start with the Gospel of John. Read a chapter a day and ask God to speak to you.', href: '/sermons', label: 'Listen to a message' },
+  { title: 'Find your people', text: 'Faith grows best in community. Join us on Sunday and find a group to walk with.', href: '/ministries', label: 'Find a group' },
+];
+---
+
+<Base title="Know Jesus" description="The good news of Jesus Christ: God loves you, Jesus paid the price for sin, and you can receive new life today." image="images/water.jpg">
+  <PageHero kicker="The good news" title="Living water for a thirsty soul." deck="Our church is named for a conversation Jesus had at a well. He offered a thirsty woman living water. He offers the same to you." />
+
+  <section class="section" style="padding-top: 0.5rem;">
+    <div class="wrap well-story">
+      <blockquote>
+        <p>“Whoever drinks of the water that I shall give him will never thirst.”</p>
+        <cite>Jesus, John 4:14</cite>
+      </blockquote>
+      <div class="measure">
+        <p class="deck">In John 4, Jesus sat down by a well in Samaria and spoke with a woman everyone else avoided. He knew her whole story, and He still offered her life.</p>
+        <p>That is still who Jesus is. Wherever you have been and whatever you carry, He knows you and He invites you to come. Here is the good news, simply put.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top: 0;">
+    <div class="wrap">
+      <div class="steps">
+        {story.map((step) => (
+          <article class="step">
+            <span class="num" aria-hidden="true">{step.n}</span>
+            <div>
+              <h2>{step.title}</h2>
+              <p>{step.text}</p>
+              <p class="verse">{step.verse} <span>{step.ref}</span></p>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="band-dark" aria-labelledby="prayer-title">
+    <div class="wrap prayer-grid">
+      <div>
+        <p class="eyebrow light">Pray with us</p>
+        <h2 id="prayer-title" class="block-title">Ready to say yes?</h2>
+        <p class="deck light-deck">There are no magic words. God looks at the heart. If you want to give your life to Jesus, you can pray something like this, right now, wherever you are.</p>
+      </div>
+      <div class="prayer-card">
+        <p>Jesus, I believe You are the Son of God. I believe You died on the cross for my sins and rose again. I confess that I have sinned, and I turn from it. Please forgive me. I receive You as my Savior and my Lord. Fill me with Your Holy Spirit and help me follow You every day. Thank You for new life. Amen.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head"><div><p class="eyebrow">I prayed that prayer</p><h2 class="block-title">Welcome to the family.</h2></div></div>
+      <p class="deck" style="margin-bottom: 2rem;">If you just prayed and meant it, heaven is rejoicing (Luke 15:10), and so are we. Here is where to go from here.</p>
+      <div class="jesus-next">
+        {nextSteps.map((item) => (
+          <a class="jesus-card" href={url(item.href)}>
+            <h3>{item.title}</h3>
+            <p>{item.text}</p>
+            <span class="more">{item.label} <span aria-hidden="true">→</span></span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .well-story { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(2rem, 6vw, 5rem); align-items: center; }
+  .well-story blockquote { margin: 0; padding-left: 1.5rem; border-left: 2px solid var(--tide); }
+  .well-story blockquote p { font: italic 500 clamp(1.8rem, 3.4vw, 2.8rem)/1.2 var(--serif); letter-spacing: -.03em; color: var(--well); }
+  .well-story cite { display: block; margin-top: 1rem; font-style: normal; font-size: .75rem; letter-spacing: .14em; text-transform: uppercase; color: var(--tide); }
+  .well-story .measure p:not(.deck) { margin-top: 1rem; color: var(--muted); }
+  .verse { margin-top: .9rem !important; padding: .9rem 1rem; border-left: 2px solid var(--foam); background: var(--paper-2); font-family: var(--serif); font-style: italic; color: var(--ink) !important; max-width: 60ch; }
+  .verse span { display: block; margin-top: .35rem; font: normal 500 .72rem var(--sans); letter-spacing: .12em; text-transform: uppercase; color: var(--tide); }
+  .prayer-grid { display: grid; grid-template-columns: .9fr 1.1fr; gap: clamp(2rem, 5vw, 4rem); align-items: center; }
+  .light-deck { color: #d1dfe6; margin-top: 1.2rem; }
+  .prayer-card { padding: clamp(1.5rem, 3vw, 2.5rem); border: 1px solid rgb(243 239 230 / 22%); border-radius: var(--radius); background: rgb(255 255 255 / 4%); }
+  .prayer-card p { font: 500 clamp(1.2rem, 2vw, 1.5rem)/1.55 var(--serif); letter-spacing: -.01em; }
+  .jesus-next { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1rem; }
+  .jesus-card { display: flex; flex-direction: column; gap: .6rem; padding: 1.4rem; border: 1px solid var(--line); border-radius: var(--radius); background: #fff; text-decoration: none; transition: transform .2s ease, box-shadow .2s ease; }
+  .jesus-card:hover { transform: translateY(-2px); box-shadow: 0 14px 30px rgb(0 46 74 / 8%); }
+  .jesus-card h3 { font: 500 1.45rem/1.15 var(--serif); letter-spacing: -.02em; }
+  .jesus-card p { color: var(--muted); font-size: .95rem; flex: 1; }
+  @media (max-width: 980px) {
+    .well-story, .prayer-grid { grid-template-columns: 1fr; }
+    .jesus-next { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 560px) { .jesus-next { grid-template-columns: 1fr; } }
+</style>

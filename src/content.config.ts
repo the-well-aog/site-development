@@ -23,6 +23,8 @@ const sermons = defineCollection({
     image,
     summary: z.string(),
     alt: z.string(),
+    // YouTube video id (the 11 characters after watch?v=). Optional.
+    video: z.string().regex(/^[\w-]{11}$/).optional(),
   }),
 });
 
@@ -34,6 +36,8 @@ const events = defineCollection({
     time: z.string(),
     place: z.string(),
     image,
+    // Draft events only appear while site.preview is true, labelled as samples.
+    draft: z.boolean().default(false),
     summary: z.string(),
     alt: z.string(),
   }),

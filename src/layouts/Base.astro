@@ -8,19 +8,20 @@ import { url } from '../lib/url';
 interface Props {
   title: string;
   description: string;
-  overlay?: boolean;
   image?: string;
 }
 
 const { title, description, image = 'images/the-well-logo.png' } = Astro.props;
 const fullTitle = title === 'The Well' ? 'The Well Assembly of God' : `${title} · The Well`;
 const canonical = new URL(Astro.url.pathname, Astro.site);
-const ogImage = new URL(url(image), Astro.site);
+const ogImage = /^https?:/.test(image) ? new URL(image) : new URL(url(image), Astro.site);
 const logoUrl = new URL(url('images/the-well-logo.png'), Astro.site);
+const sameAs = [site.facebookPage].filter(Boolean);
 const organization = {
   '@context': 'https://schema.org',
-  '@type': 'Organization',
+  '@type': 'Church',
   name: 'The Well Assembly of God',
+  description: site.tagline,
   url: new URL(url('/'), Astro.site).href,
   logo: logoUrl.href,
   telephone: site.phoneHref.replace('tel:', ''),
@@ -32,6 +33,7 @@ const organization = {
     postalCode: site.postalCode,
     addressCountry: site.country,
   },
+  ...(sameAs.length ? { sameAs } : {}),
 };
 ---
 
@@ -43,8 +45,8 @@ const organization = {
     <meta name="description" content={description} />
     <meta name="theme-color" content="#002e4a" />
     <link rel="canonical" href={canonical} />
-    <link rel="icon" href={url('images/the-well-logo.png')} type="image/png" />
-    <link rel="apple-touch-icon" href={url('images/the-well-logo.png')} />
+    <link rel="icon" href={url('images/the-well-logo-192.png')} type="image/png" />
+    <link rel="apple-touch-icon" href={url('images/the-well-logo-192.png')} />
     <meta property="og:title" content={fullTitle} />
     <meta property="og:site_name" content="The Well Assembly of God" />
     <meta property="og:description" content={description} />

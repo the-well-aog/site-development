@@ -4,25 +4,55 @@ import PageHero from '../components/PageHero.astro';
 import { url } from '../lib/url';
 
 const steps = [
-  { n: '01', title: 'Start a conversation', href: '/contact', text: 'Bring a question, introduce yourself, or ask for help finding your way. A simple hello is enough to begin.', label: 'Find contact information' },
-  { n: '02', title: 'Explore baptism', href: '/beliefs', text: 'Learn about the church’s beliefs, then ask about baptism and what taking that step could look like for you.', label: 'Explore our beliefs' },
-  { n: '03', title: 'Find your people', href: '/ministries/groups', text: 'Explore Groups and ask about meeting times, who they are for, and how to get connected.', label: 'Discover Groups' },
-  { n: '04', title: 'Ask about serving', href: '/contact', text: 'Your interests and experience are a good starting point. Ask about opportunities to lend a hand at The Well.', label: 'Start a conversation' },
+  {
+    n: '01', id: 'jesus', title: 'Follow Jesus',
+    text: 'Every step starts here. Following Jesus means turning from sin, trusting Him as Savior, and making Him Lord of your life. If you are not sure where you stand with God, we would love to help.',
+    ref: 'John 14:6', href: '/jesus', label: 'Read the good news',
+  },
+  {
+    n: '02', id: 'baptism', title: 'Be baptized in water',
+    text: 'Jesus commanded His followers to be baptized. Water baptism by immersion does not save you; it is an outward declaration of what Jesus has already done inside you. You are buried with Him and raised to walk in new life. We hold baptism services throughout the year, and a pastor will meet with you first to talk it through.',
+    ref: 'Matthew 28:19 · Romans 6:4', href: '/contact', label: 'Ask about baptism',
+  },
+  {
+    n: '03', id: 'holy-spirit', title: 'Receive the baptism in the Holy Spirit',
+    text: 'On the Day of Pentecost the disciples were filled with the Holy Spirit and spoke in other tongues as the Spirit gave them utterance. That promise is for every believer today. The baptism in the Holy Spirit gives power to live for Jesus and tell others about Him. We pray with believers to receive this gift at the altar on Sundays and Wednesdays, and we are always glad to answer questions.',
+    ref: 'Acts 1:8 · Acts 2:4, 38–39', href: '/beliefs#truth-07', label: 'What the Bible teaches',
+  },
+  {
+    n: '04', id: 'groups', title: 'Grow in a group',
+    text: 'Sunday is where we gather; groups are where we grow. Open the Bible together, pray for one another, and build friendships that carry you through the week.',
+    ref: 'Acts 2:42', href: '/ministries/groups', label: 'Find a group',
+  },
+  {
+    n: '05', id: 'membership', title: 'Make The Well your home',
+    text: 'Membership is how we say, “This is my church family.” Our membership class covers our story, our beliefs, and how you can be part of what God is doing here. Ask about the next class.',
+    ref: 'Ephesians 2:19', href: '/contact', label: 'Ask about membership',
+  },
+  {
+    n: '06', id: 'serve', title: 'Serve with your gifts',
+    text: 'God has given every believer gifts to build up the church. Greeting, worship, kids, students, media, hospitality, prayer, outreach: there is a place for you to make a difference.',
+    ref: '1 Peter 4:10', href: '/contact', label: 'Join a team',
+  },
 ];
 ---
 
-<Base title="Next steps" description="Explore ways to connect, ask about baptism, find a group, and serve at The Well." image="images/table.jpg">
-  <PageHero kicker="Find your next step" title="Begin where you are." deck="You don't need to do everything at once. Choose one small step toward connection and let the conversation grow from there." />
+<Base title="Next steps" description="Follow Jesus, be baptized in water, receive the baptism in the Holy Spirit, join a group, become a member, and serve at The Well." image="images/table.jpg">
+  <PageHero kicker="Grow in your faith" title="Your next step." deck="Following Jesus is a journey, not a single moment. Wherever you are today, here is a clear next step to take with us." />
   <section class="section" style="padding-top: 0.4rem;">
     <div class="wrap">
+      <nav class="step-jump" aria-label="Steps on this page">
+        {steps.map((step) => <a href={`#${step.id}`}>{step.title}</a>)}
+      </nav>
       <div class="steps">
         {steps.map((step) => (
-          <article class="step">
+          <article class="step" id={step.id}>
             <span class="num" aria-hidden="true">{step.n}</span>
             <div>
               <h2>{step.title}</h2>
               <p>{step.text}</p>
-              <p style="margin-top: 0.9rem;"><a class="more" href={url(step.href)}>{step.label} <span aria-hidden="true">→</span></a></p>
+              <p class="step-ref">{step.ref}</p>
+              <p style="margin-top: 0.6rem;"><a class="more" href={url(step.href)}>{step.label} <span aria-hidden="true">→</span></a></p>
             </div>
           </article>
         ))}
@@ -32,9 +62,17 @@ const steps = [
   <section class="band-dark">
     <div class="wrap">
       <p class="eyebrow light">Your first step can be Sunday</p>
-      <h2 class="block-title">Come and get to know us.</h2>
-      <p class="deck" style="color: rgba(243,239,230,.82); margin-top: 1rem;">Explore what to expect, find the gathering details, and bring your questions.</p>
+      <h2 class="block-title">Come and worship with us.</h2>
+      <p class="deck" style="color: rgba(243,239,230,.82); margin-top: 1rem;">See what to expect, find the service times, and bring your questions. We saved you a seat.</p>
       <div class="actions"><a class="btn btn-light" href={url('/visit')}>Plan your visit <span aria-hidden="true">↗</span></a></div>
     </div>
   </section>
 </Base>
+
+<style>
+  .step p { max-width: 64ch; }
+  .step .step-ref { font-size: .78rem; letter-spacing: .08em; text-transform: uppercase; color: var(--tide); }
+  .step-jump { display: flex; flex-wrap: wrap; gap: .5rem; margin-bottom: 2rem; }
+  .step-jump a { padding: .5rem .95rem; border: 1px solid var(--line-strong); border-radius: 999px; font-size: .85rem; text-decoration: none; }
+  .step-jump a:hover { background: var(--well); border-color: var(--well); color: var(--paper); }
+</style>

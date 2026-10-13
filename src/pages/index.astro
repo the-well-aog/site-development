@@ -2,33 +2,33 @@
 import { getCollection } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import { site } from '../data/site';
+import { cardinal } from '../data/beliefs';
 import { isPlaceholderText } from '../data/copy';
+import { upcomingEvents } from '../lib/events';
 import { loadSocial } from '../lib/feeds';
 import { dayNum, iso, longDate, monthShort, todayIso } from '../lib/format';
 import { img, url } from '../lib/url';
 
-const events = (await getCollection('events'))
-  .filter((entry) => iso(entry.data.date) >= todayIso() && !isPlaceholderText(entry.data.title))
-  .sort((a, b) => a.data.date.valueOf() - b.data.date.valueOf()).slice(0, 3);
+const events = (await upcomingEvents()).slice(0, 3);
 const notes = (await getCollection('announcements'))
   .filter((entry) => iso(entry.data.expires) >= todayIso() && !isPlaceholderText(entry.data.summary))
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 const social = await loadSocial();
 const featured = social.videos[0];
 const community = [
-  { id: 'kids', title: 'For the little ones.', label: 'Kids', image: 'kids', text: 'A first step for your family.', alt: 'A sunlit children’s room with small tables and wooden shelves.' },
-  { id: 'students', title: 'For the next generation.', label: 'Students', image: 'lounge', text: 'Space to ask. Room to grow.', alt: 'A comfortable lounge with a sofa, books, and an acoustic guitar.' },
-  { id: 'groups', title: 'For life together.', label: 'Groups', image: 'table', text: 'Find connection beyond Sunday.', alt: 'An oak table set with cups and an open book.' },
+  { id: 'kids', title: 'For the little ones.', label: 'Kids', image: 'kids', text: 'Safe, joyful, and full of Jesus. Nursery to 5th grade.', alt: 'A sunlit children’s room with small tables and wooden shelves.' },
+  { id: 'students', title: 'For the next generation.', label: 'Students', image: 'lounge', text: 'Encounter God and own your faith. 6th to 12th grade.', alt: 'A comfortable lounge with a sofa, books, and an acoustic guitar.' },
+  { id: 'groups', title: 'For life together.', label: 'Groups', image: 'table', text: 'Bible study, prayer, and real friendship.', alt: 'An oak table set with cups and an open book.' },
 ];
 ---
 
-<Base title="The Well" description="Welcome to The Well Assembly of God. Explore our church, find community, and take your next step in faith." image="images/church-exterior.jpg">
+<Base title="The Well" description="The Well Assembly of God is a Spirit-filled, Bible-based church in Pocola, Oklahoma. Join us Sundays at 10:00a. Come as you are and meet Jesus." image="images/church-exterior.jpg">
   <section class="welcome-hero" aria-labelledby="welcome-title">
     <div class="wrap-wide welcome-grid">
       <div class="welcome-copy">
         <p class="eyebrow"><span class="eyebrow-rule" aria-hidden="true"></span> The Well Assembly of God</p>
         <h1 id="welcome-title">A place to <br /><em>belong.</em><br />A faith to grow.</h1>
-        <p class="welcome-deck">Wherever you are in your journey, there’s a next step for you. Come discover life, faith, and community at The Well.</p>
+        <p class="welcome-deck">We are a Spirit-filled church family in Pocola, Oklahoma. Wherever you are in your journey, Jesus is ready to meet you, and so are we.</p>
         <div class="actions">
           <a class="btn" href={url('/visit')}>Plan your visit <span aria-hidden="true">↗</span></a>
           <a class="text-link" href={url('/sermons')}><span class="small-play" aria-hidden="true">▶</span> Watch a message</a>
@@ -37,7 +37,7 @@ const community = [
       </div>
       <div class="welcome-picture is-church">
         <img src={img('church')} alt="The church at golden hour: a long brick building with a red metal roof and a covered entrance." width="1254" height="1254" fetchpriority="high" />
-        <div class="picture-caption"><span>The door is open.</span><span aria-hidden="true">01 / Welcome</span></div>
+        <div class="picture-caption"><span>The door is open. Come thirsty.</span><span aria-hidden="true">John 4:14</span></div>
       </div>
     </div>
   </section>
@@ -45,22 +45,38 @@ const community = [
   <section id="gather" class="gather-strip" aria-label="Gathering information">
     <div class="wrap-wide gather-grid">
       <div class="gather-intro"><p class="eyebrow">Let’s gather</p><h2>There’s a place for you.</h2></div>
-      <div class="gather-time"><span>{site.sundayLabel}</span><strong>{site.sundayTime}</strong></div>
-      <div class="gather-time"><span>{site.midweekLabel}</span><strong>{site.midweekTime}</strong></div>
+      <div class="gather-time"><span>{site.sundayLabel}</span><strong>{site.sundayTime}</strong><small>{site.sundayDetail}</small></div>
+      <div class="gather-time"><span>{site.midweekLabel}</span><strong>{site.midweekTime}</strong><small>{site.midweekDetail}</small></div>
       <a class="gather-link" href={url('/visit')}>What to expect <span aria-hidden="true">↗</span></a>
     </div>
     <p class="wrap-wide gather-contact"><a href={site.mapsHref}>{site.address}, {site.city}</a><a href={site.phoneHref}>{site.phoneDisplay}</a></p>
-    <p class="wrap-wide preview-caption">Service times are a preview. Confirm them before visiting.</p>
+    {site.preview && <p class="wrap-wide preview-caption">Service times are awaiting final confirmation.</p>}
   </section>
 
   <section class="section introduction" aria-labelledby="intro-title">
     <div class="wrap intro-grid">
-      <div class="intro-image"><img src={img('water')} alt="Morning light on the gently rippling surface of water." width="1280" height="720" loading="lazy" /><span class="image-label">Life. Faith. Community.</span></div>
+      <div class="intro-image"><img src={img('water')} alt="Morning light on the gently rippling surface of water." width="1280" height="720" loading="lazy" /><span class="image-label">Living water · John 4</span></div>
       <div class="intro-copy">
         <p class="eyebrow">Welcome to The Well</p>
-        <h2 id="intro-title" class="block-title">Come as you are.<br /><em>Discover what’s next.</em></h2>
-        <p class="deck">You don’t need to have all the answers to take a first step. Start with a visit, explore what we believe, and get to know the people behind The Well.</p>
-        <div class="intro-links"><a class="more" href={url('/about')}>Get to know us <span aria-hidden="true">↗</span></a><a class="more" href={url('/beliefs')}>What we believe <span aria-hidden="true">↗</span></a></div>
+        <h2 id="intro-title" class="block-title">Come as you are.<br /><em>Leave refreshed.</em></h2>
+        <p class="deck">At a well in Samaria, Jesus offered a thirsty woman living water. That same invitation is why our church exists. You don’t need to have it all together. Bring your questions, your story, and your thirst for something real.</p>
+        <div class="intro-links"><a class="more" href={url('/about')}>Our story <span aria-hidden="true">↗</span></a><a class="more" href={url('/jesus')}>Know Jesus <span aria-hidden="true">↗</span></a></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section faith-section" aria-labelledby="faith-title">
+    <div class="wrap-wide">
+      <div class="section-head"><div><p class="eyebrow">Pentecostal · {site.affiliation}</p><h2 id="faith-title" class="block-title">Jesus saves, heals, fills,<br /><em>and is coming again.</em></h2></div><a class="more" href={url('/beliefs')}>What we believe <span aria-hidden="true">↗</span></a></div>
+      <div class="faith-grid">
+        {cardinal.map((item, index) => (
+          <article>
+            <span class="faith-num" aria-hidden="true">0{index + 1}</span>
+            <h3>{item.title}</h3>
+            <p>{item.text}</p>
+            <p class="faith-ref">{item.ref}</p>
+          </article>
+        ))}
       </div>
     </div>
   </section>
@@ -84,8 +100,8 @@ const community = [
         {featured && <span class="play" aria-hidden="true"></span>}
         <span class="message-image-label">A moment to pause. A word to carry with you.</span>
       </a>
-      <div class="message-copy"><p class="eyebrow light">A message for your week</p><h2 id="message-title">{featured ? featured.title : 'Make room for a little inspiration.'}</h2>
-        {featured ? <p class="message-date">{longDate(new Date(featured.published))}</p> : <p class="deck">Explore messages, revisit a conversation, or join a service online. There’s room to listen wherever you are.</p>}
+      <div class="message-copy"><p class="eyebrow light">A word for your week</p><h2 id="message-title">{featured ? featured.title : 'Bible-centered preaching for everyday life.'}</h2>
+        {featured ? <p class="message-date">{longDate(new Date(featured.published))}</p> : <p class="deck">Missed a Sunday? Catch up on a message, read the notes from our current series, or worship with us live online.</p>}
         <div class="actions"><a class="btn btn-light" href={featured ? url(`/watch/${featured.id}`) : url('/sermons')}>{featured ? 'Watch the message' : 'Explore messages'} <span aria-hidden="true">↗</span></a><a class="text-link" href={url('/live')}>Join us online <span aria-hidden="true">→</span></a></div>
         {featured && <a class="more light-link" href={url('/sermons')}>Browse all messages <span aria-hidden="true">→</span></a>}
       </div>
@@ -96,15 +112,29 @@ const community = [
     <div class="wrap-wide life-grid">
       <div>
         <p class="eyebrow">Beyond Sunday</p><h2 id="life-title" class="block-title">Life at The Well.</h2>
-        <p class="deck">Stay connected with what’s happening, find your next step, and make a little more room for community.</p>
+        <p class="deck">Church is more than a Sunday service. Here is what is coming up, and where to plug in.</p>
         {notes[0] && <p class="announcement"><span>Church update</span>{notes[0].data.summary}</p>}
+        {events.some((entry) => entry.data.draft) && <p class="fine" style="margin-top: 1rem;">Sample events for the website preview.</p>}
         {events.length > 0 ? <div class="event-list home-events">{events.map((entry) => <a class="event-row" href={url(`/events/${entry.id}`)}><span class="event-day">{dayNum(entry.data.date)}<small>{monthShort(entry.data.date)}</small></span><span><strong>{entry.data.title}</strong><em>{entry.data.time}</em></span><span aria-hidden="true">↗</span></a>)}</div> : <div class="next-step-links"><a href={url('/events')}><span><small>Stay in the loop</small>Explore the calendar</span><span aria-hidden="true">↗</span></a><a href={url('/next-steps')}><span><small>Take a step forward</small>Find your next step</span><span aria-hidden="true">↗</span></a><a href={url('/prayer')}><span><small>You don’t have to walk alone</small>Connect about prayer</span><span aria-hidden="true">↗</span></a></div>}
         {events.length > 0 && <a class="more" href={url('/events')}>See the calendar <span aria-hidden="true">↗</span></a>}
       </div>
-      {social.facebookPlugin && social.facebookPage ? <aside class="social-panel"><div class="social-heading"><span class="social-icon" aria-hidden="true">f</span><div><h3>Stay connected.</h3><p>Updates from our Facebook page</p></div></div><div class="fb-shell"><iframe src={social.facebookPlugin} title="The Well Facebook timeline" width="500" height="680" loading="lazy" allow="encrypted-media; clipboard-write; web-share" referrerpolicy="strict-origin-when-cross-origin" /></div><a class="more" href={social.facebookPage}>Visit us on Facebook <span aria-hidden="true">↗</span></a></aside> : <aside class="connection-panel"><img src={url('images/the-well-logo.png')} alt="The Well Assembly of God" width="1254" height="1254" loading="lazy" /><h3>Let’s start a conversation.</h3><p>Have a question about church or your first visit? Find the next step that’s right for you.</p><a class="btn" href={url('/contact')}>Get in touch <span aria-hidden="true">↗</span></a></aside>}
+      {social.facebookPlugin && social.facebookPage ? <aside class="social-panel"><div class="social-heading"><span class="social-icon" aria-hidden="true">f</span><div><h3>Stay connected.</h3><p>Updates from our Facebook page</p></div></div><div class="fb-shell"><iframe src={social.facebookPlugin} title="The Well Facebook timeline" width="500" height="680" loading="lazy" allow="encrypted-media; clipboard-write; web-share" referrerpolicy="strict-origin-when-cross-origin" /></div><a class="more" href={social.facebookPage}>Visit us on Facebook <span aria-hidden="true">↗</span></a></aside> : <aside class="connection-panel"><img src={url('images/the-well-logo-192.png')} alt="The Well Assembly of God" width="192" height="192" loading="lazy" /><h3>Let’s start a conversation.</h3><p>Have a question about church or your first visit? Find the next step that’s right for you.</p><a class="btn" href={url('/contact')}>Get in touch <span aria-hidden="true">↗</span></a></aside>}
     </div>
   </section>
 
-  <section class="home-invitation" aria-labelledby="invitation-title"><div class="wrap-wide invitation-grid"><div><p class="eyebrow">Your next chapter starts with a step</p><h2 id="invitation-title">We’d love to<br /><em>meet you.</em></h2></div><div><p>First time at church? Finding your way back? Start here. There’s a place for you at The Well.</p><a class="btn" href={url('/visit')}>Plan your first visit <span aria-hidden="true">↗</span></a></div></div></section>
+  <section class="home-invitation" aria-labelledby="invitation-title"><div class="wrap-wide invitation-grid"><div><p class="eyebrow">Your next chapter starts with a step</p><h2 id="invitation-title">We’d love to<br /><em>meet you.</em></h2></div><div><p>First time at church? Finding your way back to God? Start here. There’s a seat saved for you at The Well this {site.sundayLabel}.</p><a class="btn" href={url('/visit')}>Plan your first visit <span aria-hidden="true">↗</span></a></div></div></section>
 </Base>
 
+
+<style>
+  .gather-time small { display: block; font-size: .75rem; color: #c1d2dc; }
+  .faith-section { padding-top: 0; }
+  .faith-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1rem; }
+  .faith-grid article { padding: 1.5rem; border: 1px solid var(--line); border-radius: var(--radius); background: #fff; }
+  .faith-num { font: italic 500 1.25rem var(--serif); color: var(--tide); }
+  .faith-grid h3 { margin-top: .9rem; font: 500 1.45rem/1.15 var(--serif); letter-spacing: -.02em; color: var(--well); }
+  .faith-grid p { margin-top: .6rem; color: var(--muted); font-size: .95rem; }
+  .faith-grid .faith-ref { font-size: .72rem; letter-spacing: .1em; text-transform: uppercase; color: var(--tide); }
+  @media (max-width: 980px) { .faith-grid { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 560px) { .faith-grid { grid-template-columns: 1fr; } }
+</style>

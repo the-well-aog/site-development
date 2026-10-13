@@ -2,28 +2,45 @@
 import Base from '../layouts/Base.astro';
 import PageHero from '../components/PageHero.astro';
 import PlaceholderForm from '../components/PlaceholderForm.astro';
-import { url } from '../lib/url';
+import { site } from '../data/site';
 ---
 
 <Base title="Prayer" description="Find information about sharing a prayer request with The Well Assembly of God." image="images/chapel.jpg">
-  <PageHero kicker="Prayer" title="Let's pray." deck="A worry, a hope, a moment of gratitude. You don't have to find the perfect words to begin." />
+  <PageHero kicker="Prayer" title="Let’s pray together." deck="A burden, a need for healing, a hope, or a reason to give thanks. You don’t need the perfect words. God is listening." />
   <section class="section" style="padding-top: 0.2rem;">
     <div class="wrap contact-grid">
       <div class="measure">
-        <p class="eyebrow">One conversation at a time</p>
-        <h2 class="block-title">Make room<br />for prayer.</h2>
-        <p class="deck" style="margin-top: 1.2rem;">Prayer requests are not being accepted through this website yet.</p>
-        <p>The form is shown here as a preview. Before it becomes available, this page will explain who receives your request and how to ask for a reply.</p>
-        <div class="actions"><a class="more" href={url('/contact')}>Contact information <span aria-hidden="true">→</span></a></div>
+        <p class="eyebrow">We believe prayer changes things</p>
+        <h2 class="block-title">You don’t have to<br />carry it alone.</h2>
+        <p class="deck" style="margin-top: 1.2rem;">“Is anyone among you sick? Let him call for the elders of the church, and let them pray over him, anointing him with oil in the name of the Lord.” (James 5:14)</p>
+        <p>We believe God hears and answers prayer. We believe Jesus still heals, saves, restores, and provides. Whatever you are facing, sickness, grief, addiction, a broken relationship, a hard decision, or a reason to give thanks, we would be honored to pray with you.</p>
+        <ul class="prayer-ways">
+          <li><strong>At the altar.</strong> At the end of every service, pastors and prayer team members are at the front, ready to pray with you.</li>
+          <li><strong>On Wednesday nights.</strong> Our midweek service at {site.midweekTime} is built around prayer and the Word.</li>
+          <li><strong>With a pastor.</strong> Call <a href={site.phoneHref}>{site.phoneDisplay}</a> for prayer, a hospital visit, or anointing for the sick.</li>
+        </ul>
+        <p class="fine crisis">If you are in danger or thinking about harming yourself, call 911 or call or text 988 (Suicide &amp; Crisis Lifeline) right now. This form is not monitored around the clock.</p>
       </div>
       <div class="panel">
-        <h2 class="card-title" style="margin: 0 0 1.3rem;">Share a prayer request</h2>
+        <h2 class="card-title" style="margin: 0 0 .6rem;">Share a prayer request</h2>
+        <p class="fine" style="margin-bottom: 1.2rem;">Requests are read by our pastors and prayer team and kept confidential.</p>
         <PlaceholderForm submit="Share a request">
           <label class="field"><span>Name (optional)</span><input name="name" autocomplete="name" /></label>
           <label class="field"><span>Email (optional)</span><input name="email" type="email" autocomplete="email" /></label>
           <label class="field"><span>Your prayer request</span><textarea name="request" rows="5" required></textarea></label>
+          <label class="check"><input type="checkbox" name="contact" /><span>I’d like a pastor to contact me</span></label>
         </PlaceholderForm>
       </div>
     </div>
   </section>
 </Base>
+
+<style>
+  .measure > p + p { margin-top: 1rem; }
+  .measure > p:not(.deck):not(.fine) { margin-top: 1rem; color: var(--muted); }
+  .prayer-ways { list-style: none; margin: 1.5rem 0; padding: 0; border-top: 1px solid var(--line); }
+  .prayer-ways li { padding: 1rem 0; border-bottom: 1px solid var(--line); color: var(--muted); }
+  .prayer-ways strong { color: var(--well); font-weight: 600; }
+  .prayer-ways a { color: var(--tide); }
+  .crisis { padding: .9rem 1rem; border-left: 2px solid var(--tide); background: var(--paper-2); }
+</style>

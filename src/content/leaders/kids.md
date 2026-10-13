@@ -1,10 +1,8 @@
 ---
-name: Kids
-focus: Children
+name: Kids Director
+focus: Children's ministry
 order: 3
 image: kids
-summary: Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+summary: Our kids director leads a team of screened volunteers who create a safe, joyful place for children to learn about Jesus and grow in faith.
 alt: Low oak shelves and linen baskets in a bright children's room.
 ---
-
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.

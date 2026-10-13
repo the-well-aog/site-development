@@ -1213,3 +1213,13 @@ img { height: auto; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { transition: none !important; animation: none !important; }
 }
+
+/* Markdown body copy: sermon notes, ministry and event details. */
+.prose > * + * { margin-top: 1rem; }
+.prose h2 { margin-top: 2.2rem; font: 500 clamp(1.5rem, 2.4vw, 1.9rem)/1.15 var(--serif); letter-spacing: -.02em; color: var(--well); }
+.prose h3 { margin-top: 1.6rem; font: 500 1.3rem/1.2 var(--serif); }
+.prose ul, .prose ol { padding-left: 1.25rem; }
+.prose li + li { margin-top: .5rem; }
+.prose li::marker { color: var(--tide); }
+.prose strong { font-weight: 600; color: var(--well); }
+.prose blockquote { margin: 1.5rem 0; padding-left: 1.2rem; border-left: 2px solid var(--tide); font-family: var(--serif); font-style: italic; font-size: 1.15rem; }

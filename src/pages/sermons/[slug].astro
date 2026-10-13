@@ -34,21 +34,28 @@ const preview = isPlaceholderText(entry.data.summary) || isPlaceholderText(entry
         <span>{entry.data.passage}</span>
       </p>
       {preview && <p class="fine" style="margin-top: 1rem;">Sample message for this website preview.</p>}
+      {!entry.data.video && !preview && <p class="fine" style="margin-top: 1rem;">Message notes. A recording will be added when it is available.</p>}
     </div>
   </header>
   <section class="section" style="padding-top: 0;">
     <div class="wrap">
-      <div class="detail-hero">
-        <img src={img(entry.data.image)} alt={entry.data.alt} loading="lazy" />
-      </div>
-      <div class="player" role="region" aria-label="Video placeholder">
-        <div>
-          <p class="eyebrow light">Recording unavailable</p>
-          <h2 class="card-title">A little more to come.</h2>
-          <p>{preview ? 'This sample message does not have a recording connected.' : 'The recording for this message is not available yet.'}</p>
+      {entry.data.video ? (
+        <div class="video-embed">
+          <iframe
+            src={`https://www.youtube-nocookie.com/embed/${entry.data.video}`}
+            title={entry.data.title}
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowfullscreen
+            referrerpolicy="strict-origin-when-cross-origin"
+          />
         </div>
-      </div>
-      <div class="prose" style="margin-top: 2rem;">
+      ) : (
+        <div class="detail-hero">
+          <img src={img(entry.data.image)} alt={entry.data.alt} loading="lazy" />
+        </div>
+      )}
+      {entry.data.summary && !isPlaceholderText(entry.data.summary) && <p class="deck" style="margin-top: 1.6rem;">{entry.data.summary}</p>}
+      <div class="prose sermon-notes" style="margin-top: 2rem;">
         {isPlaceholderText(entry.body) ? <><h2 class="card-title">Message notes coming soon.</h2><p style="margin-top: 1rem;">This is a sample entry in the message library. The message notes and recording will be added when they are available.</p></> : <Content />}
       </div>
       <p style="margin: 2rem 0 4rem;">

@@ -1,26 +1,22 @@
 ---
-import { getCollection } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import PageHero from '../../components/PageHero.astro';
-import { isPlaceholderText } from '../../data/copy';
-import { dayNum, iso, monthShort, todayIso } from '../../lib/format';
+import { upcomingEvents } from '../../lib/events';
+import { dayNum, iso, monthShort } from '../../lib/format';
 import { url } from '../../lib/url';
 
-const today = todayIso();
-const events = (await getCollection('events'))
-  .filter((entry) => iso(entry.data.date) >= today)
-  .sort((a, b) => a.data.date.valueOf() - b.data.date.valueOf());
+const events = await upcomingEvents();
 ---
 
 <Base title="Events" description="What is happening at The Well Assembly of God." image="images/exterior.jpg">
-  <PageHero kicker="The calendar" title="Make room for connection." deck="Explore what's coming up and find another way to share life at The Well." />
+  <PageHero kicker="The calendar" title="What’s happening." deck="Worship nights, baptisms, family events, and ways to serve. There is always a next thing to be part of at The Well." />
   <section class="section" style="padding-top: 0.5rem;">
     <div class="wrap">
       {
         events.length === 0 ? (
           <div class="empty"><h2 class="card-title">More to come.</h2><p style="margin-top: .8rem;">There are no upcoming events listed right now. You can still explore a Sunday visit or find a ministry.</p><div class="actions"><a class="btn" href={url('/visit')}>Plan a visit</a><a class="more" href={url('/ministries')}>Explore ministries <span aria-hidden="true">→</span></a></div></div>
         ) : (
-          <>{events.some((entry) => isPlaceholderText(entry.data.summary)) && <p class="fine" style="margin-bottom: 1.5rem;">This calendar includes sample entries for the website preview. Details are awaiting confirmation.</p>}<div class="event-list">
+          <>{events.some((entry) => entry.data.draft) && <p class="fine" style="margin-bottom: 1.5rem;">This calendar shows sample events for the website preview. Dates and details are not confirmed.</p>}<div class="event-list">
             {events.map((entry) => (
               <a class="event-row" href={url(`/events/${entry.id}`)}>
                 <time class="event-day" datetime={iso(entry.data.date)}>

@@ -14,8 +14,8 @@ const social = await loadSocial();
     <div class="wrap">
       <p class="eyebrow light">Watch live</p>
       <h1>Wherever you are,<br />join us here.</h1>
-      <p class="deck" style="color: rgba(243,239,230,0.86); margin: 1rem 0 1.4rem;">Make a little room for worship, a message, and time to reflect.</p>
-      <p class="fine" style="color: rgba(243,239,230,.8);">{site.sundayLabel} · {site.sundayTime} <span style="opacity: .8;">— sample gathering time</span></p>
+      <p class="deck" style="color: rgba(243,239,230,0.86); margin: 1rem 0 1.4rem;">Worship with us, hear the Word, and pray along from wherever you are.</p>
+      <p class="fine" style="color: rgba(243,239,230,.8);">We go live {site.sundayLabel}s at {site.sundayTime}{site.preview && <span style="opacity: .8;"> (awaiting confirmation)</span>}</p>
       <div class="actions">
         {
           social.channelId ? (

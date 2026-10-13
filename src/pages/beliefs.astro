@@ -1,34 +1,108 @@
 ---
 import Base from '../layouts/Base.astro';
 import PageHero from '../components/PageHero.astro';
-import { beliefs, beliefsUrl } from '../data/beliefs';
+import { beliefs, beliefsUrl, cardinal } from '../data/beliefs';
+import { site } from '../data/site';
+import { url } from '../lib/url';
 ---
 
-<Base title="Beliefs" description="The sixteen Fundamental Truths of the Assemblies of God." image="images/water.jpg">
-  <PageHero kicker="Our foundation" title="What we believe." deck="Explore the sixteen Fundamental Truths of the Assemblies of God, with the full statement available in its own words." />
-  <section class="section" style="padding-top: 1rem;">
-    <div class="wrap beliefs-layout">
-      <aside>
-        <p class="eyebrow">Statement</p>
-        <p class="fine">
-          These are the titles of the sixteen Fundamental Truths. Read the complete statement, including its Scripture references, on the Assemblies of God website.
-        </p>
-        <p style="margin-top: 1rem;">
-          <a class="more" href={beliefsUrl}>Read the full statement <span aria-hidden="true">↗</span></a>
-        </p>
-      </aside>
+<Base title="Beliefs" description="What The Well Assembly of God believes: Jesus Christ, the authority of Scripture, the baptism in the Holy Spirit, and the sixteen Fundamental Truths of the Assemblies of God." image="images/water.jpg">
+  <PageHero kicker="Our foundation" title="What we believe." deck="We are a Pentecostal church in the Assemblies of God. Our faith rests on Jesus Christ, the authority of the Bible, and the power of the Holy Spirit." />
+
+  <section class="section beliefs-intro" style="padding-top: 0.5rem;">
+    <div class="wrap split-text">
       <div>
-        {
-          beliefs.map((item) => (
-            <article class="truth">
-              <span class="num">{item.n}</span>
-              <div>
-                <h2>{item.title}</h2>
-              </div>
-            </article>
-          ))
-        }
+        <p class="eyebrow">In plain words</p>
+        <h2 class="block-title">Jesus at the center.<br /><em>The Spirit at work.</em></h2>
+      </div>
+      <div class="measure">
+        <p class="deck">We believe the Bible is God’s inspired Word. We believe in one God, eternally existing as Father, Son, and Holy Spirit. We believe Jesus Christ is the Son of God, that He died for our sins and rose again, and that anyone who turns to Him in faith is forgiven and made new.</p>
+        <p>As a Pentecostal church we also believe that the same Holy Spirit who filled the first disciples on the Day of Pentecost still fills believers today, with power to live for Jesus and to tell others about Him. We pray for the sick, we expect God to move, and we look forward to the return of Christ.</p>
+        <p>The Well is affiliated with the {site.affiliation}{site.district ? `, ${site.district}` : ''}. We hold to the Assemblies of God Statement of Fundamental Truths, summarized below.</p>
       </div>
     </div>
   </section>
+
+  <section class="band-dark cardinal-band" aria-labelledby="cardinal-title">
+    <div class="wrap">
+      <p class="eyebrow light">Four core convictions</p>
+      <h2 id="cardinal-title" class="block-title">What the Assemblies of God emphasizes.</h2>
+      <div class="cardinal-grid">
+        {cardinal.map((item, index) => (
+          <article>
+            <span class="cardinal-num" aria-hidden="true">0{index + 1}</span>
+            <h3>{item.title}</h3>
+            <p>{item.text}</p>
+            <p class="cardinal-ref">{item.ref}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="truths-title">
+    <div class="wrap beliefs-layout">
+      <aside>
+        <p class="eyebrow">Statement of faith</p>
+        <h2 id="truths-title" class="aside-title">The 16 Fundamental Truths</h2>
+        <p class="fine">Each truth is summarized in plain language with its main Scripture references. The official statement, in its own words, is on the Assemblies of God website.</p>
+        <p style="margin-top: 1rem;">
+          <a class="more" href={beliefsUrl}>Read the full statement <span aria-hidden="true">↗</span></a>
+        </p>
+        <p>
+          <a class="more" href="https://ag.org/Beliefs/Position-Papers">AG position papers <span aria-hidden="true">↗</span></a>
+        </p>
+      </aside>
+      <div>
+        {beliefs.map((item) => (
+          <article class="truth" id={`truth-${item.n}`}>
+            <span class="num">{item.n}</span>
+            <div>
+              <h3>{item.title}</h3>
+              <p>{item.summary}</p>
+              <p class="truth-refs">{item.refs}</p>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top: 0;">
+    <div class="wrap pair">
+      <article>
+        <p class="eyebrow">Have questions?</p>
+        <h2>We’d love to talk.</h2>
+        <p>Questions about faith are welcome here. A pastor will gladly sit down with you, open the Bible, and talk it through.</p>
+        <div class="actions"><a class="more" href={url('/contact')}>Talk with a pastor <span aria-hidden="true">→</span></a></div>
+      </article>
+      <article>
+        <p class="eyebrow">Where it starts</p>
+        <h2>Know Jesus.</h2>
+        <p>Every belief on this page points to one Person. If you want to know how to begin a relationship with Jesus, start here.</p>
+        <div class="actions"><a class="more" href={url('/jesus')}>Begin with Jesus <span aria-hidden="true">→</span></a></div>
+      </article>
+    </div>
+  </section>
 </Base>
+
+<style>
+  .split-text { display: grid; grid-template-columns: .9fr 1.1fr; gap: clamp(2rem, 6vw, 5rem); align-items: start; }
+  .split-text .measure p + p { margin-top: 1.1rem; }
+  .split-text .measure p:not(.deck) { color: var(--muted); }
+  .cardinal-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1.5rem; margin-top: 2.5rem; }
+  .cardinal-grid article { padding-top: 1.1rem; border-top: 1px solid rgb(243 239 230 / 25%); }
+  .cardinal-num { font: italic 500 1.3rem var(--serif); color: #c1d2dc; }
+  .cardinal-grid h3 { margin-top: .6rem; font: 500 1.45rem/1.15 var(--serif); letter-spacing: -.02em; }
+  .cardinal-grid p { margin-top: .6rem; color: #d1dfe6; font-size: .95rem; }
+  .cardinal-grid .cardinal-ref { font-size: .75rem; letter-spacing: .08em; text-transform: uppercase; color: #c1d2dc; }
+  .aside-title { font: 500 1.6rem/1.15 var(--serif); letter-spacing: -.02em; margin-bottom: .8rem; }
+  .truth h3 { font-family: var(--serif); font-weight: 540; font-size: clamp(1.4rem, 2.2vw, 1.85rem); letter-spacing: -.03em; line-height: 1.15; }
+  .truth p { max-width: 62ch; }
+  .truth .truth-refs { margin-top: .7rem; font-size: .8rem; color: var(--tide); }
+  @media (max-width: 980px) {
+    .split-text { grid-template-columns: 1fr; }
+    .cardinal-grid { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 560px) { .cardinal-grid { grid-template-columns: 1fr; } }
+</style>

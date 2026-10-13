@@ -1,10 +1,8 @@
 ---
 name: Lead Pastor
-focus: Teaching
+focus: Preaching and pastoral care
 order: 1
 image: chapel
-summary: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+summary: Our lead pastor preaches God's Word each Sunday, shepherds the congregation, and leads The Well's vision to reach Pocola with the good news of Jesus.
 alt: A quiet corner with a wooden chair and an olive branch.
 ---
-
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.

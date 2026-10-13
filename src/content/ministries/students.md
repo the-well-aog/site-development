@@ -1,13 +1,26 @@
 ---
 title: Students
-order: 3
-when: Wednesdays, 6:30p
-who: Middle and high school
+order: 2
+when: Wednesdays at 6:30p
+who: 6th through 12th grade
 image: lounge
-summary: Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit.
+summary: A place for middle and high school students to encounter God, ask real questions, and build friendships that point them to Jesus.
 alt: An evening lounge with a sofa, a floor lamp, and an acoustic guitar.
 ---
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+“Let no one despise your youth, but be an example to the believers” (1 Timothy 4:12). Students are not the church of tomorrow. They are part of the church today.
 
-Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+## Wednesday nights
+
+We gather for worship, a Bible message that speaks to real life, and small groups where students can talk honestly and pray for one another. There are games, food, and plenty of time to hang out, but the center of the night is always Jesus.
+
+## What we want for every student
+
+- **To know Jesus personally,** not just know about Him.
+- **To be filled with the Holy Spirit** and to experience His power and gifts for themselves.
+- **To own their faith** by reading the Bible, praying, and sharing it with friends at school.
+- **To belong** to a group of peers and leaders who know their name.
+
+## Parents
+
+We would love to meet you. Stop by on a Wednesday night or reach out with any questions about what we teach and how we care for your student.

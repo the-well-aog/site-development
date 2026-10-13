@@ -5,8 +5,8 @@ import { url } from '../lib/url';
 
 const year = new Date().getFullYear();
 const social = await loadSocial();
-const explore = [['/visit', 'Plan your visit'], ['/about', 'Our story'], ['/beliefs', 'What we believe'], ['/leadership', 'Our leadership'], ['/sermons', 'Watch a message'], ['/events', 'Events']];
-const connect = [['/ministries', 'Find your community'], ['/next-steps', 'Take a next step'], ['/prayer', 'Ask for prayer'], ['/give', 'Give'], ['/contact', 'Contact us'], ['/live', 'Livestream']];
+const explore = [['/visit', 'Plan your visit'], ['/about', 'Our story'], ['/beliefs', 'What we believe'], ['/leadership', 'Our leadership'], ['/sermons', 'Sermons'], ['/events', 'Events']];
+const connect = [['/jesus', 'Know Jesus'], ['/next-steps', 'Next steps'], ['/ministries', 'Ministries'], ['/prayer', 'Ask for prayer'], ['/give', 'Give'], ['/live', 'Watch live']];
 ---
 
 <footer class="site-footer">
@@ -22,6 +22,7 @@ const connect = [['/ministries', 'Find your community'], ['/next-steps', 'Take a
     <div class="footer-map">
       <p class="footer-map-address"><a href={site.mapsHref}>{site.address}</a><span>{site.city}</span></p>
       <p class="footer-map-phone"><a href={site.phoneHref}>{site.phoneDisplay}</a></p>
+      <p class="footer-times">{site.sundayLabel} {site.sundayTime} · {site.midweekLabel} {site.midweekTime}</p>
       <p class="footer-map-actions">
         <a href={site.mapsHref}>Open in Google Maps <span aria-hidden="true">↗</span></a>
         <a href={site.appleMapsHref}>Open in Apple Maps <span aria-hidden="true">↗</span></a>
@@ -29,15 +30,15 @@ const connect = [['/ministries', 'Find your community'], ['/next-steps', 'Take a
       <div class="footer-map-frame">
         <iframe title="Map showing The Well Assembly of God at 2902 S Pocola Blvd, Pocola, Oklahoma" src={site.mapsEmbed} loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
       </div>
-      <div class="footer-social" aria-label="Social media">
+      <nav class="footer-social" aria-label="Social media">
         {social.facebookPage && <a href={social.facebookPage}>Facebook <span aria-hidden="true">↗</span></a>}
         {social.channelUrl && <a href={social.channelUrl}>YouTube <span aria-hidden="true">↗</span></a>}
-      </div>
+      </nav>
     </div>
   </div>
   <div class="wrap legal">
-    <span>© {year} {site.legal}</span>
-    <span>There is a place for you here.</span>
+    <span>© {year} {site.legal} · {site.affiliation}</span>
+    <span>“Come to Me and drink.” John 7:37</span>
   </div>
 </footer>
 
@@ -49,6 +50,7 @@ const connect = [['/ministries', 'Find your community'], ['/next-steps', 'Take a
   .footer-map-address span { display: block; margin-top: .35rem; color: var(--muted); font-size: .95rem; }
   .footer-map-phone { margin: .7rem 0 0; }
   .footer-map-phone a { color: var(--tide); font-weight: 500; text-decoration: none; }
+  .footer-times { margin: .35rem 0 0; color: var(--muted); font-size: .9rem; }
   .footer-map-actions { display: flex; flex-wrap: wrap; gap: .35rem 1.15rem; margin: .35rem 0 1rem; }
   .footer-map-actions a { color: var(--tide); font-size: .92rem; font-weight: 500; text-decoration: none; }
   .footer-map-frame { overflow: hidden; border-radius: .8rem; background: white; aspect-ratio: 1; }

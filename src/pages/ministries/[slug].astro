@@ -1,6 +1,7 @@
 ---
 import { getCollection, render, type CollectionEntry } from 'astro:content';
 import Base from '../../layouts/Base.astro';
+import { site } from '../../data/site';
 import { img, url } from '../../lib/url';
 
 export async function getStaticPaths() {
@@ -54,7 +55,7 @@ const { Content } = await render(entry);
           </div>
         </dl>
         <a class="btn" href={url('/contact')}>Ask a question</a>
-        <p class="fine">Meeting details are sample content for this preview. Please confirm them before planning a visit.</p>
+        {site.preview && <p class="fine">Meeting times are awaiting final confirmation.</p>}
         <a class="more" href={url('/visit')}>Plan your visit <span aria-hidden="true">→</span></a>
       </aside>
     </div>

@@ -3,35 +3,85 @@ import Base from '../layouts/Base.astro';
 import PageHero from '../components/PageHero.astro';
 import { site } from '../data/site';
 import { url } from '../lib/url';
+
+// Set this to the church's giving provider (Tithe.ly, Pushpay, Planning Center, etc.) when it exists.
+const givingUrl = '';
+
+const impact = [
+  { title: 'Reaching our community', text: 'Outreach events, serving families in need, and sharing the gospel across Pocola and the Fort Smith area.' },
+  { title: 'Raising the next generation', text: 'Kids and students ministry: curriculum, safe spaces, camps, and leaders who invest in young lives.' },
+  { title: 'Sending missionaries', text: 'Supporting Assemblies of God missionaries who carry the gospel across the nation and around the world.' },
+  { title: 'Caring for the church', text: 'Pastoral care, worship, facilities, and everything it takes to open the doors each week.' },
+];
 ---
 
-<Base title="Give" description="Information about giving to The Well Assembly of God." image="images/water.jpg">
-  <PageHero kicker="Generosity" title="Give with purpose." deck="Thank you for considering a gift to The Well. Find the next step for giving below." />
+<Base title="Give" description="Give to The Well Assembly of God. Your tithes and offerings help reach Pocola with the gospel, raise the next generation, and send missionaries around the world." image="images/water.jpg">
+  <PageHero kicker="Generosity" title="Give with joy." deck="Giving is worship. It is a response to a generous God who gave His Son for us, and a way to be part of what He is doing through The Well." />
+
   <section class="section" style="padding-top: 0.5rem;">
     <div class="wrap pair">
       <article>
-        <p class="eyebrow">Online giving</p>
-        <h2>A simple way to give.</h2>
-        <p>Online giving is not available on this preview yet. A link to the church's giving provider will be added when it is confirmed.</p>
-        <div class="actions"><button class="btn" type="button" disabled>Online giving coming soon</button></div>
-        <p class="fine" style="margin-top: 1rem;">This website does not collect card or bank details.</p>
+        <p class="eyebrow">Give online</p>
+        <h2>Simple and secure.</h2>
+        {givingUrl ? (
+          <>
+            <p>Give once or set up recurring giving through our secure giving partner.</p>
+            <div class="actions"><a class="btn" href={givingUrl}>Give online <span aria-hidden="true">↗</span></a></div>
+          </>
+        ) : (
+          <>
+            <p>Online giving is coming soon. Until then, you can give during any service or by mail.</p>
+            <div class="actions"><button class="btn" type="button" disabled>Online giving coming soon</button></div>
+          </>
+        )}
+        <p class="fine" style="margin-top: 1rem;">This website never collects card or bank details.</p>
       </article>
       <article>
         <p class="eyebrow">Other ways to give</p>
-        <h2>Begin with a conversation.</h2>
-        <p>The church is at {site.address}, {site.city}. Please check with the church before giving in person or by mail. Accepted ways to give are still to be confirmed.</p>
-        <div class="actions"><a class="more" href={url('/contact')}>Contact information <span aria-hidden="true">→</span></a></div>
+        <h2>In person or by mail.</h2>
+        <p><strong>During a service:</strong> place your gift in the offering on Sunday or Wednesday.</p>
+        <p style="margin-top: .6rem;"><strong>By mail:</strong> make checks payable to {site.legal} and mail to {site.address}, {site.city}.</p>
+        <div class="actions"><a class="more" href={url('/contact')}>Questions about giving <span aria-hidden="true">→</span></a></div>
       </article>
     </div>
   </section>
-  <section class="section" style="padding-top: 0;">
-    <div class="wrap measure">
-      <p class="eyebrow">New to The Well?</p>
-      <h2 class="block-title">Start by getting to know us.</h2>
-      <p class="deck" style="margin-top: 1rem;">Explore our beliefs, find a message, or plan a first visit at your own pace.</p>
-      <div class="actions"><a class="btn" href={url('/visit')}>Plan your visit <span aria-hidden="true">↗</span></a><a class="more" href={url('/about')}>About The Well <span aria-hidden="true">→</span></a></div>
+
+  <section class="band-dark" aria-labelledby="why-title">
+    <div class="wrap give-why">
+      <div>
+        <p class="eyebrow light">Why we give</p>
+        <h2 id="why-title" class="block-title">Because God gave first.</h2>
+      </div>
+      <div class="give-why-copy">
+        <p class="give-verse">“So let each one give as he purposes in his heart, not grudgingly or of necessity; for God loves a cheerful giver.” <span>2 Corinthians 9:7</span></p>
+        <p>Everything we have comes from God. When we bring our tithes and offerings, we are not paying God or buying His favor; we already have it in Christ. We are saying thank you, putting Him first, and trusting Him with our lives.</p>
+        <p>The Bible teaches the tithe, the first tenth, as a starting place for faithful giving (Malachi 3:10), and calls every believer to be generous with an open hand. Give with joy, as God leads you.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="impact-title">
+    <div class="wrap">
+      <div class="section-head"><div><p class="eyebrow">Your gift at work</p><h2 id="impact-title" class="block-title">Where your giving goes.</h2></div></div>
+      <div class="impact-grid">
+        {impact.map((item) => <article><h3>{item.title}</h3><p>{item.text}</p></article>)}
+      </div>
+      <p class="fine" style="margin-top: 2rem; max-width: 60ch;">We handle every gift with integrity and accountability. If you have a question about how The Well stewards its finances, please ask.</p>
     </div>
   </section>
 </Base>
 
-<style>button:disabled { cursor: not-allowed; opacity: .55; }</style>
+<style>
+  button:disabled { cursor: not-allowed; opacity: .55; }
+  .give-why { display: grid; grid-template-columns: .85fr 1.15fr; gap: clamp(2rem, 5vw, 4rem); align-items: start; }
+  .give-why-copy p { color: #d1dfe6; }
+  .give-why-copy p + p { margin-top: 1rem; }
+  .give-why-copy .give-verse { font: italic 500 clamp(1.3rem, 2.2vw, 1.7rem)/1.4 var(--serif); color: var(--paper); margin-bottom: 1.6rem; }
+  .give-verse span { display: block; margin-top: .6rem; font: normal 500 .72rem var(--sans); letter-spacing: .12em; text-transform: uppercase; color: #c1d2dc; }
+  .impact-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1.5rem; }
+  .impact-grid article { padding-top: 1.1rem; border-top: 1px solid var(--line-strong); }
+  .impact-grid h3 { font: 500 1.35rem/1.2 var(--serif); letter-spacing: -.02em; }
+  .impact-grid p { margin-top: .5rem; color: var(--muted); font-size: .95rem; }
+  @media (max-width: 980px) { .give-why { grid-template-columns: 1fr; } .impact-grid { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 560px) { .impact-grid { grid-template-columns: 1fr; } }
+</style>

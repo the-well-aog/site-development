@@ -7,7 +7,7 @@ import { url } from '../lib/url';
 ---
 
 <Base title="Contact" description="Find contact information and ways to connect with The Well Assembly of God." image="images/exterior.jpg">
-  <PageHero kicker="Let's connect" title="Start with hello." deck="A question about Sunday, a next step, or something on your mind. Find a place to begin the conversation." />
+  <PageHero kicker="Let’s connect" title="Start with hello." deck="A question about Sunday, a prayer need, or a conversation about faith. A real person from The Well will read your message." />
   <section class="section" style="padding-top: 0.4rem;">
     <div class="wrap contact-grid">
       <div>
@@ -15,7 +15,7 @@ import { url } from '../lib/url';
         <h2 class="block-title" style="font-size: clamp(2rem, 4vw, 2.6rem);"><a href={site.mapsHref}>{site.address}</a></h2>
         <p class="deck" style="margin-top: 0.4rem;">{site.city}</p>
         <p style="margin-top: 0.8rem;"><a class="more" href={site.phoneHref}>{site.phoneDisplay}</a></p>
-        <p class="fine" style="margin-top: 1rem;">Gathering times below are still a preview. The address and phone number are the church's.</p>
+        {site.preview && <p class="fine" style="margin-top: 1rem;">Service times are awaiting final confirmation.</p>}
         <dl class="facts contact-times">
           <div><dt>{site.sundayLabel}</dt><dd>{site.sundayTime}</dd></div>
           <div><dt>{site.midweekLabel}</dt><dd>{site.midweekTime}</dd></div>
@@ -32,6 +32,7 @@ import { url } from '../lib/url';
           <label class="field"><span>Email</span><input name="email" type="email" autocomplete="email" required /></label>
           <label class="field"><span>Message</span><textarea name="message" rows="5" required></textarea></label>
           <label class="check"><input type="checkbox" name="prayer" /><span>This is a prayer request</span></label>
+          <p class="fine">This is not an emergency line. If you are in danger, call 911, or call or text 988.</p>
         </PlaceholderForm>
       </div>
     </div>

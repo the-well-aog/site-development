@@ -4,7 +4,7 @@ A static website for The Well Assembly of God, published on GitHub Pages wheneve
 
 ## Overview
 
-The site gives a guest service times, a first-Sunday welcome, beliefs, ministries, sermons, and events. It is a style-first build: body copy is lorem ipsum, and the address, phone, and names are placeholders.
+The site gives a guest service times, a first-Sunday welcome, beliefs, ministries, sermons, and events. Page copy is written for the church and grounded in the Assemblies of God Fundamental Truths. The address and phone are real; service times, leader names, and events still need the church's confirmation (see `site.preview`).
 
 Pages are Markdown and Astro templates in this repo. GitHub Actions builds them into plain files and deploys that folder. There is no server, database, or payment form.
 
@@ -63,7 +63,7 @@ There is no runtime environment and no `.env` secrets.
 | `npm run preview` | Serve `dist/` |
 | `npm run check` | Re-check links in an existing `dist/` |
 
-Public routes: `/`, `/visit`, `/about`, `/beliefs`, `/leadership`, `/ministries`, `/ministries/kids`, `/ministries/students`, `/ministries/groups`, `/sermons`, `/live`, `/events`, `/give`, `/contact`, `/prayer`, `/next-steps`.
+Public routes: `/`, `/visit`, `/jesus`, `/about`, `/beliefs`, `/leadership`, `/ministries`, `/ministries/kids`, `/ministries/students`, `/ministries/groups`, `/sermons`, `/live`, `/events`, `/give`, `/contact`, `/prayer`, `/next-steps`.
 
 Sermons, events, ministries, leaders, and announcements are Markdown files under `src/content`. Add a file, and the next build publishes it.
 
@@ -91,8 +91,10 @@ astro.config.mjs              site URL, base path, sitemap
 
 ## Notes / conventions
 
-- Body copy is placeholder Latin. Belief titles are the real Assemblies of God Fundamental Truths, with a link to the statement on ag.org. Do not treat the paragraphs as doctrine.
-- Service times, the street address, the phone number, and leader names are sample labels for layout.
+- `/beliefs` restates each of the 16 Fundamental Truths in plain language with its Scripture references and links to the official statement on ag.org. Keep it faithful to that statement.
+- Scripture quotations are NKJV.
+- `site.preview` in `src/data/site.ts` shows "awaiting confirmation" notes beside service times, leader names, and meeting times, and publishes events marked `draft: true` as samples. Set it to `false` at launch.
+- Leader files hold role descriptions only. Add real names, photos, and bios the leaders approve.
 - Do not collect card numbers, passwords, or prayer-request storage in this repo. Point Give at the church's giving provider when that URL exists.
 - No secrets in the repo. This site does not call Autotask or n8n.
 - One-time Pages setting: in the GitHub repo, Settings → Pages → Build and deployment → Source: GitHub Actions. After that, a merge to `main` publishes the site.

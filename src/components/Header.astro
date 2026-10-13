@@ -3,7 +3,7 @@ import { isActive, url } from '../lib/url';
 
 const groups = [
   { label: 'About', id: 'about', links: [['/about', 'Our story'], ['/beliefs', 'What we believe'], ['/leadership', 'Our leadership']] },
-  { label: 'Connect', id: 'connect', links: [['/ministries', 'Ministries'], ['/next-steps', 'Next steps'], ['/prayer', 'Prayer'], ['/contact', 'Contact us']] },
+  { label: 'Connect', id: 'connect', links: [['/jesus', 'Know Jesus'], ['/next-steps', 'Next steps'], ['/ministries', 'Ministries'], ['/prayer', 'Prayer'], ['/contact', 'Contact us']] },
 ];
 const links = [['/sermons', 'Watch'], ['/events', 'Events'], ['/give', 'Give']];
 const active = (href: string) => isActive(Astro.url.pathname, href) ? 'page' : undefined;
@@ -12,7 +12,7 @@ const active = (href: string) => isActive(Astro.url.pathname, href) ? 'page' : u
 <header class="site-header" data-header>
   <div class="header-bar">
     <a class="brand-home" href={url('/')} aria-label="The Well Assembly of God — home">
-      <img src={url('images/the-well-logo.png')} width="1254" height="1254" alt="The Well Assembly of God" loading="eager" />
+      <img src={url('images/the-well-logo-192.png')} width="192" height="192" alt="The Well Assembly of God" loading="eager" />
     </a>
     <nav class="nav-desktop" aria-label="Primary">
       {groups.map((group) => (
@@ -50,7 +50,7 @@ const active = (href: string) => isActive(Astro.url.pathname, href) ? 'page' : u
       {links.map(([href, label]) => <a href={url(href)} aria-current={active(href)}>{label}<span aria-hidden="true">↗</span></a>)}
       <a href={url('/live')} aria-current={active('/live')}>Livestream<span aria-hidden="true">↗</span></a>
     </div>
-    <p class="mobile-signoff">Faith. Community. A place to call home.</p>
+    <p class="mobile-signoff">Spirit-filled. Bible-based. A place to belong.</p>
   </nav>
 </header>
 

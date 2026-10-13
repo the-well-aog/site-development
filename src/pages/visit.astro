@@ -6,23 +6,26 @@ import { site } from '../data/site';
 import { img, url } from '../lib/url';
 
 const questions = [
-  { title: 'What should I know before I come?', text: 'Start with the gathering times and location. If you have a question about the service, arrival time, or what to wear, get in touch before your visit.', href: '/contact', label: 'Ask about your visit' },
-  { title: 'What about my kids?', text: 'Visit the Kids page to explore the ministry, then contact us about ages, check-in, and what your family can expect.', href: '/ministries/kids', label: 'Explore Kids' },
-  { title: 'Where do I park and enter?', text: 'Contact us for parking and entrance details before you set out. Let us know if you have an accessibility question or need help planning your arrival.', href: '/contact', label: 'Get arrival details' },
-  { title: 'Can I get to know The Well first?', text: 'Absolutely. Explore our beliefs, browse messages, and take a look at the ways to connect. There is no need to rush your next step.', href: '/about', label: 'Get to know The Well' },
+  { title: 'What is a service like?', text: `Our ${site.sundayLabel} service starts at ${site.sundayTime} and lasts ${site.serviceLength}. We begin with heartfelt worship: contemporary songs, a live band, and people who love to praise God. Some lift their hands, some sing quietly; you are free to simply listen. Then a pastor preaches a practical, Bible-centered message, and we close with a time of prayer at the altar for anyone who wants it.`, href: '/beliefs', label: 'What we believe' },
+  { title: 'What should I wear?', text: 'Whatever you are comfortable in. You will see jeans and you will see Sunday best. God looks at the heart, and so do we.', href: '/contact', label: 'Ask us anything' },
+  { title: 'What about my kids?', text: 'Children are a gift, and we love having them here. Kids ministry runs during the Sunday service for nursery through elementary, with safe check-in, screened volunteers, and Bible lessons made for their age. Students meet on Wednesday nights.', href: '/ministries/kids', label: 'Explore Kids' },
+  { title: 'Will I be singled out?', text: 'No. We will not ask you to stand up or speak. A greeter will welcome you at the door, help you find a seat or the kids area, and answer any questions, and that is it.', href: '/contact', label: 'Ask about your visit' },
+  { title: 'I have heard Pentecostals pray in tongues. What should I expect?', text: 'We believe the gifts of the Holy Spirit described in the Bible are for today, and you may hear someone pray in tongues or sense a moment of quiet expectation during worship or prayer. Scripture tells us everything should be done decently and in order (1 Corinthians 14:40), and our pastors guide every service with care. If something is new to you, ask; we love talking about it.', href: '/next-steps#holy-spirit', label: 'The Holy Spirit and you' },
+  { title: 'Do I have to give?', text: 'No. Giving is an act of worship for our church family, and guests are never expected to give. Please receive the service as our gift to you.', href: '/give', label: 'About giving' },
+  { title: 'Where do I park and enter?', text: `We are at ${site.address} in ${site.locality}, with parking right beside the building. Enter through the covered front entrance and a greeter will meet you. If you need step-free access or help getting in, call ahead and we will be ready for you.`, href: '/contact', label: 'Get arrival help' },
 ];
 ---
 
 <Base title="Plan your visit" description="Find gathering times, explore Kids, and plan your first visit to The Well Assembly of God." image="images/church-exterior.jpg">
-  <PageHero kicker="Your first Sunday" title="Come as you are." deck="A new place can come with a lot of questions. Let's make your first step a little easier." />
+  <PageHero kicker="Your first Sunday" title="Come as you are." deck="A new church can come with a lot of questions. Here is everything you need to feel at home before you walk through the door." />
   <section class="visit-at-a-glance" aria-label="Gathering times and location">
     <div class="wrap">
       <dl class="facts">
-        <div><dt>{site.sundayLabel}</dt><dd>{site.sundayTime}</dd></div>
-        <div><dt>{site.midweekLabel}</dt><dd>{site.midweekTime}</dd></div>
+        <div><dt>{site.sundayLabel}</dt><dd>{site.sundayTime}<small>{site.sundayDetail}</small></dd></div>
+        <div><dt>{site.midweekLabel}</dt><dd>{site.midweekTime}<small>{site.midweekDetail}</small></dd></div>
         <div><dt>Find us</dt><dd><a href={site.mapsHref}>{site.address}</a><small>{site.city}</small><a href={site.phoneHref}>{site.phoneDisplay}</a></dd></div>
       </dl>
-      <p class="fine preview-note">Gathering times are a preview. Confirm them before you visit.</p>
+      {site.preview && <p class="fine preview-note">Service times are awaiting final confirmation. Call ahead if you want to be sure.</p>}
       <nav class="actions" aria-label="Plan your visit">
         <a class="btn" href="#first-visit">What to expect <span aria-hidden="true">↓</span></a>
         <a class="more" href={url('/ministries/kids')}>Coming with kids? <span aria-hidden="true">→</span></a>
@@ -37,7 +40,7 @@ const questions = [
       <div>
         <p class="eyebrow">Before you arrive</p>
         <h2 class="block-title">A little more<br />peace of mind.</h2>
-        <p class="deck">Your questions are a good place to start.</p>
+        <p class="deck">Honest answers to the questions most guests ask.</p>
       </div>
       <div class="faq-list">
         {questions.map((question, index) => (
@@ -56,9 +59,8 @@ const questions = [
     <div class="wrap contact-grid">
       <div class="measure">
         <p class="eyebrow">Start a conversation</p>
-        <h2 class="block-title">A familiar face<br />starts with hello.</h2>
-        <p class="deck">Have a question about visiting? Tell us a little about yourself and what would help you feel at home.</p>
-        <p class="fine">This preview form does not send a message or reserve a place.</p>
+        <h2 class="block-title">Let us know<br />you’re coming.</h2>
+        <p class="deck">Tell us a little about yourself and we will have someone watching for you at the door, ready to help with kids check-in and save you a seat.</p>
         <div class="actions"><a class="more" href={url('/contact')}>Contact information <span aria-hidden="true">→</span></a></div>
       </div>
       <div class="panel">

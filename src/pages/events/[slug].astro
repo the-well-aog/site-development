@@ -1,12 +1,13 @@
 ---
 import { getCollection, render, type CollectionEntry } from 'astro:content';
 import Base from '../../layouts/Base.astro';
+import { site } from '../../data/site';
 import { isPlaceholderText } from '../../data/copy';
-import { longDate } from '../../lib/format';
+import { iso, longDate } from '../../lib/format';
 import { img, url } from '../../lib/url';
 
 export async function getStaticPaths() {
-  const events = await getCollection('events');
+  const events = (await getCollection('events')).filter((entry) => site.preview || !entry.data.draft);
   return events.map((entry) => ({
     params: { slug: entry.id },
     props: { entry },
@@ -19,7 +20,7 @@ interface Props {
 
 const { entry } = Astro.props;
 const { Content } = await render(entry);
-const preview = isPlaceholderText(entry.data.summary) || isPlaceholderText(entry.body);
+const preview = entry.data.draft || isPlaceholderText(entry.data.summary) || isPlaceholderText(entry.body);
 const summary = isPlaceholderText(entry.data.summary)
   ? 'A preview of an event at The Well. Full details will be added once they are confirmed.'
   : entry.data.summary;
@@ -32,7 +33,7 @@ const summary = isPlaceholderText(entry.data.summary)
       <p class="eyebrow">{entry.data.place}</p>
       <h1>{entry.data.title}</h1>
       <p class="deck">{summary}</p>
-      {preview && <p class="fine" style="margin-top: 1rem;">Preview event. The date, time, and location are sample details.</p>}
+      {preview && <p class="fine" style="margin-top: 1rem;">Sample event for the website preview. The date and details are not confirmed.</p>}
     </div>
   </header>
   <section class="section" style="padding-top: 0;">
@@ -52,7 +53,7 @@ const summary = isPlaceholderText(entry.data.summary)
         <dl>
           <div>
             <dt>Date</dt>
-            <dd>{longDate(entry.data.date)}</dd>
+            <dd><time datetime={iso(entry.data.date)}>{longDate(entry.data.date)}</time></dd>
           </div>
           <div>
             <dt>Time</dt>
