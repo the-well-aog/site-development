@@ -14,9 +14,14 @@ interface Props {
   still?: boolean;
   /** Leave out the canonical address, so link previews key on the exact shared URL (see /today). */
   canonical?: boolean;
+  /**
+   * The preview image's size, type, and description. Facebook only shows a never-before-seen image
+   * in the first preview when its size is declared; otherwise the first share has no picture.
+   */
+  imageMeta?: { width: number; height: number; type: string; alt: string };
 }
 
-const { title, description, image = img('church'), still = false, canonical: withCanonical = true } = Astro.props;
+const { title, description, image = img('church'), still = false, canonical: withCanonical = true, imageMeta } = Astro.props;
 const fullTitle = title === 'Home' ? site.legal : `${title} · ${site.name}`;
 const canonical = new URL(Astro.url.pathname, Astro.site);
 // Absolute URLs and already-resolved site paths ("/…") pass through; bare paths get the base prefix.
@@ -58,6 +63,17 @@ const organization = {
     <meta property="og:type" content="website" />
     {withCanonical && <meta property="og:url" content={canonical} />}
     <meta property="og:image" content={ogImage} />
+    {imageMeta && (
+      <>
+        <meta property="og:image:secure_url" content={ogImage} />
+        <meta property="og:image:type" content={imageMeta.type} />
+        <meta property="og:image:width" content={String(imageMeta.width)} />
+        <meta property="og:image:height" content={String(imageMeta.height)} />
+        <meta property="og:image:alt" content={imageMeta.alt} />
+        <meta name="twitter:image" content={ogImage} />
+        <meta name="twitter:image:alt" content={imageMeta.alt} />
+      </>
+    )}
     <meta name="twitter:card" content="summary_large_image" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />

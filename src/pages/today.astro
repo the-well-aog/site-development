@@ -15,7 +15,7 @@ const image = `${url('og/today.jpg')}?v=${verseStamp()}`;
 const home = `${url('/')}#today`;
 ---
 
-<Base title={`A word for today: ${verse.reference}`} description={`“${verse.text}” ${verse.reference} (KJV). Today’s verse from ${site.legal}.`} image={image} canonical={false}>
+<Base title={`A word for today: ${verse.reference}`} description={`“${verse.text}” ${verse.reference} (KJV). Today’s verse from ${site.legal}.`} image={image} canonical={false} imageMeta={{ width: 1200, height: 630, type: 'image/jpeg', alt: `${verse.reference}: “${verse.text}”` }}>
   <script is:inline define:vars={{ home }}>location.replace(home);</script>
   <section class="wrap today-forward">
     <p>Taking you to today’s verse… <a href={home}>Go now</a></p>
