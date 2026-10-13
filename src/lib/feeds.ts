@@ -168,14 +168,16 @@ async function fetchVideos(channelId: string): Promise<YoutubeVideo[]> {
 
 async function load(): Promise<SocialFeeds> {
   const facebookInput = (process.env.FACEBOOK_PAGE || site.facebookPage || '').trim();
-  const youtubeInput = (process.env.YOUTUBE_CHANNEL || site.youtubeChannel || '').trim();
+  // Nothing is fetched from YouTube while both online features are off.
+  const youtubeWanted = site.features.youtube || site.features.livestream;
+  const youtubeInput = youtubeWanted ? (process.env.YOUTUBE_CHANNEL || site.youtubeChannel || '').trim() : '';
   const facebookPage = facebookPageUrl(facebookInput);
   let channelId: string | null = null;
   let videos: YoutubeVideo[] = [];
   if (youtubeInput) {
     try {
       channelId = await resolveChannelId(youtubeInput);
-      if (channelId) videos = await fetchVideos(channelId);
+      if (channelId && site.features.youtube) videos = await fetchVideos(channelId);
       else console.warn('YouTube feed skipped: could not resolve a channel id.');
     } catch (error) {
       console.warn('YouTube feed skipped:', error instanceof Error ? error.message : error);

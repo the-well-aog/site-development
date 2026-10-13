@@ -3,6 +3,8 @@ import Base from '../layouts/Base.astro';
 import CtaBand from '../components/CtaBand.astro';
 import NumberedList from '../components/NumberedList.astro';
 import PageHeader from '../components/PageHeader.astro';
+import Icon from '../components/Icon.astro';
+import Respond from '../components/Respond.astro';
 import Section from '../components/Section.astro';
 import { url } from '../lib/url';
 
@@ -42,22 +44,81 @@ const steps = [
 
 <Base title="Next steps" description="Follow Jesus, be baptized in water, receive the baptism in the Holy Spirit, join a group, become a member, and serve at The Well.">
   <PageHeader eyebrow="Grow" title="Your next step." lede="Following Jesus is a journey, not a single moment. Wherever you are today, here is a clear next step to take with us.">
-    <nav slot="actions" class="jump" aria-label="Steps on this page">
-      {steps.map((step, index) => <a href={url(`#${step.id}`)}><span>{String(index + 1).padStart(2, '0')}</span>{step.title}</a>)}
+    <nav slot="actions" class="path" aria-label="Steps on this page">
+      <svg class="path-stream" viewBox="0 0 1000 60" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+        <path d="M0 30 C 80 6, 160 54, 250 30 S 420 6, 500 30 S 670 54, 750 30 S 920 6, 1000 30" />
+      </svg>
+      <ol role="list">
+        {steps.map((step, index) => (
+          <li>
+            <a href={url(`#${step.id}`)} data-stone={step.id}>
+              <span class="stone"><span class="stone-num">{String(index + 1).padStart(2, '0')}</span><Icon name="check" size={16} class="stone-check" /></span>
+              <span class="stone-label">{step.title}</span>
+            </a>
+          </li>
+        ))}
+      </ol>
+      <p class="path-note" data-path-note>Mark each step as you take it. Your progress stays on this device.</p>
     </nav>
   </PageHeader>
 
   <Section space="flush-top" labelledby="steps-title">
     <h2 id="steps-title" class="sr-only">Six next steps</h2>
-    <NumberedList items={steps} as="h3" />
+    <NumberedList items={steps} as="h3" track />
   </Section>
+
+  <Respond />
 
   <CtaBand eyebrow="Your first step can be Sunday" title="Come and worship" accent="with us." text="See what to expect, find the service times, and bring your questions. We saved you a seat." primary={{ href: '/visit', label: 'Plan your visit' }} secondary={{ href: '/prayer', label: 'Ask for prayer' }} />
 </Base>
 
 <style>
-  .jump { display: flex; flex-wrap: wrap; gap: 0.5rem; }
-  .jump a { display: inline-flex; align-items: center; gap: 0.5rem; min-height: 40px; padding: 0 1rem 0 0.4rem; border: 1px solid var(--line-strong); border-radius: 999px; font-size: 0.88rem; font-weight: 500; color: var(--heading); text-decoration: none; transition: background-color 0.2s var(--ease), color 0.2s var(--ease); }
-  .jump a span { display: grid; place-items: center; width: 1.9rem; height: 1.9rem; border-radius: 50%; background: var(--sand); font: italic 500 0.8rem var(--serif); color: var(--accent-ink); }
-  .jump a:hover { background: var(--navy); border-color: var(--navy); color: #fff; }
+  /* Six stones across a stream: the steps of following Jesus, marked off as you take them. */
+  .path { position: relative; width: 100%; margin-top: 0.5rem; }
+  .path-stream { position: absolute; left: 0; right: 0; top: 1.05rem; width: 100%; height: 2.5rem; fill: none; stroke: var(--mist); stroke-width: 2; stroke-dasharray: 2 7; stroke-linecap: round; }
+  .path ol { position: relative; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 0.75rem; margin: 0; padding: 0; }
+  .path a { display: grid; justify-items: center; gap: 0.6rem; color: var(--heading); text-align: center; text-decoration: none; }
+  .stone { position: relative; display: grid; place-items: center; width: 4.5rem; height: 4.5rem; border: 1px solid var(--line-strong); border-radius: 46% 54% 50% 50% / 55% 48% 52% 45%; background: var(--paper); box-shadow: var(--shadow-sm); transition: background-color 0.3s var(--ease), border-color 0.3s var(--ease), transform 0.3s var(--ease); }
+  .path li:nth-child(even) .stone { border-radius: 54% 46% 48% 52% / 46% 55% 45% 54%; }
+  .stone-num { font: italic 500 1.1rem var(--serif); color: var(--accent-ink); }
+  .path :global(.stone-check) { display: none; color: #fff; }
+  .path a:hover .stone { transform: translateY(-3px); border-color: var(--heading); }
+  .path a.is-done .stone { border-color: var(--gold); background: var(--gold); }
+  .path a.is-done .stone-num { display: none; }
+  .path a.is-done :global(.stone-check) { display: block; }
+  .stone-label { font-size: 0.85rem; font-weight: 500; line-height: 1.3; }
+  .path-note { margin-top: 1.25rem; color: var(--fg-muted); font-size: 0.88rem; }
+  @media (max-width: 900px) {
+    .path-stream { display: none; }
+    .path ol { grid-template-columns: repeat(3, minmax(0, 1fr)); row-gap: 1.25rem; }
+  }
 </style>
+
+<script>
+  // Progress is a per-visitor convenience: kept in this browser only, and the page works without it.
+  const KEY = 'thewell:next-steps';
+  const read = (): string[] => {
+    try { return JSON.parse(localStorage.getItem(KEY) || '[]'); } catch { return []; }
+  };
+  const write = (done: string[]) => {
+    try { localStorage.setItem(KEY, JSON.stringify(done)); } catch { /* storage unavailable */ }
+  };
+  const paint = (done: string[]) => {
+    document.querySelectorAll<HTMLElement>('[data-step-toggle]').forEach((toggle) => toggle.setAttribute('aria-pressed', String(done.includes(toggle.dataset.stepToggle!))));
+    document.querySelectorAll<HTMLElement>('[data-stone]').forEach((stone) => {
+      const isDone = done.includes(stone.dataset.stone!);
+      stone.classList.toggle('is-done', isDone);
+      stone.setAttribute('aria-label', `${stone.textContent?.replace(/^\d+/, '').trim()}${isDone ? ' (taken)' : ''}`);
+    });
+  };
+  document.querySelectorAll<HTMLElement>('[data-step-toggle]').forEach((toggle) => {
+    toggle.addEventListener('click', () => {
+      const id = toggle.dataset.stepToggle!;
+      const done = read();
+      const next = done.includes(id) ? done.filter((step) => step !== id) : [...done, id];
+      write(next);
+      paint(next);
+    });
+  });
+  paint(read());
+</script>

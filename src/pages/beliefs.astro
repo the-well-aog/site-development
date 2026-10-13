@@ -5,6 +5,7 @@ import Button from '../components/Button.astro';
 import CtaBand from '../components/CtaBand.astro';
 import FeatureGrid from '../components/FeatureGrid.astro';
 import PageHeader from '../components/PageHeader.astro';
+import StillToggle from '../components/StillToggle.astro';
 import Section from '../components/Section.astro';
 import SectionHeader from '../components/SectionHeader.astro';
 import { beliefs, beliefsUrl, cardinal } from '../data/beliefs';
@@ -14,8 +15,10 @@ const truths = beliefs.map((item) => ({ id: `truth-${item.n}`, number: item.n, t
 const convictions = cardinal.map((item) => ({ title: item.title, text: item.text, ref: item.ref }));
 ---
 
-<Base title="What we believe" description={`What ${site.legal} believes: Jesus Christ, the authority of Scripture, the baptism in the Holy Spirit, and the sixteen Fundamental Truths of the ${site.affiliation}.`}>
-  <PageHeader align="center" eyebrow="What we believe" title="Jesus at the center." accent="The Spirit at work." lede={`We are a Pentecostal church in the ${site.affiliation}. Our faith rests on Jesus Christ, the authority of the Bible, and the power of the Holy Spirit.`} />
+<Base still title="What we believe" description={`What ${site.legal} believes: Jesus Christ, the authority of Scripture, the baptism in the Holy Spirit, and the sixteen Fundamental Truths of the ${site.affiliation}.`}>
+  <PageHeader align="center" eyebrow="What we believe" title="Jesus at the center." accent="The Spirit at work." lede={`We are a Pentecostal church in the ${site.affiliation}. Our faith rests on Jesus Christ, the authority of the Bible, and the power of the Holy Spirit.`}>
+    <Fragment slot="actions"><StillToggle /></Fragment>
+  </PageHeader>
 
   <Section space="flush-top" labelledby="plain-title">
     <div class="plain" data-reveal>

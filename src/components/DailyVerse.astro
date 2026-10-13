@@ -1,0 +1,87 @@
+---
+import Icon from './Icon.astro';
+import { site } from '../data/site';
+import { verses } from '../data/verses';
+
+// The build picks today's verse; the browser re-picks on its own date, so the verse still changes
+// daily between rebuilds. Both count days on the church's clock.
+const dayNumber = (date: Date) => {
+  const [y, m, d] = new Intl.DateTimeFormat('en-CA', { timeZone: site.timeZone }).format(date).split('-').map(Number);
+  return Math.floor(Date.UTC(y, m - 1, d) / 86400000);
+};
+const today = verses[dayNumber(new Date()) % verses.length];
+---
+
+<figure class="daily-verse" data-daily-verse data-verses={JSON.stringify(verses)} data-zone={site.timeZone}>
+  <svg class="daily-pool" viewBox="0 0 400 400" aria-hidden="true" focusable="false">
+    {[50, 100, 150, 200].map((r) => <circle cx="200" cy="200" r={r} />)}
+  </svg>
+  <p class="eyebrow">A word for today</p>
+  <blockquote><p data-verse-text>“{today.text}”</p></blockquote>
+  <figcaption>
+    <span class="ref" data-verse-ref>{today.reference}</span> <span class="version">NKJV</span>
+  </figcaption>
+  <button class="daily-share" type="button" data-verse-share>
+    <Icon name="share" size={16} /><span data-verse-share-label>Share this verse</span>
+  </button>
+</figure>
+
+<style>
+  .daily-verse { position: relative; display: grid; justify-items: center; gap: 1.25rem; margin: 0; padding: clamp(1rem, 3vw, 2rem) 0; text-align: center; }
+  .daily-pool { position: absolute; left: 50%; top: 50%; width: min(36rem, 120%); transform: translate(-50%, -50%); fill: none; stroke: var(--navy); stroke-opacity: 0.07; pointer-events: none; }
+  blockquote { position: relative; margin: 0; }
+  blockquote p { max-width: 30ch; font: italic 500 clamp(1.6rem, 1.2rem + 1.6vw, 2.5rem) / 1.3 var(--serif); letter-spacing: -0.02em; color: var(--heading); text-wrap: balance; }
+  figcaption { position: relative; display: flex; gap: 0.6rem; align-items: baseline; }
+  .version { font: 600 0.68rem / 1.4 var(--sans); letter-spacing: 0.12em; color: var(--fg-muted); }
+  .daily-share {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 44px;
+    padding: 0 1.1rem;
+    border: 1px solid var(--line-strong);
+    border-radius: 999px;
+    background: transparent;
+    color: var(--heading);
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: border-color 0.2s var(--ease);
+  }
+  .daily-share:hover { border-color: var(--heading); }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-daily-verse]').forEach((root) => {
+    const verses: { text: string; reference: string }[] = JSON.parse(root.dataset.verses || '[]');
+    const zone = root.dataset.zone || 'America/Chicago';
+    const text = root.querySelector<HTMLElement>('[data-verse-text]');
+    const ref = root.querySelector<HTMLElement>('[data-verse-ref]');
+    const [y, m, d] = new Intl.DateTimeFormat('en-CA', { timeZone: zone }).format(new Date()).split('-').map(Number);
+    const verse = verses[Math.floor(Date.UTC(y, m - 1, d) / 86400000) % verses.length];
+    if (verse && text && ref) {
+      text.textContent = `“${verse.text}”`;
+      ref.textContent = verse.reference;
+    }
+
+    const button = root.querySelector<HTMLButtonElement>('[data-verse-share]');
+    const label = root.querySelector<HTMLElement>('[data-verse-share-label]');
+    button?.addEventListener('click', async () => {
+      const message = `${text?.textContent ?? ''} ${ref?.textContent ?? ''} (NKJV)`;
+      try {
+        if (navigator.share) {
+          await navigator.share({ text: message, url: location.href });
+          return;
+        }
+        await navigator.clipboard.writeText(`${message}\n${location.href}`);
+        if (label) {
+          label.textContent = 'Copied';
+          setTimeout(() => { label.textContent = 'Share this verse'; }, 2000);
+        }
+      } catch {
+        // The visitor closed the share sheet, or the clipboard is unavailable. Nothing to do.
+      }
+    });
+  });
+</script>

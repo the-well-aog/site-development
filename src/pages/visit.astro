@@ -6,6 +6,7 @@ import ContactOptions from '../components/ContactOptions.astro';
 import Icon from '../components/Icon.astro';
 import PageHeader from '../components/PageHeader.astro';
 import Photo from '../components/Photo.astro';
+import VisitPlanner from '../components/VisitPlanner.astro';
 import Section from '../components/Section.astro';
 import SectionHeader from '../components/SectionHeader.astro';
 import ServiceTimes from '../components/ServiceTimes.astro';
@@ -14,7 +15,7 @@ import { img } from '../lib/url';
 
 const sundayFlow = [
   { icon: 'door', title: 'Arrive and park', text: `Park beside the building and come in through the covered front entrance. ${sundaySchool.name} classes start at ${sundaySchool.time}; worship begins at ${sunday.time}.` },
-  { icon: 'kids', title: 'Check in the kids', text: 'A greeter will walk you to kids check-in. Children from nursery through 5th grade have their own space and lesson.' },
+  { icon: 'kids', title: 'Take the kids to class', text: 'A greeter will show you where the kids classes meet. Children from nursery through 5th grade have their own space and lesson.' },
   { icon: 'flame', title: 'Worship together', text: 'Contemporary songs with a live band. Sing out, lift your hands, or simply listen. You are welcome either way.' },
   { icon: 'book', title: 'Hear the Word', text: 'A pastor preaches a practical, Bible-centered message for everyday life.' },
   { icon: 'hands', title: 'Pray at the altar', text: 'We close with an open altar. Anyone who wants prayer can come forward, and someone will pray with you.' },
@@ -57,6 +58,10 @@ const questions = [
     </div>
   </Section>
 
+  <Section label="Plan your Sunday">
+    <VisitPlanner />
+  </Section>
+
   <Section tone="sand" width="wide" labelledby="flow-title">
     <SectionHeader id="flow-title" align="split" eyebrow={`Your first ${sunday.day}`} title="What the morning looks like." lede={`From the parking lot to the last song, here is how a ${sunday.day} at The Well usually goes.`} />
     <ol class="flow" role="list" data-reveal>
@@ -77,7 +82,7 @@ const questions = [
       <div class="kids-copy">
         <p class="eyebrow">Coming with kids?</p>
         <h2 id="kids-title">Your kids will love it here.</h2>
-        <p class="lede">While you worship, your children worship too, with Bible lessons made for their age in a clean, safe space. Every child is returned only to the adult who checked them in.</p>
+        <p class="lede">While you worship, your children worship too, in kids classes with Bible lessons made for their age. Our security team is on site during every service.</p>
         <Button href="/ministries/kids" variant="secondary">About The Well Kids</Button>
       </div>
     </div>
@@ -92,12 +97,12 @@ const questions = [
     </div>
   </Section>
 
-  <Section tone="sand" labelledby="hello-title">
+  <Section tone="sand" id="hello" labelledby="hello-title">
     <div class="hello">
       <div class="hello-copy" data-reveal>
         <p class="eyebrow">Let us know you’re coming</p>
         <h2 id="hello-title">We’ll watch for you at the door.</h2>
-        <p class="lede">Tell us you are coming and someone will be ready to welcome you, help with kids check-in, and save you a seat.</p>
+        <p class="lede">Tell us you are coming and someone will be ready to welcome you, show your kids to their classes, and save you a seat.</p>
       </div>
       <ContactOptions title="Say hello before Sunday" subject="Planning a visit" submit="Let us know" directions>
         <label>Name<input name="name" autocomplete="name" required /></label>

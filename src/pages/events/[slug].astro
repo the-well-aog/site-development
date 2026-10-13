@@ -7,7 +7,7 @@ import PageHeader from '../../components/PageHeader.astro';
 import Section from '../../components/Section.astro';
 import { site } from '../../data/site';
 import { iso, longDate } from '../../lib/format';
-import { photoFor } from '../../lib/url';
+import { photoFor, url } from '../../lib/url';
 
 export async function getStaticPaths() {
   const events = (await getCollection('events')).filter((entry) => site.preview || !entry.data.draft);
@@ -34,6 +34,7 @@ const { Content } = await render(entry);
       {entry.data.draft && <p class="sample">Sample event for the website preview. The date and details are not confirmed.</p>}
       <div class="prose"><Content /></div>
       <Fragment slot="actions">
+        <a class="button-calendar" href={url(`/events/${entry.id}.ics`)} download={`${entry.id}.ics`}>Add to calendar</a>
         <Button href={site.mapsHref} leading="pin" icon="none">Get directions</Button>
         <Button href="/contact" variant="text">Ask about this event</Button>
       </Fragment>
@@ -42,5 +43,7 @@ const { Content } = await render(entry);
 </Base>
 
 <style>
+  .button-calendar { display: inline-flex; align-items: center; justify-content: center; width: 100%; min-height: 48px; border: 1px solid var(--line-strong); border-radius: 999px; color: var(--heading); font-weight: 500; font-size: 0.95rem; text-decoration: none; }
+  .button-calendar:hover { border-color: var(--heading); }
   .sample { padding: 0.9rem 1.1rem; border-left: 3px solid var(--gold); border-radius: 0 var(--radius) var(--radius) 0; background: var(--sand); color: var(--fg-muted); font-size: 0.92rem; }
 </style>

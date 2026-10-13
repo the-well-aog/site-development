@@ -3,6 +3,7 @@ import Base from '../layouts/Base.astro';
 import ContactOptions from '../components/ContactOptions.astro';
 import FeatureGrid from '../components/FeatureGrid.astro';
 import PageHeader from '../components/PageHeader.astro';
+import StillToggle from '../components/StillToggle.astro';
 import Scripture from '../components/Scripture.astro';
 import Section from '../components/Section.astro';
 import { prayerMeeting, site } from '../data/site';
@@ -14,8 +15,10 @@ const ways = [
 ] as const;
 ---
 
-<Base title="Prayer" description={`Share a prayer request with ${site.legal}. Our pastors and prayer team would be honored to pray with you.`}>
-  <PageHeader eyebrow="Prayer" title="You don’t have to" accent="carry it alone." lede="A burden, a need for healing, a hope, or a reason to give thanks. You don’t need the perfect words. God is listening." />
+<Base still title="Prayer" description={`Share a prayer request with ${site.legal}. Our pastors and prayer team would be honored to pray with you.`}>
+  <PageHeader eyebrow="Prayer" title="You don’t have to" accent="carry it alone." lede="A burden, a need for healing, a hope, or a reason to give thanks. You don’t need the perfect words. God is listening.">
+    <Fragment slot="actions"><StillToggle /></Fragment>
+  </PageHeader>
 
   <Section space="flush-top" labelledby="request-title">
     <div class="layout">

@@ -10,12 +10,25 @@ const { text, reference, size = 'md', align = 'start' } = Astro.props;
 ---
 
 <figure class:list={['scripture', `size-${size}`, `align-${align}`]}>
+  {size === 'lg' && (
+    <svg class="pool" viewBox="0 0 400 400" aria-hidden="true" focusable="false">
+      {[40, 80, 120, 160, 200].map((r, n) => <circle cx="200" cy="200" r={r} style={`--n: ${n}`} />)}
+    </svg>
+  )}
   <blockquote><p>“{text}”</p></blockquote>
   <figcaption class="ref">{reference} <span class="translation">NKJV</span></figcaption>
 </figure>
 
 <style>
-  .scripture { display: grid; gap: 1rem; }
+  .scripture { position: relative; display: grid; gap: 1rem; }
+  .scripture > :not(.pool) { position: relative; }
+  /* A still pool behind the words; its rings breathe very slowly. */
+  .pool { position: absolute; left: 50%; top: 50%; width: min(34rem, 130%); transform: translate(-50%, -50%); fill: none; stroke: currentColor; stroke-width: 1; color: var(--heading); opacity: 0.08; pointer-events: none; }
+  .align-start .pool { left: 30%; }
+  @media (prefers-reduced-motion: no-preference) {
+    .pool circle { transform-origin: 200px 200px; animation: breathe 9s ease-in-out infinite; animation-delay: calc(var(--n) * -1.8s); }
+  }
+  @keyframes breathe { 0%, 100% { transform: scale(0.97); opacity: 0.6; } 50% { transform: scale(1.03); opacity: 1; } }
   blockquote p {
     font: italic 500 clamp(1.25rem, 1.1rem + 0.7vw, 1.6rem) / 1.4 var(--serif);
     letter-spacing: -0.015em;

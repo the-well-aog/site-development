@@ -5,6 +5,7 @@ import Button from '../components/Button.astro';
 import EventList from '../components/EventList.astro';
 import FeatureGrid from '../components/FeatureGrid.astro';
 import Icon from '../components/Icon.astro';
+import DailyVerse from '../components/DailyVerse.astro';
 import MessageCard from '../components/MessageCard.astro';
 import MinistryCard from '../components/MinistryCard.astro';
 import Photo from '../components/Photo.astro';
@@ -13,11 +14,11 @@ import Section from '../components/Section.astro';
 import SectionHeader from '../components/SectionHeader.astro';
 import ServiceTimes from '../components/ServiceTimes.astro';
 import { cardinal } from '../data/beliefs';
-import { midweek, prayerMeeting, site, sunday, sundaySchool } from '../data/site';
+import { midweek, online, prayerMeeting, site, sunday, sundaySchool } from '../data/site';
 import { upcomingEvents } from '../lib/events';
 import { loadSocial } from '../lib/feeds';
 import { iso, longDate, todayIso } from '../lib/format';
-import { img, photoFor, url } from '../lib/url';
+import { img } from '../lib/url';
 
 const ministries = (await getCollection('ministries')).sort((a, b) => a.data.order - b.data.order);
 const events = (await upcomingEvents()).slice(0, 3);
@@ -25,18 +26,17 @@ const [note] = (await getCollection('announcements'))
   .filter((entry) => iso(entry.data.expires) >= todayIso())
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 const social = await loadSocial();
-const sermons = (await getCollection('sermons')).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 
-// Latest messages: YouTube uploads when the feed is connected, otherwise the sermon-notes library.
-const messages = social.videos.length
+// Recent videos appear only while the YouTube feature is on (site.features).
+const messages = site.features.youtube
   ? social.videos.slice(0, 4).map((video) => ({ href: `/watch/${video.id}`, image: video.thumbnail, title: video.title, meta: longDate(new Date(video.published)), video: true }))
-  : sermons.slice(0, 4).map((entry) => ({ href: `/sermons/${entry.id}`, image: photoFor(entry.data), title: entry.data.title, meta: `${entry.data.passage} · ${longDate(entry.data.date)}`, video: Boolean(entry.data.video) }));
+  : [];
 const [featured, ...recent] = messages;
 
 const firstVisit = [
   { icon: 'clock', title: `${site.serviceLength[0].toUpperCase()}${site.serviceLength.slice(1)}`, text: `Worship, a Bible message, and prayer. ${sundaySchool.name} for every age meets the hour before.` },
   { icon: 'shirt', title: 'Come as you are', text: 'Jeans or Sunday best. No one will single you out or ask you to stand.' },
-  { icon: 'kids', title: 'Kids are covered', text: 'Safe check-in and Bible lessons made for nursery through 5th grade.' },
+  { icon: 'kids', title: 'Kids are covered', text: 'Kids classes with Bible lessons for nursery through 5th grade, and security on site.' },
   { icon: 'flame', title: 'Spirit-filled worship', text: 'Heartfelt songs, practical preaching, and an open altar for prayer.' },
 ] as const;
 ---
@@ -50,7 +50,11 @@ const firstVisit = [
         <p class="lede">We are a Spirit-filled church family. Wherever you are in your journey, Jesus is ready to meet you, and so are we.</p>
         <div class="hero-actions">
           <Button href="/visit" size="lg">Plan your visit</Button>
-          <Button href="/watch" variant="secondary" size="lg" leading="play" icon="none">Watch online</Button>
+          {online ? (
+            <Button href="/watch" variant="secondary" size="lg" leading="play" icon="none">Watch online</Button>
+          ) : (
+            <Button href="/jesus" variant="secondary" size="lg">Know Jesus</Button>
+          )}
         </div>
         <div class="hero-times">
           <ServiceTimes days={['Sunday']} />
@@ -58,10 +62,23 @@ const firstVisit = [
           <a class="hero-address" href={site.mapsHref}><Icon name="pin" size={18} />{site.address}, {site.city}</a>
         </div>
       </div>
+      <div class="hero-visual">
+      <svg class="hero-ripples" viewBox="0 0 600 600" aria-hidden="true" focusable="false">
+        {[0, 1, 2, 3].map((n) => <circle cx="300" cy="300" r="150" style={`--n: ${n}`} />)}
+      </svg>
       <figure class="hero-media">
         <Photo src={img('church')} alt="The Well Assembly of God: a long brick building with a red metal roof and a covered front entrance, at sunset." sizes="(min-width: 1000px) 45vw, 100vw" priority />
         <figcaption>The door is open. Come thirsty.</figcaption>
       </figure>
+      </div>
+    </div>
+  </section>
+
+  <section class="loved" aria-labelledby="loved-title">
+    <div class="wrap loved-inner" data-reveal>
+      <p class="eyebrow">Something we hear over and over</p>
+      <p class="loved-line" id="loved-title">Every person who walks through that door just feels <em>so loved.</em></p>
+      <p class="loved-note">Not because we are perfect, but because Jesus is here, and His love is the first thing you meet.</p>
     </div>
   </section>
 
@@ -73,7 +90,7 @@ const firstVisit = [
   <Section tone="sand" width="wide" labelledby="story-title">
     <div class="story" data-reveal>
       <div class="story-media">
-        <Photo src={img('youth')} alt="Students from The Well smiling around a dinner table in the fellowship hall." sizes="(min-width: 1000px) 40vw, 100vw" />
+        <Photo src={img('worship')} alt="The sanctuary at The Well: a carpeted platform with a wooden pulpit, a grand piano, guitars, and a cross draped in purple." sizes="(min-width: 1000px) 40vw, 100vw" />
       </div>
       <div class="story-copy">
         <p class="eyebrow">Who we are</p>
@@ -111,6 +128,11 @@ const firstVisit = [
     </Section>
   )}
 
+  <Section tone="sand" width="narrow" labelledby="verse-title" class="verse-section">
+    <h2 id="verse-title" class="sr-only">Verse of the day</h2>
+    <DailyVerse />
+  </Section>
+
   <Section labelledby="events-title">
     <SectionHeader id="events-title" align="split" eyebrow="Coming up" title="Life at The Well." lede="Church is more than a Sunday service. Here is what is coming up and where to plug in." action={{ href: '/events', label: 'Full calendar' }} />
     <div class="events-layout" data-reveal>
@@ -138,7 +160,7 @@ const firstVisit = [
 </Base>
 
 <style>
-  .hero { padding: clamp(1.5rem, 3vw, 2.5rem) 0 clamp(2rem, 4vw, 3.5rem); }
+  .hero { padding: clamp(1.5rem, 3vw, 2.5rem) 0 clamp(2rem, 4vw, 3.5rem); overflow-x: clip; }
   .hero + :global(.section) { padding-top: calc(var(--section) * 0.45); }
   .hero-grid { display: grid; grid-template-columns: 1.05fr 0.95fr; gap: clamp(2rem, 5vw, 5rem); align-items: center; }
   .hero-copy { display: grid; gap: 1.5rem; justify-items: start; }
@@ -149,10 +171,28 @@ const firstVisit = [
   .hero-address { display: inline-flex; align-items: center; gap: 0.5rem; justify-self: start; min-height: 44px; color: var(--fg-muted); font-size: 0.95rem; text-decoration: none; }
   .hero-address :global(.icon) { color: var(--accent-ink); }
   .hero-address:hover { color: var(--heading); text-decoration: underline; }
+  .hero-visual { position: relative; }
+  /* Slow rings spreading from the doorway, like water from a well. */
+  .hero-ripples { position: absolute; left: 50%; bottom: -12%; width: 150%; transform: translateX(-50%); fill: none; stroke: var(--navy); stroke-width: 1; pointer-events: none; }
+  .hero-ripples circle { opacity: 0; transform-origin: 300px 300px; }
+  @media (prefers-reduced-motion: no-preference) {
+    .hero-ripples circle { animation: well-ripple 12s linear infinite; animation-delay: calc(var(--n) * -3s); }
+  }
+  @keyframes well-ripple {
+    0% { transform: scale(0.6); opacity: 0; }
+    15% { opacity: 0.12; }
+    100% { transform: scale(2); opacity: 0; }
+  }
   .hero-media { position: relative; margin: 0; overflow: hidden; aspect-ratio: 1; max-height: calc(100svh - var(--header-h) - 4rem); border-radius: 999px 999px var(--radius-lg) var(--radius-lg); background: var(--sand-2); }
   .hero-media :global(img) { width: 100%; height: 100%; object-fit: cover; object-position: center 45%; }
   .hero-media::after { content: ''; position: absolute; inset: 55% 0 0; background: linear-gradient(transparent, rgb(0 30 48 / 70%)); }
   .hero-media figcaption { position: absolute; z-index: 1; left: 1.75rem; bottom: 1.5rem; color: #fff; font: italic 500 1.1rem var(--serif); }
+
+  .loved { padding: clamp(1rem, 3vw, 2rem) 0 clamp(1.5rem, 4vw, 3rem); }
+  .loved-inner { display: grid; justify-items: center; gap: 1rem; text-align: center; }
+  .loved-line { max-width: 22ch; font: 500 clamp(2rem, 1.4rem + 2.6vw, 3.6rem) / 1.12 var(--serif); letter-spacing: -0.025em; color: var(--heading); text-wrap: balance; }
+  .loved-line em { color: var(--accent); }
+  .loved-note { max-width: 40rem; color: var(--fg-muted); font-size: var(--text-lg); }
 
   .story { display: grid; grid-template-columns: 0.9fr 1.1fr; gap: clamp(2rem, 6vw, 6rem); align-items: center; }
   .story-media { overflow: hidden; aspect-ratio: 4 / 3; border-radius: var(--radius-lg); }
@@ -182,7 +222,9 @@ const firstVisit = [
   @media (max-width: 1000px) {
     .hero-grid, .story, .watch-grid, .events-layout { grid-template-columns: 1fr; }
     /* The building leads on small screens, so the first view always shows the church. */
-    .hero-media { order: -1; aspect-ratio: 16 / 9; max-height: 34svh; width: 100%; border-radius: 12rem 12rem var(--radius-lg) var(--radius-lg); }
+    .hero-visual { order: -1; }
+    .hero-ripples { display: none; }
+    .hero-media { aspect-ratio: 16 / 9; max-height: 34svh; width: 100%; border-radius: 12rem 12rem var(--radius-lg) var(--radius-lg); }
     .hero-media figcaption { display: none; }
     .story-media { aspect-ratio: 16 / 9; }
   }

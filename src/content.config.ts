@@ -6,42 +6,6 @@ import { clock } from './lib/format';
 const image = z.enum(['worship', 'youth', 'fellowship', 'family', 'sanctuary', 'water', 'table', 'kids', 'lounge', 'chapel', 'night', 'exterior', 'church']);
 const photo = z.string().url().optional();
 
-const sermons = defineCollection({
-  loader: cmsLoader({
-    endpoint: 'sermons',
-    photo: true,
-    map: (item) => ({
-      id: item.slug,
-      body: item.body,
-      data: {
-        title: item.title,
-        date: item.date,
-        speaker: item.speaker,
-        series: item.series,
-        passage: item.passage,
-        image: item.stockPhoto,
-        photo: mediaUrl(item.photo),
-        summary: item.summary,
-        alt: altFor(item, item.title),
-        video: item.video || undefined,
-      },
-    }),
-  }),
-  schema: z.object({
-    title: z.string(),
-    date: z.coerce.date(),
-    speaker: z.string(),
-    series: z.string(),
-    passage: z.string(),
-    image,
-    photo,
-    summary: z.string(),
-    alt: z.string(),
-    // YouTube video id (the 11 characters after watch?v=). Optional.
-    video: z.string().regex(/^[\w-]{11}$/).optional(),
-  }),
-});
-
 const events = defineCollection({
   loader: cmsLoader({
     endpoint: 'events',
@@ -142,4 +106,4 @@ const announcements = defineCollection({
   }),
 });
 
-export const collections = { sermons, events, ministries, leaders, announcements };
+export const collections = { events, ministries, leaders, announcements };

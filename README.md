@@ -4,7 +4,7 @@ A static website for The Well Assembly of God, published on GitHub Pages wheneve
 
 ## Overview
 
-The site gives a guest service times, a first-Sunday welcome, beliefs, ministries, sermons, and events. Page copy is written for the church and grounded in the Assemblies of God Fundamental Truths. The address and phone are real; service times, leader names, and events still need the church's confirmation (see `site.preview`).
+The site gives a guest service times, a first-Sunday welcome, beliefs, ministries, and events. Page copy is written for the church and grounded in the Assemblies of God Fundamental Truths. The address and phone are real; service times, leader names, and events still need the church's confirmation (see `site.preview`).
 
 Pages are Markdown and Astro templates in this repo. GitHub Actions builds them into plain files and deploys that folder. There is no server, database, or payment form.
 
@@ -50,7 +50,9 @@ Build-time only. Copy `.env.example` to `.env` if you want `npm run build` to pi
 | `FACEBOOK_PAGE` | Optional | Overrides `facebookPage` in `src/data/site.ts` for this build. A public Facebook Page URL. |
 | `YOUTUBE_CHANNEL` | Optional | Overrides `youtubeChannel` in `src/data/site.ts`. An `@handle`, channel URL, or `UC…` id. |
 
-Facebook and YouTube are set in `src/data/site.ts` (`facebookPage`, `youtubeChannel`). Leave them blank until the real profiles exist. YouTube titles and thumbnails are read from the channel's public RSS feed at build time, with no API key. The Pages workflow also runs once a day so a new upload shows up without a manual edit. Facebook is the official Page plugin: the timeline loads in the visitor's browser, and it does not use an app id or token.
+Facebook and YouTube are set in `src/data/site.ts` (`facebookPage`, `youtubeChannel`). Leave them blank until the real profiles exist.
+
+Online worship has two independent switches in `site.features` (`src/data/site.ts`): `youtube` shows recent videos and `livestream` shows the live-stream panel and "Watch live" links. Both are off for now; while both are off, the Watch link leaves the navigation and the build fetches nothing from YouTube. YouTube titles and thumbnails are read from the channel's public RSS feed at build time, with no API key. The Pages workflow also runs once a day so a new upload shows up without a manual edit. Facebook is the official Page plugin: the timeline loads in the visitor's browser, and it does not use an app id or token.
 
 There is no runtime environment and no `.env` secrets.
 
@@ -63,9 +65,9 @@ There is no runtime environment and no `.env` secrets.
 | `npm run preview` | Serve `dist/` |
 | `npm run check` | Re-check links in an existing `dist/` |
 
-Public routes: `/`, `/visit`, `/about` (story, values, team), `/beliefs`, `/jesus`, `/next-steps`, `/prayer`, `/ministries` and one page per ministry, `/watch` (live, recent messages, sermon notes), `/watch/<video>`, `/sermons/<notes>`, `/events`, `/give`, `/contact`. `/sermons`, `/live`, and `/leadership` redirect to their new homes.
+Public routes: `/`, `/visit`, `/about` (story, values, team), `/beliefs`, `/jesus`, `/next-steps`, `/prayer`, `/ministries` and one page per ministry, `/watch` (live and recent messages, when switched on), `/watch/<video>`, `/events` and one page per event (each with an `.ics` calendar file), `/give`, `/contact`. `/live` and `/leadership` redirect to their new homes.
 
-Sermons, events, ministries, leaders, and announcements are Markdown files under `src/content`. Add a file, and the next build publishes it.
+Events, ministries, leaders, and announcements are Markdown files under `src/content`. Add a file, and the next build publishes it.
 
 ## Project structure
 
@@ -73,7 +75,7 @@ Sermons, events, ministries, leaders, and announcements are Markdown files under
 .github/workflows/pages.yml   build on pull request, deploy on main
 public/                       images, favicon, robots.txt
 src/components                the component library (see below)
-src/content                   Markdown fallback for sermons, events, ministries, leaders, announcements
+src/content                   Markdown fallback for events, ministries, leaders, announcements
 deploy/thewell                server builder, compose file, and Apache vhost
 src/data                      church facts and service times, navigation, beliefs
 src/layouts/Base.astro        document shell
@@ -85,7 +87,7 @@ astro.config.mjs              site URL, base path, sitemap
 
 ## Content (Strapi)
 
-Sermons, events, ministries, leaders, and announcements are edited in Strapi at
+Events, ministries, leaders, and announcements are edited in Strapi at
 https://cms.wellspringstudiollc.com/admin (behind the Wellspring login, then a Strapi account).
 The Strapi project lives in `C:\Users\roger\dev\wellspring-cms` and runs on the Wellspring server
 in `/opt/strapi` (SQLite, container `strapi`, 127.0.0.1:1337).

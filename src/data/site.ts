@@ -3,6 +3,8 @@ export type Service = {
   time: string;
   name: string;
   detail: string;
+  /** How long it usually runs, for the "happening now" notice. */
+  minutes: number;
 };
 
 export const site = {
@@ -18,12 +20,21 @@ export const site = {
   district: 'Oklahoma Ministry Network',
   // Confirmed by the church.
   services: [
-    { day: 'Sunday', time: '10:00 AM', name: 'Sunday School', detail: 'Bible classes for every age' },
-    { day: 'Sunday', time: '11:00 AM', name: 'Sunday Worship', detail: 'Worship, the Word, and Kids' },
-    { day: 'Tuesday', time: '7:00 PM', name: 'Prayer Meeting', detail: 'Seeking God together in prayer' },
-    { day: 'Wednesday', time: '7:00 PM', name: 'Wednesday Service', detail: 'Worship and the Word' },
+    { day: 'Sunday', time: '10:00 AM', name: 'Sunday School', detail: 'Bible classes for every age', minutes: 55 },
+    { day: 'Sunday', time: '11:00 AM', name: 'Sunday Worship', detail: 'Worship, the Word, and Kids', minutes: 90 },
+    { day: 'Tuesday', time: '7:00 PM', name: 'Prayer Meeting', detail: 'Seeking God together in prayer', minutes: 60 },
+    { day: 'Wednesday', time: '7:00 PM', name: 'Wednesday Service', detail: 'Worship and the Word', minutes: 75 },
   ] satisfies Service[],
   serviceLength: 'about 90 minutes',
+  // The church's clock, for the notices that change with the day ("See you tomorrow", "Starting soon").
+  timeZone: 'America/Chicago',
+  // Turn online features on once they are ready. Each one is independent.
+  features: {
+    // Recent videos pulled from the YouTube channel below.
+    youtube: false,
+    // "Watch live" links and the live-stream panel.
+    livestream: false,
+  },
   address: '2902 S Pocola Blvd',
   city: 'Pocola, OK 74902',
   locality: 'Pocola',
@@ -53,3 +64,6 @@ export const sunday = byName('Sunday Worship');
 export const sundaySchool = byName('Sunday School');
 export const prayerMeeting = byName('Prayer Meeting');
 export const midweek = byName('Wednesday Service');
+
+/** Whether anything is on offer online, so "Watch" links appear only when there is something to watch. */
+export const online = site.features.youtube || site.features.livestream;

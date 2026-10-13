@@ -2,6 +2,7 @@
 import '../styles/global.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import ServiceStatus from '../components/ServiceStatus.astro';
 import { site } from '../data/site';
 import { img, url } from '../lib/url';
 
@@ -9,9 +10,11 @@ interface Props {
   title: string;
   description: string;
   image?: string;
+  /** Offer the "Be still" reading mode on this page. */
+  still?: boolean;
 }
 
-const { title, description, image = img('church') } = Astro.props;
+const { title, description, image = img('church'), still = false } = Astro.props;
 const fullTitle = title === 'Home' ? site.legal : `${title} · ${site.name}`;
 const canonical = new URL(Astro.url.pathname, Astro.site);
 // Absolute URLs and already-resolved site paths ("/…") pass through; bare paths get the base prefix.
@@ -37,7 +40,7 @@ const organization = {
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="en" data-still-page={still || undefined}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
@@ -60,15 +63,38 @@ const organization = {
       href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&family=Outfit:wght@400;500;600&display=swap"
       rel="stylesheet"
     />
+    {still && (
+      <script is:inline>
+        // Restore "Be still" before first paint, so the page doesn't flash light then dark.
+        try { if (localStorage.getItem('thewell:still') === 'on') document.documentElement.dataset.still = ''; } catch {}
+      </script>
+    )}
     <script type="application/ld+json" set:html={JSON.stringify(organization).replace(/</g, '\\u003c')} />
   </head>
   <body>
     <a class="skip-link" href="#content">Skip to content</a>
+    <ServiceStatus />
     <Header />
     <main id="content" tabindex="-1">
       <slot />
     </main>
     <Footer />
+    <script>
+      // A ripple from the point a button is pressed, like a drop on still water. Skipped for reduced motion.
+      const still = window.matchMedia('(prefers-reduced-motion: reduce)');
+      document.addEventListener('pointerdown', (event) => {
+        if (still.matches || !(event.target instanceof Element)) return;
+        const target = event.target.closest<HTMLElement>('.button:not(.button-text), .planner-next, .respond-choice');
+        if (!target) return;
+        const box = target.getBoundingClientRect();
+        const ink = document.createElement('span');
+        ink.className = 'ink';
+        ink.style.left = `${event.clientX - box.left}px`;
+        ink.style.top = `${event.clientY - box.top}px`;
+        target.append(ink);
+        ink.addEventListener('animationend', () => ink.remove());
+      });
+    </script>
   </body>
 </html>
 

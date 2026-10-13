@@ -216,6 +216,23 @@ main:focus { outline: none; }
     }
   }
 }
+/* Water motion: a ripple spreads from where a button is pressed. */
+.button, .planner-next, .respond-choice { position: relative; overflow: hidden; }
+.ink {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  margin: -6px 0 0 -6px;
+  border: 1.5px solid currentColor;
+  border-radius: 50%;
+  pointer-events: none;
+  animation: ink 0.9s var(--ease) forwards;
+}
+@keyframes ink {
+  from { transform: scale(1); opacity: 0.55; }
+  to { transform: scale(22); opacity: 0; }
+}
+
 @keyframes rise {
   from { opacity: 0; transform: translateY(18px); }
   to { opacity: 1; transform: none; }
@@ -224,3 +241,39 @@ main:focus { outline: none; }
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
 }
+
+/*
+  "Be still" reading mode (StillToggle): larger type and a calm evening palette, offered on
+  reading pages. Colour comes from the same tokens, so most components follow automatically;
+  the rules after the token block cover the few that set their own colours.
+*/
+:root[data-still] {
+  font-size: 112.5%;
+  color-scheme: dark;
+  --paper: #0c2a3f;
+  --sand: #0a2639;
+  --sand-2: #12354d;
+  --foam: rgb(255 255 255 / 10%);
+  --ink: #e9eef0;
+  --muted: #b9ccd6;
+  --bg: var(--navy-deep);
+  --fg: #e9eef0;
+  --fg-muted: #b9ccd6;
+  --heading: #fff;
+  --accent: #c9d8e0;
+  --accent-ink: #e2bb72;
+  --line: rgb(255 255 255 / 14%);
+  --line-strong: rgb(255 255 255 / 26%);
+  --surface: rgb(255 255 255 / 5%);
+}
+:root[data-still] body { background: var(--navy-deep); color: var(--fg); }
+:root[data-still] .tone-sand { --bg: var(--sand); --surface: rgb(255 255 255 / 5%); }
+:root[data-still] .site-header { background: rgb(0 31 51 / 90%); }
+:root[data-still] .brand { color: #fff; }
+:root[data-still] .brand img { filter: brightness(0) invert(0.96); }
+:root[data-still] .nav-menu strong, :root[data-still] .menu-toggle, :root[data-still] .mobile-group a, :root[data-still] .mobile-times strong { color: #fff; }
+:root[data-still] .feature-icon, :root[data-still] .contact-icon { color: #fff; }
+:root[data-still] ::selection { background: var(--gold); color: var(--navy-deep); }
+:root[data-still] .ripple, :root[data-still] .pool { display: none; }
+:root[data-still] .site-footer { border-top: 1px solid var(--line); }
+:root[data-still] .nav-item[aria-current], :root[data-still] .nav-item[data-current] { color: #fff; }

@@ -1,31 +1,29 @@
 import type { ImageMetadata } from 'astro';
-import chapel from '../assets/photos/chapel.jpg';
 import church from '../assets/photos/church-exterior.jpg';
 import exterior from '../assets/photos/exterior.jpg';
 import family from '../assets/photos/family.jpg';
 import fellowship from '../assets/photos/fellowship.jpg';
-import kids from '../assets/photos/kids.jpg';
 import night from '../assets/photos/night.jpg';
 import water from '../assets/photos/water.jpg';
 import worship from '../assets/photos/worship.jpg';
 import youth from '../assets/photos/youth.jpg';
 
 // Photos live in src/assets so the build can serve each one at the size it is shown.
-// sanctuary, lounge, and table are older names the CMS still uses; they now point at the church's own photos.
+// sanctuary, lounge, table, kids, and chapel are older names the CMS still uses; they now point at the church's own photos.
 const photos = {
   worship,
   youth,
   fellowship,
   family,
   water,
-  kids,
-  chapel,
   night,
   exterior,
   church,
   sanctuary: worship,
   lounge: family,
   table: fellowship,
+  kids: youth,
+  chapel: youth,
 } satisfies Record<string, ImageMetadata>;
 
 export type PhotoKey = keyof typeof photos;

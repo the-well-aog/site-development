@@ -1,0 +1,45 @@
+---
+import Icon from './Icon.astro';
+
+// "Be still": larger type and a calm evening palette for reading and prayer (Psalm 46:10).
+---
+
+<button class="still-toggle" type="button" aria-pressed="false" data-still-toggle>
+  <Icon name="moon" size={16} />
+  <span>Be still</span>
+</button>
+
+<style>
+  .still-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 44px;
+    padding: 0 1.1rem;
+    border: 1px solid var(--line-strong);
+    border-radius: 999px;
+    background: transparent;
+    color: var(--heading);
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: border-color 0.2s var(--ease), background-color 0.2s var(--ease);
+  }
+  .still-toggle:hover { border-color: var(--heading); }
+  .still-toggle[aria-pressed='true'] { background: rgb(255 255 255 / 10%); }
+</style>
+
+<script>
+  const root = document.documentElement;
+  const sync = () => document.querySelectorAll('[data-still-toggle]').forEach((button) => button.setAttribute('aria-pressed', String('still' in root.dataset)));
+  document.querySelectorAll<HTMLButtonElement>('[data-still-toggle]').forEach((button) => {
+    button.addEventListener('click', () => {
+      const on = !('still' in root.dataset);
+      if (on) root.dataset.still = '';
+      else delete root.dataset.still;
+      try { localStorage.setItem('thewell:still', on ? 'on' : 'off'); } catch { /* storage unavailable */ }
+      sync();
+    });
+  });
+  sync();
+</script>

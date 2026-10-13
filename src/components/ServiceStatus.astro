@@ -1,0 +1,70 @@
+---
+import { site } from '../data/site';
+import { url } from '../lib/url';
+
+/*
+  A notice that follows the church's week: "See you tomorrow", "Starts in 20 minutes",
+  "Happening now". It is filled in by the browser on its own clock, so it stays right
+  between rebuilds, and it stays hidden when nothing is on.
+*/
+const services = site.services.map(({ day, time, name, minutes }) => ({ day, time, name, minutes }));
+const watch = site.features.livestream ? url('/watch') : '';
+---
+
+<div class="service-status status-bar" data-service-status data-services={JSON.stringify(services)} data-zone={site.timeZone} data-watch={watch} data-directions={site.mapsHref} data-visit={url('/visit')} hidden>
+  <div class="wrap-wide status-inner">
+    <span class="status-dot" aria-hidden="true"></span>
+    <p class="status-text" data-status-text></p>
+    <a class="status-link" data-status-link href={url('/visit')}></a>
+  </div>
+</div>
+
+<style>
+  .service-status[hidden] { display: none; }
+  .status-inner { display: flex; flex-wrap: wrap; align-items: center; gap: 0.35rem 0.75rem; }
+  .status-dot { position: relative; flex: none; width: 0.55rem; height: 0.55rem; border-radius: 50%; background: var(--gold); }
+  .status-dot::after { content: ''; position: absolute; inset: 0; border-radius: 50%; border: 1px solid var(--gold); }
+  .is-now .status-dot::after { animation: status-ring 2.4s var(--ease) infinite; }
+  .status-text { font-size: 0.88rem; }
+  .status-link { font-size: 0.88rem; font-weight: 600; text-decoration: underline; text-underline-offset: 0.25em; }
+
+  .status-bar { background: var(--navy); color: #eef2f2; }
+  .status-bar .status-inner { justify-content: center; min-height: 2.5rem; padding-block: 0.35rem; text-align: center; }
+  .status-bar .status-link { color: #fff; }
+  :global(body.nav-open) .status-bar { display: none; }
+  @media (max-width: 640px) { .status-bar .status-dot { display: none; } }
+
+
+  @keyframes status-ring { from { transform: scale(1); opacity: 0.9; } to { transform: scale(3.2); opacity: 0; } }
+  @media (prefers-reduced-motion: reduce) { .is-now .status-dot::after { animation: none; } }
+</style>
+
+<script>
+  import { serviceStatus, statusText, type Slot } from '../lib/schedule';
+
+  function render(root: HTMLElement) {
+    const services: Slot[] = JSON.parse(root.dataset.services || '[]');
+    const status = serviceStatus(services, root.dataset.zone || 'America/Chicago');
+    const text = root.querySelector<HTMLElement>('[data-status-text]');
+    const link = root.querySelector<HTMLAnchorElement>('[data-status-link]');
+    root.hidden = !status;
+    root.classList.toggle('is-now', status?.kind === 'now');
+    if (!status || !text || !link) return;
+    text.textContent = statusText(status);
+    if (status.kind === 'now' && root.dataset.watch) {
+      link.href = root.dataset.watch;
+      link.textContent = 'Watch live';
+    } else if (status.kind === 'tomorrow') {
+      link.href = root.dataset.visit || '/';
+      link.textContent = 'Plan your visit';
+    } else {
+      link.href = root.dataset.directions || '/';
+      link.textContent = 'Get directions';
+    }
+  }
+
+  const roots = Array.from(document.querySelectorAll<HTMLElement>('[data-service-status]'));
+  const update = () => roots.forEach(render);
+  update();
+  setInterval(update, 60_000);
+</script>

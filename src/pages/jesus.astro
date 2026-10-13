@@ -3,6 +3,8 @@ import Base from '../layouts/Base.astro';
 import FeatureGrid from '../components/FeatureGrid.astro';
 import NumberedList from '../components/NumberedList.astro';
 import PageHeader from '../components/PageHeader.astro';
+import StillToggle from '../components/StillToggle.astro';
+import Respond from '../components/Respond.astro';
 import Scripture from '../components/Scripture.astro';
 import Section from '../components/Section.astro';
 import SectionHeader from '../components/SectionHeader.astro';
@@ -33,13 +35,15 @@ const story = [
 const nextSteps = [
   { icon: 'message', title: 'Tell someone', text: 'Let us know. We want to celebrate with you, pray with you, and help you take your next steps.', href: '/contact', label: 'Tell a pastor' },
   { icon: 'heart', title: 'Get baptized', text: 'Water baptism is a public declaration that you belong to Jesus. Ask about our next baptism service.', href: '/next-steps#baptism', label: 'About baptism' },
-  { icon: 'book', title: 'Read the Bible', text: 'Start with the Gospel of John. Read a chapter a day and ask God to speak to you.', href: '/sermons/the-woman-at-the-well', label: 'Start in John 4' },
+  { icon: 'book', title: 'Read the Bible', text: 'Start with the Gospel of John. Read a chapter a day and ask God to speak to you.', href: 'https://www.biblegateway.com/passage/?search=John+4&version=NKJV', label: 'Start in John 4' },
   { icon: 'kids', title: 'Find your people', text: 'Faith grows best in community. Join us on Sunday and find a group to walk with.', href: '/ministries/groups', label: 'Find a group' },
 ] as const;
 ---
 
-<Base title="Know Jesus" description="The good news of Jesus Christ: God loves you, Jesus paid the price for sin, and you can receive new life today.">
-  <PageHeader align="center" eyebrow="The good news" title="Living water for a thirsty soul." lede="Our church is named for a conversation Jesus had at a well. He offered a thirsty woman living water. He offers the same to you." />
+<Base still title="Know Jesus" description="The good news of Jesus Christ: God loves you, Jesus paid the price for sin, and you can receive new life today.">
+  <PageHeader align="center" eyebrow="The good news" title="Living water for a thirsty soul." lede="Our church is named for a conversation Jesus had at a well. He offered a thirsty woman living water. He offers the same to you.">
+    <Fragment slot="actions"><StillToggle /></Fragment>
+  </PageHeader>
 
   <Section space="flush-top" labelledby="well-title">
     <div class="well" data-reveal>
@@ -74,6 +78,8 @@ const nextSteps = [
     <SectionHeader id="family-title" align="center" eyebrow="I prayed that prayer" title="Welcome to the family." lede="If you just prayed and meant it, heaven is rejoicing (Luke 15:10), and so are we. Here is where to go from here." />
     <FeatureGrid items={nextSteps} columns={4} variant="cards" />
   </Section>
+
+  <Respond />
 </Base>
 
 <style>

@@ -1,5 +1,4 @@
 ---
-import { getCollection } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import Button from '../../components/Button.astro';
 import Icon from '../../components/Icon.astro';
@@ -8,41 +7,30 @@ import PageHeader from '../../components/PageHeader.astro';
 import Section from '../../components/Section.astro';
 import SectionHeader from '../../components/SectionHeader.astro';
 import VideoEmbed from '../../components/VideoEmbed.astro';
-import { site, sunday } from '../../data/site';
+import { online, site, sunday } from '../../data/site';
 import { loadSocial } from '../../lib/feeds';
 import { longDate } from '../../lib/format';
-import { photoFor } from '../../lib/url';
 
+// Each part of this page follows its own switch in site.features.
 const social = await loadSocial();
-const [latest, ...older] = social.videos;
-const liveUrl = social.channelUrl ? `${social.channelUrl}/live` : null;
-const sermons = (await getCollection('sermons')).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
-const series = [...new Set(sermons.map((entry) => entry.data.series))];
+const videos = site.features.youtube ? social.videos : [];
+const [latest, ...older] = videos;
+const liveUrl = site.features.livestream && social.channelUrl ? `${social.channelUrl}/live` : null;
 ---
 
-<Base title="Watch" description={`Watch ${site.legal} live on ${sunday.day}s at ${sunday.time}, catch up on recent messages, and read sermon notes.`} image={latest?.thumbnail}>
-  <PageHeader eyebrow="Watch" title="Worship with us," accent="wherever you are." lede={`Join the service live every ${sunday.day} at ${sunday.time}, or catch up on a recent message any time.`}>
-    <Fragment slot="actions">
-      {latest && liveUrl && <Button href={liveUrl} leading="play" icon="none" size="lg">Watch live on YouTube</Button>}
-      {latest && <span class="live-when"><Icon name="clock" size={18} />Live {sunday.day}s at {sunday.time}</span>}
-    </Fragment>
-  </PageHeader>
-
-  {latest && (
-    <Section space="flush-top" width="wide" labelledby="latest-title">
-      <div class="latest" data-reveal>
-        <VideoEmbed id={latest.id} title={latest.title} />
-        <div class="latest-copy">
-          <p class="ref">Latest message · {longDate(new Date(latest.published))}</p>
-          <h2 id="latest-title">{latest.title}</h2>
-          {latest.excerpt && <p class="muted">{latest.excerpt}</p>}
-          <Button href={`/watch/${latest.id}`} variant="text">Open message page</Button>
-        </div>
-      </div>
-    </Section>
+<Base title="Watch" description={online ? `Worship with ${site.legal} online, live on ${sunday.day}s at ${sunday.time}, and catch up on recent messages.` : `Online worship from ${site.legal} is coming soon. Join us in person on ${sunday.day}s at ${sunday.time}.`} image={latest?.thumbnail}>
+  {online ? (
+    <PageHeader eyebrow="Watch" title="Worship with us," accent="wherever you are." lede={`Join the service live every ${sunday.day} at ${sunday.time}, or catch up on a recent message any time.`} />
+  ) : (
+    <PageHeader align="center" eyebrow="Watch" title="Come worship" accent="with us in person." lede={`We are getting online worship ready. Until then, there is a seat saved for you every ${sunday.day} at ${sunday.time}.`}>
+      <Fragment slot="actions">
+        <Button href="/visit" size="lg">Plan your visit</Button>
+        {social.facebookPage && <Button href={social.facebookPage} variant="text">Follow along on Facebook</Button>}
+      </Fragment>
+    </PageHeader>
   )}
 
-  {!latest && (
+  {site.features.livestream && (
     <Section space="flush-top" width="wide" labelledby="live-title">
       <div class="live tone-navy" data-reveal>
         <svg class="live-rings" viewBox="0 0 400 400" aria-hidden="true" focusable="false">
@@ -55,9 +43,22 @@ const series = [...new Set(sermons.map((entry) => entry.data.series))];
           <p class="muted">The service streams each week. Join from home, then come and see us in person when you can.</p>
         </div>
         <div class="live-actions">
-          {liveUrl && <Button href={liveUrl} leading="play" icon="none">Watch on YouTube</Button>}
+          {liveUrl && <Button href={liveUrl} leading="play" icon="none">Watch live</Button>}
           {social.facebookPage && <Button href={social.facebookPage} variant="secondary" leading="facebook" icon="none">Follow on Facebook</Button>}
-          {!liveUrl && !social.facebookPage && <Button href="/visit">Plan your visit</Button>}
+        </div>
+      </div>
+    </Section>
+  )}
+
+  {latest && (
+    <Section space={site.features.livestream ? 'normal' : 'flush-top'} width="wide" labelledby="latest-title">
+      <div class="latest" data-reveal>
+        <VideoEmbed id={latest.id} title={latest.title} />
+        <div class="latest-copy">
+          <p class="ref">Latest message · {longDate(new Date(latest.published))}</p>
+          <h2 id="latest-title">{latest.title}</h2>
+          {latest.excerpt && <p class="muted">{latest.excerpt}</p>}
+          <Button href={`/watch/${latest.id}`} variant="text">Open message page</Button>
         </div>
       </div>
     </Section>
@@ -73,44 +74,25 @@ const series = [...new Set(sermons.map((entry) => entry.data.series))];
       </ul>
     </Section>
   )}
-
-  {sermons.length > 0 && (
-    <Section tone="sand" width="wide" labelledby="notes-title">
-      <SectionHeader id="notes-title" align="split" eyebrow={series.length === 1 ? `Series · ${series[0]}` : 'Sermon notes'} title="Read and reflect." lede="Outlines and discussion questions to take a message deeper, on your own or with your group." />
-      <ul class="grid" role="list" data-reveal>
-        {sermons.map((entry) => (
-          <li><MessageCard href={`/sermons/${entry.id}`} image={photoFor(entry.data)} alt={entry.data.alt} eyebrow={entry.data.passage} title={entry.data.title} summary={entry.data.summary} meta={`${longDate(entry.data.date)} · ${entry.data.speaker}`} video={Boolean(entry.data.video)} /></li>
-        ))}
-      </ul>
-    </Section>
-  )}
-
-  {!latest && sermons.length === 0 && (
-    <Section space="flush-top">
-      <p class="lede">Messages will appear here soon. In the meantime, we would love to see you in person.</p>
-      <Button href="/visit">Plan your visit</Button>
-    </Section>
-  )}
 </Base>
 
 <style>
-  .live-when { display: inline-flex; align-items: center; gap: 0.5rem; color: var(--fg-muted); font-size: 0.95rem; }
-  .live-when :global(.icon) { color: var(--accent-ink); }
   .live { position: relative; display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 1.5rem clamp(1.5rem, 4vw, 3rem); overflow: hidden; padding: clamp(1.75rem, 4vw, 3rem); border-radius: var(--radius-lg); background: var(--bg); color: var(--fg); }
   .live-rings { position: absolute; width: 34rem; left: -8rem; top: 50%; transform: translateY(-50%); fill: none; stroke: #fff; stroke-opacity: 0.08; pointer-events: none; }
   .live-badge { position: relative; display: grid; place-items: center; width: 5.5rem; height: 5.5rem; padding-left: 4px; border-radius: 50%; background: var(--paper); color: var(--navy); box-shadow: 0 0 0 10px rgb(255 255 255 / 8%); }
   .live-copy { position: relative; display: grid; gap: 0.5rem; }
   .live-copy h2 { font-size: clamp(1.8rem, 1.4rem + 1.6vw, 2.75rem); }
   .live-actions { position: relative; display: flex; flex-wrap: wrap; gap: 0.75rem; }
-  @media (max-width: 1000px) { .live { grid-template-columns: auto minmax(0, 1fr); } .live-actions { grid-column: 1 / -1; } }
-  @media (max-width: 560px) { .live { grid-template-columns: 1fr; } .live-badge { width: 4.25rem; height: 4.25rem; } }
   .latest { display: grid; grid-template-columns: 1.6fr 1fr; gap: clamp(1.5rem, 4vw, 3.5rem); align-items: center; }
   .latest-copy { display: grid; gap: 1rem; justify-items: start; }
   .latest-copy h2 { font-size: clamp(1.75rem, 1.4rem + 1.4vw, 2.6rem); overflow-wrap: anywhere; }
   .grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 2rem 1.25rem; }
   @media (max-width: 1000px) {
+    .live { grid-template-columns: auto minmax(0, 1fr); }
+    .live-actions { grid-column: 1 / -1; }
     .latest { grid-template-columns: 1fr; }
     .grid { grid-template-columns: 1fr 1fr; }
   }
   @media (max-width: 620px) { .grid { grid-template-columns: 1fr; } }
+  @media (max-width: 560px) { .live { grid-template-columns: 1fr; } .live-badge { width: 4.25rem; height: 4.25rem; } }
 </style>

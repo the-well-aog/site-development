@@ -48,7 +48,7 @@ async function fetchAll(endpoint: string, populate: boolean): Promise<CmsItem[]>
 }
 
 interface Options {
-  /** Strapi REST endpoint, e.g. "sermons". Also the src/content folder name used as the fallback. */
+  /** Strapi REST endpoint, e.g. "events". Also the src/content folder name used as the fallback. */
   endpoint: string;
   /** Whether the content type has a `photo` media field to populate. */
   photo?: boolean;

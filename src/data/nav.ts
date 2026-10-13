@@ -1,4 +1,5 @@
 import { getCollection } from 'astro:content';
+import { online } from './site';
 
 export type NavLink = { href: string; label: string; note?: string };
 export type NavGroup = { id: string; label: string; href: string; links: NavLink[] };
@@ -37,7 +38,7 @@ export async function getNav() {
   ];
 
   const links: NavLink[] = [
-    { href: '/watch', label: 'Watch' },
+    ...(online ? [{ href: '/watch', label: 'Watch' }] : []),
     { href: '/events', label: 'Events' },
     { href: '/give', label: 'Give' },
   ];

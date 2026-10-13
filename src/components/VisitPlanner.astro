@@ -1,0 +1,288 @@
+---
+import { getCollection } from 'astro:content';
+import Icon from './Icon.astro';
+import { site, sunday, sundaySchool } from '../data/site';
+
+/*
+  Three gentle questions, then a personal "Here's your Sunday" with an arrival time, what the
+  kids will do, and a calendar file. Everything happens in the browser; nothing is sent anywhere.
+  Without JavaScript the planner stays hidden and the rest of the page covers the same ground.
+*/
+const ministries = await getCollection('ministries');
+const students = ministries.find((entry) => entry.id === 'students' || /student/i.test(entry.data.title));
+
+const config = {
+  zone: site.timeZone,
+  worship: sunday.time,
+  school: sundaySchool.time,
+  length: site.serviceLength,
+  address: `${site.address}, ${site.city}`,
+  legal: site.legal,
+  studentsWhen: students?.data.when ?? '',
+};
+---
+
+<div class="planner" data-planner data-config={JSON.stringify(config)} hidden>
+  <div class="planner-head">
+    <p class="eyebrow">Plan your Sunday</p>
+    <h2 id="planner-title">Three questions, <em>and you’re set.</em></h2>
+    <p class="muted">Tell us a little about your visit and we’ll put together your morning. Nothing is sent anywhere.</p>
+    <ol class="planner-progress" aria-hidden="true">
+      <li data-progress="1"></li><li data-progress="2"></li><li data-progress="3"></li>
+    </ol>
+  </div>
+
+  <form class="planner-body" data-planner-form aria-labelledby="planner-title" novalidate>
+    <fieldset data-step="1">
+      <legend>Who’s coming?</legend>
+      <div class="planner-options">
+        <label><input type="radio" name="who" value="me" required /><span>Just me</span></label>
+        <label><input type="radio" name="who" value="two" /><span>Two of us</span></label>
+        <label><input type="radio" name="who" value="family" /><span>My family, with kids</span></label>
+        <label><input type="radio" name="who" value="group" /><span>A group of us</span></label>
+      </div>
+    </fieldset>
+
+    <fieldset data-step="2" hidden>
+      <legend>How old are the kids?</legend>
+      <p class="planner-hint">Choose any that apply.</p>
+      <div class="planner-options">
+        <label><input type="checkbox" name="ages" value="nursery" /><span>Birth to age 3</span></label>
+        <label><input type="checkbox" name="ages" value="kids" /><span>Preschool to 5th grade</span></label>
+        <label><input type="checkbox" name="ages" value="students" /><span>6th to 12th grade</span></label>
+      </div>
+    </fieldset>
+
+    <fieldset data-step="3" hidden>
+      <legend>Which Sunday?</legend>
+      <div class="planner-options" data-sundays></div>
+      <label class="planner-check"><input type="checkbox" name="school" value="yes" /><span>We’d like to come early for {sundaySchool.name} at {sundaySchool.time}</span></label>
+    </fieldset>
+
+    <div class="planner-nav">
+      <button class="planner-back" type="button" data-back hidden><Icon name="arrow-left" size={16} />Back</button>
+      <button class="planner-next" type="submit" data-next><span data-next-label>Next</span><Icon name="arrow-right" size={16} /></button>
+    </div>
+  </form>
+
+  <div class="planner-result" data-result hidden tabindex="-1">
+    <p class="ref" data-result-date></p>
+    <h3>Here’s your Sunday.</h3>
+    <ul class="planner-plan" role="list" data-plan></ul>
+    <div class="planner-actions">
+      <button class="planner-next" type="button" data-calendar><Icon name="calendar" size={16} />Add to calendar</button>
+      <a class="planner-ghost" href={site.mapsHref}><Icon name="pin" size={16} />Get directions</a>
+      <a class="planner-ghost" href="#hello">Let us know you’re coming</a>
+      <button class="planner-link" type="button" data-restart>Change my answers</button>
+    </div>
+  </div>
+</div>
+
+<style>
+  .planner[hidden] { display: none; }
+  .planner {
+    display: grid;
+    grid-template-columns: 0.85fr 1.15fr;
+    gap: clamp(1.5rem, 4vw, 4rem);
+    align-items: start;
+    padding: clamp(1.5rem, 4vw, 3rem);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    background: var(--surface);
+    box-shadow: var(--shadow-sm);
+  }
+  .planner-head { display: grid; gap: 1rem; }
+  .planner-head h2 { font-size: clamp(1.9rem, 1.5rem + 1.6vw, 2.75rem); }
+  .planner-progress { display: flex; gap: 0.4rem; margin: 0.5rem 0 0; padding: 0; list-style: none; }
+  .planner-progress li { width: 2.25rem; height: 4px; border-radius: 4px; background: var(--line-strong); transition: background-color 0.3s var(--ease); }
+  .planner-progress li.is-done { background: var(--gold); }
+
+  .planner-body, .planner-result { display: grid; gap: 1.5rem; }
+  .planner-result:focus { outline: none; }
+  fieldset { display: grid; gap: 1rem; margin: 0; padding: 0; border: 0; }
+  legend { margin-bottom: 1rem; font: 500 clamp(1.4rem, 1.2rem + 0.8vw, 1.8rem) / 1.2 var(--serif); color: var(--heading); }
+  .planner-hint { margin-top: -0.75rem; color: var(--fg-muted); font-size: 0.9rem; }
+  .planner-options { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.6rem; }
+  .planner-options label, .planner-check { position: relative; cursor: pointer; }
+  .planner-options input { position: absolute; opacity: 0; pointer-events: none; }
+  .planner-options span {
+    display: flex;
+    align-items: center;
+    min-height: 3.5rem;
+    padding: 0.75rem 1.1rem;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius);
+    background: var(--paper);
+    color: var(--heading);
+    font-weight: 500;
+    transition: border-color 0.2s var(--ease), background-color 0.2s var(--ease), color 0.2s var(--ease);
+  }
+  .planner-options label:hover span { border-color: var(--heading); }
+  .planner-options input:checked + span { border-color: var(--navy); background: var(--navy); color: #fff; }
+  .planner-options input:focus-visible + span { outline: 2px solid var(--accent); outline-offset: 3px; }
+  .planner-check { display: flex; align-items: flex-start; gap: 0.6rem; color: var(--fg); font-size: 0.95rem; }
+  .planner-check input { width: 1.1rem; height: 1.1rem; margin-top: 0.2rem; accent-color: var(--navy); }
+
+  .planner-nav, .planner-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem 1rem; }
+  .planner-next, .planner-ghost, .planner-back, .planner-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 48px;
+    padding: 0 1.4rem;
+    border: 1px solid transparent;
+    border-radius: 999px;
+    font: 500 0.95rem / 1.2 var(--sans);
+    text-decoration: none;
+    cursor: pointer;
+  }
+  .planner-next { background: var(--navy); color: #fff; }
+  .planner-ghost, .planner-back { border-color: var(--line-strong); background: transparent; color: var(--heading); }
+  .planner-ghost:hover, .planner-back:hover { border-color: var(--heading); }
+  .planner-link { padding-inline: 0; background: none; color: var(--fg-muted); text-decoration: underline; text-underline-offset: 0.3em; }
+  .planner-nav .planner-next { margin-left: auto; }
+
+  .planner-result h3 { font-size: clamp(1.9rem, 1.5rem + 1.6vw, 2.6rem); margin-top: -0.75rem; }
+  .planner-plan { display: grid; gap: 0.25rem; }
+  .planner-plan :global(li) { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 1rem; align-items: start; padding: 0.9rem 0; border-top: 1px solid var(--line); }
+  .planner-plan :global(li:last-child) { border-bottom: 1px solid var(--line); }
+  .planner-plan :global(.plan-icon) { display: grid; place-items: center; width: 2.4rem; height: 2.4rem; border-radius: 50%; background: var(--foam); color: var(--navy); }
+  .planner-plan :global(strong) { display: block; color: var(--heading); font-weight: 500; }
+  .planner-plan :global(span.plan-note) { color: var(--fg-muted); font-size: 0.93rem; }
+
+  @media (max-width: 900px) { .planner { grid-template-columns: 1fr; } }
+  @media (max-width: 480px) { .planner-options { grid-template-columns: 1fr; } }
+</style>
+
+<script>
+  import { icons } from '../lib/icons';
+  import { calendarFile } from '../lib/ics';
+  import { minutesOf } from '../lib/schedule';
+
+  type Config = { zone: string; worship: string; school: string; length: string; address: string; legal: string; studentsWhen: string };
+
+  const icon = (name: keyof typeof icons) => `<span class="plan-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">${icons[name]}</svg></span>`;
+  const clock = (minutes: number) => {
+    const hour = Math.floor(minutes / 60);
+    return `${hour % 12 || 12}:${String(minutes % 60).padStart(2, '0')} ${hour < 12 ? 'AM' : 'PM'}`;
+  };
+  const escapeHtml = (text: string) => text.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]!);
+
+  /** The next four Sundays on the church's calendar, including today if worship hasn't started. */
+  function upcomingSundays(config: Config) {
+    const now = new Date();
+    const parts = new Intl.DateTimeFormat('en-US', { timeZone: config.zone, year: 'numeric', month: 'numeric', day: 'numeric', weekday: 'short', hour: 'numeric', minute: 'numeric', hourCycle: 'h23' }).formatToParts(now);
+    const get = (type: string) => parts.find((part) => part.type === type)?.value ?? '';
+    const weekday = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].indexOf(get('weekday'));
+    const minutes = Number(get('hour')) * 60 + Number(get('minute'));
+    let offset = (7 - weekday) % 7;
+    if (offset === 0 && minutes >= minutesOf(config.worship)) offset = 7;
+    const base = Date.UTC(Number(get('year')), Number(get('month')) - 1, Number(get('day')));
+    return [0, 7, 14, 21].map((add) => {
+      const date = new Date(base + (offset + add) * 86400000);
+      const label = new Intl.DateTimeFormat('en-US', { timeZone: 'UTC', weekday: 'long', month: 'long', day: 'numeric' }).format(date);
+      return { value: date.toISOString().slice(0, 10), label: offset + add === 0 ? `Today, ${label.replace(/^Sunday, /, '')}` : label };
+    });
+  }
+
+  document.querySelectorAll<HTMLElement>('[data-planner]').forEach((root) => {
+    const config: Config = JSON.parse(root.dataset.config || '{}');
+    const form = root.querySelector<HTMLFormElement>('[data-planner-form]')!;
+    const steps = Array.from(form.querySelectorAll<HTMLFieldSetElement>('[data-step]'));
+    const back = form.querySelector<HTMLButtonElement>('[data-back]')!;
+    const next = form.querySelector<HTMLButtonElement>('[data-next]')!;
+    const result = root.querySelector<HTMLElement>('[data-result]')!;
+    const progress = Array.from(root.querySelectorAll<HTMLElement>('[data-progress]'));
+    let current = 1;
+    let plan: { date: string; label: string; arrive: number; school: boolean } | null = null;
+
+    const sundays = upcomingSundays(config);
+    form.querySelector('[data-sundays]')!.innerHTML = sundays
+      .map((sunday, index) => `<label><input type="radio" name="sunday" value="${sunday.value}" ${index === 0 ? 'required' : ''} /><span>${escapeHtml(sunday.label)}</span></label>`)
+      .join('');
+
+    const value = (name: string) => (form.elements.namedItem(name) as RadioNodeList | null)?.value ?? '';
+    const ages = () => Array.from(form.querySelectorAll<HTMLInputElement>('input[name="ages"]:checked')).map((input) => input.value);
+    const hasKidsStep = () => value('who') === 'family' || value('who') === 'group';
+
+    const nextLabel = next.querySelector<HTMLElement>('[data-next-label]')!;
+
+    function show(step: number, focus = true) {
+      current = step;
+      steps.forEach((fieldset) => { fieldset.hidden = Number(fieldset.dataset.step) !== step; });
+      back.hidden = step === 1;
+      nextLabel.textContent = step === 3 ? 'See my Sunday' : 'Next';
+      progress.forEach((bar) => bar.classList.toggle('is-done', Number(bar.dataset.progress) <= step));
+      if (focus) steps.find((fieldset) => !fieldset.hidden)?.querySelector<HTMLInputElement>('input')?.focus({ preventScroll: true });
+    }
+
+    function finish() {
+      const school = Boolean(form.querySelector<HTMLInputElement>('input[name="school"]:checked'));
+      const first = minutesOf(school ? config.school : config.worship);
+      const arrive = first - 15;
+      const chosen = sundays.find((sunday) => sunday.value === value('sunday')) ?? sundays[0];
+      plan = { date: chosen.value, label: chosen.label, arrive, school };
+      const selected = ages();
+      const items = [
+        `${icon('clock')}<div><strong>Arrive around ${clock(arrive)}</strong><span class="plan-note">${school ? `${escapeHtml(config.school)} for Sunday School, then worship at ${escapeHtml(config.worship)}.` : `Worship starts at ${escapeHtml(config.worship)} and runs ${escapeHtml(config.length)}.`}</span></div>`,
+        `${icon('pin')}<div><strong>Park beside the building</strong><span class="plan-note">Come in through the covered front entrance at ${escapeHtml(config.address)}.</span></div>`,
+        `${icon('door')}<div><strong>A greeter will meet you at the door</strong><span class="plan-note">They’ll help you find a seat and answer any questions.</span></div>`,
+      ];
+      if (selected.includes('nursery') || selected.includes('kids')) {
+        items.push(`${icon('kids')}<div><strong>Kids go to their own classes</strong><span class="plan-note">${selected.includes('nursery') ? 'A nursery for the little ones and ' : ''}Bible lessons made for their age during the service. Our security team is on site.</span></div>`);
+      }
+      if (selected.includes('students')) {
+        items.push(`${icon('flame')}<div><strong>Students worship with you</strong><span class="plan-note">${config.studentsWhen ? `The student ministry also meets: ${escapeHtml(config.studentsWhen)}.` : 'Ask a greeter about the student ministry.'}</span></div>`);
+      }
+      items.push(`${icon('shirt')}<div><strong>Come as you are</strong><span class="plan-note">Jeans or Sunday best. No one will single you out.</span></div>`);
+      root.querySelector('[data-plan]')!.innerHTML = items.map((item) => `<li>${item}</li>`).join('');
+      root.querySelector('[data-result-date]')!.textContent = chosen.label;
+      form.hidden = true;
+      result.hidden = false;
+      progress.forEach((bar) => bar.classList.add('is-done'));
+      result.focus();
+    }
+
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const fieldset = steps.find((step) => !step.hidden);
+      if (fieldset && !Array.from(fieldset.querySelectorAll('input')).every((input) => input.checkValidity())) {
+        fieldset.querySelector<HTMLInputElement>('input:invalid')?.reportValidity();
+        return;
+      }
+      if (current === 1) show(hasKidsStep() ? 2 : 3);
+      else if (current === 2) show(3);
+      else finish();
+    });
+
+    back.addEventListener('click', () => show(current === 3 && !hasKidsStep() ? 1 : current - 1));
+
+    root.querySelector('[data-restart]')?.addEventListener('click', () => {
+      result.hidden = true;
+      form.hidden = false;
+      show(1);
+    });
+
+    root.querySelector('[data-calendar]')?.addEventListener('click', () => {
+      if (!plan) return;
+      const [year, month, day] = plan.date.split('-').map(Number);
+      const file = calendarFile({
+        uid: `visit-${plan.date}@thewell`,
+        title: `Visit ${config.legal}`,
+        date: { year, month, day },
+        start: plan.arrive,
+        end: minutesOf(config.worship) + 90,
+        location: config.address,
+        description: plan.school ? `Sunday School at ${config.school}, worship at ${config.worship}. A greeter will meet you at the door.` : `Worship at ${config.worship}. A greeter will meet you at the door.`,
+      });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(new Blob([file], { type: 'text/calendar' }));
+      link.download = 'the-well-sunday.ics';
+      link.click();
+      setTimeout(() => URL.revokeObjectURL(link.href), 1000);
+    });
+
+    root.hidden = false;
+    show(1, false);
+  });
+</script>

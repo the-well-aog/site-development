@@ -3,9 +3,9 @@ title: Sunday School
 order: 2
 when: Sundays at 10:00 AM
 who: Every age, kids through adults
-image: worship
+image: youth
 summary: An hour in the Bible before worship, with classes for every age. Come with questions and leave with a Word for your week.
-alt: "The sanctuary at The Well: a carpeted platform with a wooden pulpit, a grand piano, guitars, and a cross draped in purple."
+alt: "Students from The Well smiling around a dinner table in the fellowship hall."
 ---
 
 “All Scripture is given by inspiration of God, and is profitable for doctrine, for reproof, for correction, for instruction in righteousness” (2 Timothy 3:16). Sunday School is where we slow down and study it together.
