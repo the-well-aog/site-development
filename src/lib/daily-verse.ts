@@ -10,7 +10,11 @@ import { verses } from '../data/verses';
 export type DailyVerse = { text: string; reference: string; source: 'service' | 'fallback' };
 
 const SERVICE = 'https://discoverybiblestudy.org/daily/api/';
-const KJV_LOOKUP = (reference: string) => `https://bible-api.com/${encodeURIComponent(reference.replace(/[–—]/g, '-'))}?translation=kjv`;
+// encodeURI keeps the colon readable ("John%2011:4"), which is the form bible-api.com documents.
+const KJV_LOOKUP = (reference: string) => `https://bible-api.com/${encodeURI(reference.replace(/[–—]/g, '-'))}?translation=kjv`;
+
+/** "John 11: 4" (as the service writes it) becomes "John 11:4". */
+const tidyReference = (reference: string) => reference.replace(/\s*:\s*/g, ':').replace(/\s*[-–—]\s*/g, '-').replace(/\s+/g, ' ').trim();
 
 const TEXT_KEYS = ['text', 'verse_text', 'versetext', 'verse', 'content', 'body', 'passage', 'scripture', 'quote'];
 const REF_KEYS = ['reference', 'ref', 'citation', 'verse_reference', 'passage_reference', 'title', 'display_ref'];
@@ -58,7 +62,8 @@ async function get(url: string): Promise<string> {
 
 /** The KJV text for a reference, e.g. "John 3:16". */
 async function kjv(reference: string): Promise<string | undefined> {
-  const json = JSON.parse(await get(KJV_LOOKUP(reference)));
+  const lookup = KJV_LOOKUP(reference);
+  const json = JSON.parse(await get(lookup).catch((error) => { throw new Error(`KJV lookup ${lookup}: ${error instanceof Error ? error.message : error}`); }));
   return typeof json.text === 'string' ? plain(json.text) : undefined;
 }
 
@@ -74,10 +79,11 @@ async function load(): Promise<DailyVerse> {
     const found = parse(body);
     console.log(`Daily verse service answered: ${JSON.stringify(found)} (response starts: ${JSON.stringify(body.slice(0, 300))})`);
     if (!found.reference) throw new Error('no verse reference in the response');
+    const reference = tidyReference(found.reference);
     const isKjv = /^(kjv|king james)/i.test(found.version ?? '');
-    const text = isKjv && found.text ? found.text : await kjv(found.reference);
-    if (!text) throw new Error(`no KJV text for ${found.reference}`);
-    return { text: unquote(text), reference: found.reference.replace(/-/g, '–'), source: 'service' };
+    const text = isKjv && found.text ? found.text : await kjv(reference);
+    if (!text) throw new Error(`no KJV text for ${reference}`);
+    return { text: unquote(text), reference: reference.replace(/-/g, '–'), source: 'service' };
   } catch (error) {
     console.warn(`Daily verse: using the built-in KJV list (${error instanceof Error ? error.message : error}).`);
     return fallback();
