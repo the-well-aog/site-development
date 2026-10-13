@@ -3,7 +3,7 @@ import { altFor, cmsLoader, mediaUrl } from './lib/cms';
 import { clock } from './lib/format';
 
 // Photos in src/assets/photos (see src/lib/url.ts). An uploaded CMS photo (`photo`, an absolute URL) takes precedence.
-const image = z.enum(['worship', 'youth', 'fellowship', 'family', 'sanctuary', 'water', 'table', 'kids', 'lounge', 'chapel', 'night', 'exterior', 'church']);
+const image = z.enum(['worship', 'youth', 'fellowship', 'family', 'classes', 'sanctuary', 'water', 'table', 'kids', 'lounge', 'chapel', 'night', 'exterior', 'church']);
 const photo = z.string().url().optional();
 
 const events = defineCollection({

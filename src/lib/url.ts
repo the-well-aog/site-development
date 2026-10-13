@@ -1,5 +1,6 @@
 import type { ImageMetadata } from 'astro';
 import church from '../assets/photos/church-exterior.jpg';
+import classes from '../assets/photos/classes.jpg';
 import exterior from '../assets/photos/exterior.jpg';
 import family from '../assets/photos/family.jpg';
 import fellowship from '../assets/photos/fellowship.jpg';
@@ -15,6 +16,7 @@ const photos = {
   youth,
   fellowship,
   family,
+  classes,
   water,
   night,
   exterior,
@@ -23,7 +25,7 @@ const photos = {
   lounge: family,
   table: fellowship,
   kids: youth,
-  chapel: youth,
+  chapel: classes,
 } satisfies Record<string, ImageMetadata>;
 
 export type PhotoKey = keyof typeof photos;
