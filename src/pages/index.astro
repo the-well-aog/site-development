@@ -74,16 +74,8 @@ const firstVisit = [
     </div>
   </section>
 
-  <section class="loved" aria-labelledby="loved-title">
-    <div class="wrap loved-inner" data-reveal>
-      <p class="eyebrow">Something we hear over and over</p>
-      <p class="loved-line" id="loved-title">Every person who walks through that door just feels <em>so loved.</em></p>
-      <p class="loved-note">Not because we are perfect, but because Jesus is here, and His love is the first thing you meet.</p>
-    </div>
-  </section>
-
   <Section labelledby="visit-title">
-    <SectionHeader id="visit-title" align="split" eyebrow="Your first Sunday" title="Come as you are." accent="We’ll save you a seat." lede="Visiting a church for the first time can feel like a big step. Here is what to expect, so you can walk in feeling at home." action={{ href: '/visit', label: 'Everything about your visit' }} />
+    <SectionHeader id="visit-title" align="split" eyebrow="Your first Sunday" title="Come as you are." accent="We’ll save you a seat." lede="Visiting a new church can feel like a big step. The thing guests tell us most is how loved they felt the moment they walked through the door. Here’s what to expect, so you can walk in feeling at home." action={{ href: '/visit', label: 'Everything about your visit' }} />
     <FeatureGrid items={firstVisit} columns={4} variant="cards" />
   </Section>
 
@@ -187,12 +179,6 @@ const firstVisit = [
   .hero-media :global(img) { width: 100%; height: 100%; object-fit: cover; object-position: center 45%; }
   .hero-media::after { content: ''; position: absolute; inset: 55% 0 0; background: linear-gradient(transparent, rgb(0 30 48 / 70%)); }
   .hero-media figcaption { position: absolute; z-index: 1; left: 1.75rem; bottom: 1.5rem; color: #fff; font: italic 500 1.1rem var(--serif); }
-
-  .loved { padding: clamp(1rem, 3vw, 2rem) 0 clamp(1.5rem, 4vw, 3rem); }
-  .loved-inner { display: grid; justify-items: center; gap: 1rem; text-align: center; }
-  .loved-line { max-width: 22ch; font: 500 clamp(2rem, 1.4rem + 2.6vw, 3.6rem) / 1.12 var(--serif); letter-spacing: -0.025em; color: var(--heading); text-wrap: balance; }
-  .loved-line em { color: var(--accent); }
-  .loved-note { max-width: 40rem; color: var(--fg-muted); font-size: var(--text-lg); }
 
   .story { display: grid; grid-template-columns: 0.9fr 1.1fr; gap: clamp(2rem, 6vw, 6rem); align-items: center; }
   .story-media { overflow: hidden; aspect-ratio: 4 / 3; border-radius: var(--radius-lg); }
