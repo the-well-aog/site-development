@@ -2,17 +2,46 @@ import type { ImageMetadata } from 'astro';
 import chapel from '../assets/photos/chapel.jpg';
 import church from '../assets/photos/church-exterior.jpg';
 import exterior from '../assets/photos/exterior.jpg';
+import family from '../assets/photos/family.jpg';
+import fellowship from '../assets/photos/fellowship.jpg';
 import kids from '../assets/photos/kids.jpg';
-import lounge from '../assets/photos/lounge.jpg';
 import night from '../assets/photos/night.jpg';
-import sanctuary from '../assets/photos/sanctuary.jpg';
-import table from '../assets/photos/table.jpg';
 import water from '../assets/photos/water.jpg';
+import worship from '../assets/photos/worship.jpg';
+import youth from '../assets/photos/youth.jpg';
 
-// Stock photos live in src/assets so the build can serve each one at the size it is shown.
-const photos = { sanctuary, water, table, kids, lounge, chapel, night, exterior, church } satisfies Record<string, ImageMetadata>;
+// Photos live in src/assets so the build can serve each one at the size it is shown.
+// sanctuary, lounge, and table are older names the CMS still uses; they now point at the church's own photos.
+const photos = {
+  worship,
+  youth,
+  fellowship,
+  family,
+  water,
+  kids,
+  chapel,
+  night,
+  exterior,
+  church,
+  sanctuary: worship,
+  lounge: youth,
+  table: fellowship,
+} satisfies Record<string, ImageMetadata>;
 
 export type PhotoKey = keyof typeof photos;
+
+// Where each photo's subject sits, so tight crops (wide headers, square tiles) keep faces in frame.
+const focus = new Map<ImageMetadata, string>([
+  [fellowship, 'center 15%'],
+  [family, 'center 65%'],
+  [youth, 'center 45%'],
+]);
+
+/** The object-position that keeps a stock photo's subject in view, if it needs one. */
+export function photoFocus(src: string): string | undefined {
+  const meta = localPhoto(src);
+  return meta && focus.get(meta);
+}
 
 /** Prefix a site path with the deploy base. External, tel:, mailto:, and #hash links pass through. */
 export function url(path = '/'): string {
@@ -32,7 +61,7 @@ export function img(key: string): string {
 }
 
 export function photoMeta(key: string): ImageMetadata {
-  return key in photos ? photos[key as PhotoKey] : photos.sanctuary;
+  return key in photos ? photos[key as PhotoKey] : photos.worship;
 }
 
 /** The stock photo behind a built URL, so <Photo> can serve it responsively. Uploads return undefined. */

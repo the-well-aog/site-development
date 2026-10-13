@@ -3,9 +3,9 @@ title: Groups
 order: 4
 when: Through the week
 who: Adults
-image: table
+image: fellowship
 summary: Bible study, prayer, and real friendship. Groups are where Sunday faith becomes everyday life.
-alt: An oak table set with cups, linen, and an open book.
+alt: "A volunteer serving bowls of food at a table spread for a church meal."
 ---
 
 The first believers “continued steadfastly in the apostles’ doctrine and fellowship, in the breaking of bread, and in prayers” (Acts 2:42). That is still the pattern. On Sundays we gather as one church. In groups, we grow together.

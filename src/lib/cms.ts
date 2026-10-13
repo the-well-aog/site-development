@@ -1,4 +1,5 @@
 import { glob, type Loader } from 'astro/loaders';
+import { photoAlt } from '../data/photo-alt';
 
 /*
   Content comes from Strapi (cms.wellspringstudiollc.com) when STRAPI_URL is set at build time.
@@ -79,7 +80,8 @@ export function cmsLoader({ endpoint, photo = false, map }: Options): Loader {
   };
 }
 
-/** Image description: the upload's own alt text, then the entry's, then a fallback. */
+/** Image description: an upload's own alt text; for a stock photo, what that photo shows; then the entry's, then a fallback. */
 export function altFor(item: CmsItem, fallback: string): string {
-  return item.photo?.alternativeText || item.alt || fallback;
+  if (item.photo?.url) return item.photo.alternativeText || item.alt || fallback;
+  return photoAlt[item.stockPhoto] || item.alt || fallback;
 }

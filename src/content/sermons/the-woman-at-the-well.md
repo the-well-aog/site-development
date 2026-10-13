@@ -4,9 +4,9 @@ date: 2026-10-04
 speaker: The Well Pastoral Team
 series: Living Water
 passage: John 4:1–42
-image: sanctuary
+image: worship
 summary: Jesus went out of His way to meet one woman with a complicated story, and her encounter changed a whole town.
-alt: A quiet sanctuary with oak benches and a round stone basin.
+alt: "The sanctuary at The Well: a carpeted platform with a wooden pulpit, a grand piano, guitars, and a cross draped in purple."
 ---
 
 Jesus “needed to go through Samaria” (John 4:4). Most travelers avoided it. Jesus went straight to a well at noon to meet a woman everyone else avoided.

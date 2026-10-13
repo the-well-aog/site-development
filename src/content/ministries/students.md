@@ -3,9 +3,9 @@ title: Students
 order: 3
 when: Wednesdays at 7:00 PM
 who: 6th through 12th grade
-image: lounge
+image: youth
 summary: A place for middle and high school students to encounter God, ask real questions, and build friendships that point them to Jesus.
-alt: An evening lounge with a sofa, a floor lamp, and an acoustic guitar.
+alt: "Students from The Well smiling around a dinner table in the fellowship hall."
 ---
 
 “Let no one despise your youth, but be an example to the believers” (1 Timothy 4:12). Students are not the church of tomorrow. They are part of the church today.

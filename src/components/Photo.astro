@@ -1,6 +1,6 @@
 ---
 import { Picture } from 'astro:assets';
-import { localPhoto } from '../lib/url';
+import { localPhoto, photoFocus } from '../lib/url';
 
 /*
   A photo by URL. Stock photos are served as AVIF/WebP at several widths so each screen
@@ -20,13 +20,15 @@ interface Props {
 
 const { src, alt, sizes = '(min-width: 1000px) 50vw, 100vw', width = 1280, height = 853, priority = false, class: className, style } = Astro.props;
 const local = localPhoto(src);
+const focal = photoFocus(src);
+const position = style ?? (focal ? `object-position: ${focal}` : undefined);
 const loading = priority ? 'eager' : 'lazy';
 const fetchpriority = priority ? 'high' : undefined;
 const widths = local ? [480, 800, 1200, local.width].filter((w, i, all) => w <= local.width && all.indexOf(w) === i) : [];
 ---
 
 {local ? (
-  <Picture src={local} alt={alt} widths={widths} sizes={sizes} formats={['avif', 'webp']} class={className} style={style} loading={loading} fetchpriority={fetchpriority} />
+  <Picture src={local} alt={alt} widths={widths} sizes={sizes} formats={['avif', 'webp']} class={className} style={position} loading={loading} fetchpriority={fetchpriority} />
 ) : (
   <img src={src} alt={alt} width={width} height={height} class={className} style={style} loading={loading} fetchpriority={fetchpriority} decoding="async" />
 )}
