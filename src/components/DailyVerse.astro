@@ -2,7 +2,7 @@
 import Icon from './Icon.astro';
 import { site } from '../data/site';
 import { verses } from '../data/verses';
-import { backgroundFor, chapterOf } from '../data/verse-backgrounds';
+import { backgroundFor } from '../data/verse-backgrounds';
 import { dailyVerse } from '../lib/daily-verse';
 import { url } from '../lib/url';
 
@@ -21,7 +21,6 @@ const config = {
   legal: site.legal,
 };
 const dateLabel = new Intl.DateTimeFormat('en-US', { timeZone: site.timeZone, weekday: 'long', month: 'long', day: 'numeric' }).format(new Date());
-const chapterHref = (reference: string) => `https://www.biblegateway.com/passage/?search=${encodeURIComponent(chapterOf(reference))}&version=KJV`;
 ---
 
 <section class="today" id="today" aria-labelledby="today-title" data-daily-verse data-config={JSON.stringify(config)} data-dark={art.dark || undefined} style={`--photo: url('${url(`verse/${art.file}`)}')`}>
@@ -50,7 +49,6 @@ const chapterHref = (reference: string) => `https://www.biblegateway.com/passage
       </button>
     </div>
     <p class="today-status" role="status" aria-live="polite" data-verse-status></p>
-    <a class="today-chapter" href={chapterHref(today.reference)} data-verse-chapter>Read the whole chapter <Icon name="arrow-up-right" size={14} /></a>
   </figure>
 </section>
 
@@ -126,8 +124,6 @@ const chapterHref = (reference: string) => `https://www.biblegateway.com/passage
   .today-primary:hover { background: #fff; }
   .today-button[disabled] { opacity: 0.7; cursor: progress; }
   .today-status { min-height: 1.4em; color: rgb(251 248 241 / 85%); font-size: 0.92rem; }
-  .today-chapter { display: inline-flex; align-items: center; gap: 0.35rem; color: rgb(251 248 241 / 75%); font-size: 0.88rem; text-decoration: underline; text-decoration-color: rgb(255 255 255 / 30%); text-underline-offset: 0.3em; }
-  .today-chapter:hover { color: #fff; }
 
   @media (prefers-reduced-motion: no-preference) {
     .today-photo { animation: today-drift 40s ease-in-out infinite alternate; }
@@ -150,7 +146,7 @@ const chapterHref = (reference: string) => `https://www.biblegateway.com/passage
 </style>
 
 <script>
-  import { verseBackgrounds, backgroundFor, chapterOf } from '../data/verse-backgrounds';
+  import { verseBackgrounds, backgroundFor } from '../data/verse-backgrounds';
   import { canvasBlob, paintVerseCard } from '../lib/verse-image';
 
   type Config = { zone: string; verses: { text: string; reference: string }[]; base: string; logo: string; legal: string };
@@ -160,7 +156,6 @@ const chapterHref = (reference: string) => `https://www.biblegateway.com/passage
     const text = root.querySelector<HTMLElement>('[data-verse-text]')!;
     const ref = root.querySelector<HTMLElement>('[data-verse-ref]')!;
     const date = root.querySelector<HTMLElement>('[data-verse-date]')!;
-    const chapter = root.querySelector<HTMLAnchorElement>('[data-verse-chapter]')!;
     const status = root.querySelector<HTMLElement>('[data-verse-status]')!;
 
     // Today on the church's clock, so the label and (fallback) verse match Pocola's date.
@@ -171,7 +166,6 @@ const chapterHref = (reference: string) => `https://www.biblegateway.com/passage
       const verse = config.verses[Math.floor(Date.UTC(y, m - 1, d) / 86400000) % config.verses.length];
       text.textContent = `“${verse.text}”`;
       ref.textContent = verse.reference;
-      chapter.href = `https://www.biblegateway.com/passage/?search=${encodeURIComponent(chapterOf(verse.reference))}&version=KJV`;
       const art = backgroundFor(verse.reference);
       root.style.setProperty('--photo', `url('${config.base}${art.file}')`);
       root.toggleAttribute('data-dark', art.dark);
@@ -217,6 +211,8 @@ const chapterHref = (reference: string) => `https://www.biblegateway.com/passage
           background: `${config.base}${art.file}`,
           dark: art.dark,
           logo: config.logo,
+          // Whatever address the site is served from today (GitHub Pages now, the church's domain later).
+          site: `${location.host}${location.pathname}`.replace(/^www\./, '').replace(/\/$/, ''),
         });
         const blob = await canvasBlob(canvas);
         const name = `the-well-${reference().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')}.png`;

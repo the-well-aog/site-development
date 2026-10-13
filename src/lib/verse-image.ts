@@ -9,6 +9,8 @@ export type VerseCard = {
   background: string;
   dark: boolean;
   logo: string;
+  /** The site's address, set small at the very bottom. */
+  site: string;
 };
 
 const WIDTH = 1080;
@@ -169,6 +171,10 @@ export async function paintVerseCard(card: VerseCard): Promise<HTMLCanvasElement
     ctx.drawImage(logo, (WIDTH - w) / 2, HEIGHT - 82 - h, w, h);
     ctx.globalAlpha = 1;
   }
+
+  // The site's address, quiet in the margin below the frame.
+  ctx.fillStyle = 'rgba(251, 248, 241, 0.62)';
+  tracked(ctx, card.site.toUpperCase(), WIDTH / 2, HEIGHT - 24, 14, 3, 500);
   return canvas;
 }
 

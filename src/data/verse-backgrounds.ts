@@ -21,8 +21,3 @@ export function backgroundFor(reference: string): VerseBackground {
   for (let index = 0; index < reference.length; index += 1) total += reference.charCodeAt(index) * (index + 1);
   return verseBackgrounds[total % verseBackgrounds.length];
 }
-
-/** "Lamentations 3:22–23" → "Lamentations 3", for a read-the-chapter link. */
-export function chapterOf(reference: string): string {
-  return reference.replace(/:.*$/, '');
-}
