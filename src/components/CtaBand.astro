@@ -1,0 +1,43 @@
+---
+import Button from './Button.astro';
+import Section from './Section.astro';
+
+interface Props {
+  eyebrow?: string;
+  title: string;
+  accent?: string;
+  text: string;
+  primary: { href: string; label: string };
+  secondary?: { href: string; label: string };
+  tone?: 'sand' | 'navy';
+}
+
+const { eyebrow, title, accent, text, primary, secondary, tone = 'sand' } = Astro.props;
+---
+
+<Section tone={tone} space="tight" width="wide">
+  <div class="cta" data-reveal>
+    <div class="cta-title">
+      {eyebrow && <p class="eyebrow">{eyebrow}</p>}
+      <h2>{title}{accent && <><br /><em>{accent}</em></>}</h2>
+    </div>
+    <div class="cta-side">
+      <p class="lede">{text}</p>
+      <div class="cta-actions">
+        <Button href={primary.href} size="lg">{primary.label}</Button>
+        {secondary && <Button href={secondary.href} variant="text">{secondary.label}</Button>}
+      </div>
+    </div>
+  </div>
+</Section>
+
+<style>
+  .cta { display: grid; gap: 2rem; align-items: end; }
+  .cta-title { display: grid; gap: 1rem; }
+  .cta h2 { font-size: clamp(2.5rem, 1.8rem + 3.2vw, 4.75rem); letter-spacing: -0.045em; line-height: 1; }
+  .cta-side { display: grid; gap: 1.5rem; justify-items: start; }
+  .cta-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem 1.5rem; }
+  @media (min-width: 900px) {
+    .cta { grid-template-columns: 1.2fr 0.8fr; gap: 4rem; }
+  }
+</style>

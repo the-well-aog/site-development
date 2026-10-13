@@ -1,97 +1,127 @@
 ---
+import { getCollection } from 'astro:content';
 import Base from '../layouts/Base.astro';
-import PageHero from '../components/PageHero.astro';
-import { site } from '../data/site';
+import Button from '../components/Button.astro';
+import CtaBand from '../components/CtaBand.astro';
+import FeatureGrid from '../components/FeatureGrid.astro';
+import PageHeader from '../components/PageHeader.astro';
+import Section from '../components/Section.astro';
+import SectionHeader from '../components/SectionHeader.astro';
+import { site, sunday } from '../data/site';
 import { img, url } from '../lib/url';
+
+const leaders = (await getCollection('leaders')).sort((a, b) => a.data.order - b.data.order);
 
 const values = [
   { title: 'Jesus at the center', text: 'Everything we do points to Jesus Christ: His cross, His resurrection, and His invitation to new life.', ref: 'Colossians 1:18' },
   { title: 'Rooted in the Word', text: 'The Bible is God’s inspired Word. We preach it, read it, and build our lives on it.', ref: '2 Timothy 3:16' },
   { title: 'Empowered by the Spirit', text: 'We are Pentecostal. We welcome the presence and gifts of the Holy Spirit, decently and in order.', ref: 'Acts 1:8 · 1 Corinthians 14:40' },
   { title: 'Devoted to prayer', text: 'Prayer is not a program here. It is how we begin, how we decide, and how we care for one another.', ref: 'Acts 2:42' },
-  { title: 'A family for every generation', text: 'From nursery to grandparents, we believe the church is a family where every age belongs and grows.', ref: 'Psalm 145:4' },
-  { title: 'Sent to our community', text: 'We exist to share the gospel and show the love of Jesus in Pocola, the Fort Smith area, and to the ends of the earth.', ref: 'Matthew 28:19–20' },
+  { title: 'A family for every generation', text: 'From the nursery to the grandparents, the church is a family where every age belongs and grows.', ref: 'Psalm 145:4' },
+  { title: 'Sent to our community', text: `We share the gospel and show the love of Jesus in ${site.locality}, the Fort Smith area, and to the ends of the earth.`, ref: 'Matthew 28:19–20' },
 ];
+
+const initials = (name: string) => name.split(/\s+/).map((part) => part[0]).join('').slice(0, 2).toUpperCase();
 ---
 
-<Base title="About" description="The Well Assembly of God is a Spirit-filled, Bible-based church in Pocola, Oklahoma, where every generation can meet Jesus, grow in faith, and belong." image="images/church-exterior.jpg">
-  <PageHero kicker="Our story" title="A well in Pocola." deck="The Well is a Pentecostal church family in the Assemblies of God, here to help people meet Jesus, be filled with His Spirit, and live out their faith together." />
+<Base title="About" description={`${site.legal} is a Spirit-filled, Bible-based church in ${site.locality}, Oklahoma, where every generation can meet Jesus, grow in faith, and belong.`}>
+  <PageHeader eyebrow="Our story" title="A well in Pocola." lede={`The Well is a Pentecostal church family in the ${site.affiliation}, here to help people meet Jesus, be filled with His Spirit, and live out their faith together.`} />
 
-  <figure class="page-figure">
-    <img class="is-church" src={img('church')} alt="The Well Assembly of God: a long brick building with a red metal roof and a covered entrance, lit by evening sun." width="1254" height="1254" />
-  </figure>
-
-  <section class="section">
-    <div class="wrap split-text">
-      <div>
+  <Section width="wide" space="flush-top" labelledby="name-title">
+    <div class="story" data-reveal>
+      <div class="story-media"><img src={img('chapel')} alt="Morning light across a quiet room with a wooden chair." width="1280" height="900" loading="lazy" /></div>
+      <div class="story-copy">
         <p class="eyebrow">Why “The Well”</p>
-        <h2 class="block-title">Where thirsty people<br /><em>meet Jesus.</em></h2>
-      </div>
-      <div class="measure">
-        <p class="deck">In John 4, Jesus met a woman at a well in the middle of an ordinary day. She came for water. She left with living water, and then she ran to tell her whole town.</p>
-        <p>That is the heart of our church. We want The Well to be a place where anyone can come as they are and meet the Jesus who knows them completely and loves them anyway. And like that woman, we want everyone who drinks of that living water to carry it to someone else.</p>
-        <p>We are a church that loves God’s presence. Our worship is heartfelt, our preaching is from the Bible, and our altars are open. We pray for the sick, we believe God still speaks and moves, and we make room for the Holy Spirit to do what only He can do.</p>
+        <h2 id="name-title">Where thirsty people <em>meet Jesus.</em></h2>
+        <div class="stack">
+          <p class="lede">In John 4, Jesus met a woman at a well in the middle of an ordinary day. She came for water. She left with living water, and then she ran to tell her whole town.</p>
+          <p class="muted">That is the heart of our church. We want The Well to be a place where anyone can come as they are and meet the Jesus who knows them completely and loves them anyway. And like that woman, we want everyone who drinks of that living water to carry it to someone else.</p>
+          <p class="muted">We love God’s presence. Our worship is heartfelt, our preaching comes from the Bible, and our altars are open. We pray for the sick, we believe God still speaks and moves, and we make room for the Holy Spirit to do what only He can do.</p>
+        </div>
       </div>
     </div>
-  </section>
+  </Section>
 
-  <section class="band-dark">
-    <div class="wrap mission">
-      <p class="eyebrow light">Our mission</p>
+  <Section tone="navy" labelledby="mission-title">
+    <div class="mission" data-reveal>
+      <p class="eyebrow" id="mission-title">Our mission</p>
       <p class="mission-line">To <em>reach</em> people with the good news of Jesus, <em>root</em> them in God’s Word, <em>fill</em> them with the Holy Spirit, and <em>send</em> them out to love and serve.</p>
     </div>
-  </section>
+  </Section>
 
-  <section class="section">
-    <div class="wrap">
-      <div class="section-head"><div><p class="eyebrow">What we value</p><h2 class="block-title">What shapes us.</h2></div><a class="more" href={url('/beliefs')}>Read our beliefs <span aria-hidden="true">→</span></a></div>
-      <div class="values-grid">
-        {values.map((value) => (
-          <article>
-            <h3>{value.title}</h3>
-            <p>{value.text}</p>
-            <p class="value-ref">{value.ref}</p>
-          </article>
-        ))}
+  <Section labelledby="values-title">
+    <SectionHeader id="values-title" align="split" eyebrow="What we value" title="What shapes us." lede="Six convictions guide how we worship, how we decide, and how we treat one another." action={{ href: '/beliefs', label: 'Read what we believe' }} />
+    <FeatureGrid items={values} columns={3} />
+  </Section>
+
+  <Section tone="sand" id="team" labelledby="team-title">
+    <SectionHeader id="team-title" align="split" eyebrow="Our team" title="Shepherds who serve." lede="Our pastors and leaders are called to love God, preach His Word, and care for the people of The Well." />
+    {site.preview && <p class="team-note">Names, photos, and biographies are coming soon.</p>}
+    <ul class="team" role="list" data-reveal>
+      {leaders.map((entry) => (
+        <li>
+          <div class="team-photo">
+            {entry.data.photo ? (
+              <img src={url(entry.data.photo)} alt={entry.data.name} width="600" height="750" loading="lazy" />
+            ) : (
+              <span class="team-placeholder" aria-hidden="true"><span>{initials(entry.data.name)}</span></span>
+            )}
+          </div>
+          <h3>{entry.data.name}</h3>
+          <p class="ref">{entry.data.role}</p>
+          <p class="team-summary">{entry.data.summary}</p>
+        </li>
+      ))}
+    </ul>
+    <div class="team-contact">
+      <p>Need a pastor for prayer, a hospital visit, a wedding, or a baby dedication?</p>
+      <Button href="/contact" variant="text">Contact a pastor</Button>
+    </div>
+  </Section>
+
+  <Section labelledby="family-title">
+    <div class="family" data-reveal>
+      <div>
+        <p class="eyebrow">Our fellowship</p>
+        <h2 id="family-title">Part of something bigger.</h2>
+      </div>
+      <div class="stack">
+        <p class="lede">The Well is affiliated with the {site.affiliation}{site.district ? ` and the ${site.district}` : ''}, a worldwide Pentecostal fellowship of churches committed to evangelism, worship, discipleship, and compassion.</p>
+        <Button href="https://ag.org" variant="text">Visit ag.org</Button>
       </div>
     </div>
-  </section>
+  </Section>
 
-  <section class="section" style="padding-top: 0;">
-    <div class="wrap pair">
-      <article>
-        <p class="eyebrow">Our fellowship</p>
-        <h2>Part of something bigger.</h2>
-        <p>The Well is affiliated with the {site.affiliation}{site.district ? ` and the ${site.district}` : ''}, a worldwide Pentecostal fellowship of churches committed to evangelism, worship, discipleship, and compassion.</p>
-        <div class="actions"><a class="more" href="https://ag.org">Visit ag.org <span aria-hidden="true">↗</span></a></div>
-      </article>
-      <article>
-        <p class="eyebrow">Meet the team</p>
-        <h2>The people who serve you.</h2>
-        <p>Get to know the pastors and leaders who care for The Well and its ministries.</p>
-        <div class="actions"><a class="more" href={url('/leadership')}>Our leadership <span aria-hidden="true">→</span></a></div>
-      </article>
-    </div>
-  </section>
-
-  <section class="home-invitation"><div class="wrap-wide invitation-grid"><div><p class="eyebrow">Come and see</p><h2>There’s a seat<br /><em>saved for you.</em></h2></div><div><p>The best way to know a church is to worship with it. Join us this {site.sundayLabel} at {site.sundayTime}.</p><a class="btn" href={url('/visit')}>Plan your visit <span aria-hidden="true">↗</span></a></div></div></section>
+  <CtaBand eyebrow="Come and see" title="There’s a seat" accent="saved for you." text={`The best way to know a church is to worship with it. Join us this ${sunday.day} at ${sunday.time}.`} primary={{ href: '/visit', label: 'Plan your visit' }} secondary={{ href: '/beliefs', label: 'What we believe' }} />
 </Base>
 
 <style>
-  .split-text { display: grid; grid-template-columns: .9fr 1.1fr; gap: clamp(2rem, 6vw, 5rem); align-items: start; }
-  .split-text .measure p + p { margin-top: 1.1rem; }
-  .split-text .measure p:not(.deck) { color: var(--muted); }
-  .mission { max-width: 62rem; }
-  .mission-line { font: 500 clamp(1.8rem, 3.6vw, 3rem)/1.25 var(--serif); letter-spacing: -.03em; }
-  .mission-line em { color: #c1d2dc; }
-  .values-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 2rem 1.5rem; }
-  .values-grid article { padding-top: 1.1rem; border-top: 1px solid var(--line-strong); }
-  .values-grid h3 { font: 500 1.5rem/1.15 var(--serif); letter-spacing: -.02em; }
-  .values-grid p { margin-top: .6rem; color: var(--muted); }
-  .values-grid .value-ref { font-size: .75rem; letter-spacing: .08em; text-transform: uppercase; color: var(--tide); }
-  @media (max-width: 980px) {
-    .split-text { grid-template-columns: 1fr; }
-    .values-grid { grid-template-columns: 1fr 1fr; }
+  .story { display: grid; grid-template-columns: 0.9fr 1.1fr; gap: clamp(2rem, 6vw, 6rem); align-items: center; }
+  .story-media { overflow: hidden; aspect-ratio: 4 / 5; border-radius: var(--radius-lg); }
+  .story-media img { width: 100%; height: 100%; object-fit: cover; }
+  .story-copy { display: grid; gap: 1.5rem; }
+
+  .mission { display: grid; gap: 1.5rem; max-width: 60rem; }
+  .mission-line { font: 500 clamp(1.8rem, 1.3rem + 2.2vw, 3.1rem) / 1.22 var(--serif); letter-spacing: -0.03em; color: var(--heading); text-wrap: balance; }
+  .mission-line em { color: var(--accent-ink); }
+
+  .team-note { margin: -1.5rem 0 2rem; color: var(--fg-muted); font-size: 0.9rem; }
+  .team { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 2rem 1.25rem; }
+  .team li { display: grid; align-content: start; gap: 0.5rem; }
+  .team-photo { overflow: hidden; aspect-ratio: 4 / 5; margin-bottom: 0.75rem; border-radius: var(--radius); background: var(--sand-2); }
+  .team-photo img { width: 100%; height: 100%; object-fit: cover; }
+  .team-placeholder { display: grid; place-items: center; width: 100%; height: 100%; background: radial-gradient(circle at 50% 35%, var(--paper), var(--sand-2) 70%); }
+  .team-placeholder span { display: grid; place-items: center; width: 5.5rem; height: 5.5rem; border: 1px solid var(--line-strong); border-radius: 50%; background: var(--paper); color: var(--navy); font: 500 1.8rem var(--serif); letter-spacing: 0.02em; box-shadow: var(--shadow-sm); }
+  .team h3 { font-size: 1.4rem; }
+  .team-summary { color: var(--fg-muted); font-size: 0.93rem; }
+  .team-contact { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 1.5rem; margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--line-strong); }
+
+  .family { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(2rem, 5vw, 5rem); align-items: end; }
+
+  @media (max-width: 1000px) {
+    .story, .family { grid-template-columns: 1fr; }
+    .story-media { aspect-ratio: 16 / 10; }
+    .team { grid-template-columns: 1fr 1fr; }
   }
-  @media (max-width: 560px) { .values-grid { grid-template-columns: 1fr; } }
+  @media (max-width: 480px) { .team { grid-template-columns: 1fr; } }
 </style>

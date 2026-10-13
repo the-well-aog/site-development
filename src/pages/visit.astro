@@ -1,107 +1,144 @@
 ---
 import Base from '../layouts/Base.astro';
-import PageHero from '../components/PageHero.astro';
-import PlaceholderForm from '../components/PlaceholderForm.astro';
-import { site } from '../data/site';
-import { img, url } from '../lib/url';
+import Accordion from '../components/Accordion.astro';
+import Button from '../components/Button.astro';
+import ContactOptions from '../components/ContactOptions.astro';
+import Icon from '../components/Icon.astro';
+import PageHeader from '../components/PageHeader.astro';
+import Section from '../components/Section.astro';
+import SectionHeader from '../components/SectionHeader.astro';
+import ServiceTimes from '../components/ServiceTimes.astro';
+import { midweek, prayerMeeting, site, sunday, sundaySchool } from '../data/site';
+import { img } from '../lib/url';
+
+const sundayFlow = [
+  { icon: 'door', title: 'Arrive and park', text: `Park beside the building and come in through the covered front entrance. ${sundaySchool.name} classes start at ${sundaySchool.time}; worship begins at ${sunday.time}.` },
+  { icon: 'kids', title: 'Check in the kids', text: 'A greeter will walk you to kids check-in. Children from nursery through 5th grade have their own space and lesson.' },
+  { icon: 'flame', title: 'Worship together', text: 'Contemporary songs with a live band. Sing out, lift your hands, or simply listen. You are welcome either way.' },
+  { icon: 'book', title: 'Hear the Word', text: 'A pastor preaches a practical, Bible-centered message for everyday life.' },
+  { icon: 'hands', title: 'Pray at the altar', text: 'We close with an open altar. Anyone who wants prayer can come forward, and someone will pray with you.' },
+  { icon: 'coffee', title: 'Stay and say hello', text: 'After service, grab a coffee and meet a pastor. We would love to learn your name.' },
+] as const;
 
 const questions = [
-  { title: 'What is a service like?', text: `Our ${site.sundayLabel} service starts at ${site.sundayTime} and lasts ${site.serviceLength}. We begin with heartfelt worship: contemporary songs, a live band, and people who love to praise God. Some lift their hands, some sing quietly; you are free to simply listen. Then a pastor preaches a practical, Bible-centered message, and we close with a time of prayer at the altar for anyone who wants it.`, href: '/beliefs', label: 'What we believe' },
-  { title: 'What should I wear?', text: 'Whatever you are comfortable in. You will see jeans and you will see Sunday best. God looks at the heart, and so do we.', href: '/contact', label: 'Ask us anything' },
-  { title: 'What about my kids?', text: 'Children are a gift, and we love having them here. Kids ministry runs during the Sunday service for nursery through elementary, with safe check-in, screened volunteers, and Bible lessons made for their age. Students meet on Wednesday nights.', href: '/ministries/kids', label: 'Explore Kids' },
-  { title: 'Will I be singled out?', text: 'No. We will not ask you to stand up or speak. A greeter will welcome you at the door, help you find a seat or the kids area, and answer any questions, and that is it.', href: '/contact', label: 'Ask about your visit' },
-  { title: 'I have heard Pentecostals pray in tongues. What should I expect?', text: 'We believe the gifts of the Holy Spirit described in the Bible are for today, and you may hear someone pray in tongues or sense a moment of quiet expectation during worship or prayer. Scripture tells us everything should be done decently and in order (1 Corinthians 14:40), and our pastors guide every service with care. If something is new to you, ask; we love talking about it.', href: '/next-steps#holy-spirit', label: 'The Holy Spirit and you' },
-  { title: 'Do I have to give?', text: 'No. Giving is an act of worship for our church family, and guests are never expected to give. Please receive the service as our gift to you.', href: '/give', label: 'About giving' },
-  { title: 'Where do I park and enter?', text: `We are at ${site.address} in ${site.locality}, with parking right beside the building. Enter through the covered front entrance and a greeter will meet you. If you need step-free access or help getting in, call ahead and we will be ready for you.`, href: '/contact', label: 'Get arrival help' },
+  { title: 'What should I wear?', text: 'Whatever you are comfortable in. You will see jeans and you will see Sunday best. God looks at the heart, and so do we.' },
+  { title: 'Will I be singled out?', text: 'No. We will not ask you to stand up or say anything. A greeter will welcome you, help you find a seat or the kids area, and answer your questions.' },
+  { title: 'I have heard Pentecostals pray in tongues. What should I expect?', text: 'We believe the gifts of the Holy Spirit described in the Bible are for today, so you may hear someone pray in tongues or sense a moment of quiet expectation during worship. Scripture tells us everything should be done decently and in order (1 Corinthians 14:40), and our pastors guide every service with care. If something is new to you, ask. We love talking about it.', link: { href: '/next-steps#holy-spirit', label: 'The Holy Spirit and you' } },
+  { title: 'Do I have to give?', text: 'No. Giving is an act of worship for our church family, and guests are never expected to give. Please receive the service as our gift to you.' },
+  { title: 'Is the building accessible?', text: 'Parking is right beside the entrance. If you need step-free access or a hand getting in, call ahead and we will be ready for you.' },
+  { title: 'What happens during the week?', text: `We gather for a ${prayerMeeting.name.toLowerCase()} on ${prayerMeeting.day}s at ${prayerMeeting.time} and for our ${midweek.day} service at ${midweek.time}. Both are a great second step after a ${sunday.day} visit.` },
+  { title: 'Is there something before the service?', text: `Yes. ${sundaySchool.name} meets at ${sundaySchool.time}, with Bible classes for every age. You are welcome to come for both, or just for worship at ${sunday.time}.` },
 ];
 ---
 
-<Base title="Plan your visit" description="Find gathering times, explore Kids, and plan your first visit to The Well Assembly of God." image="images/church-exterior.jpg">
-  <PageHero kicker="Your first Sunday" title="Come as you are." deck="A new church can come with a lot of questions. Here is everything you need to feel at home before you walk through the door." />
-  <section class="visit-at-a-glance" aria-label="Gathering times and location">
-    <div class="wrap">
-      <dl class="facts">
-        <div><dt>{site.sundayLabel}</dt><dd>{site.sundayTime}<small>{site.sundayDetail}</small></dd></div>
-        <div><dt>{site.midweekLabel}</dt><dd>{site.midweekTime}<small>{site.midweekDetail}</small></dd></div>
-        <div><dt>Find us</dt><dd><a href={site.mapsHref}>{site.address}</a><small>{site.city}</small><a href={site.phoneHref}>{site.phoneDisplay}</a></dd></div>
-      </dl>
-      {site.preview && <p class="fine preview-note">Service times are awaiting final confirmation. Call ahead if you want to be sure.</p>}
-      <nav class="actions" aria-label="Plan your visit">
-        <a class="btn" href="#first-visit">What to expect <span aria-hidden="true">↓</span></a>
-        <a class="more" href={url('/ministries/kids')}>Coming with kids? <span aria-hidden="true">→</span></a>
-      </nav>
-    </div>
-  </section>
-  <figure class="page-figure">
-    <img class="is-church" src={img('church')} alt="The church at golden hour: a long brick building with a red metal roof, a gravel lot, and the covered entrance." width="1254" height="1254" />
-  </figure>
-  <section class="section" id="first-visit">
-    <div class="wrap visit-questions">
-      <div>
-        <p class="eyebrow">Before you arrive</p>
-        <h2 class="block-title">A little more<br />peace of mind.</h2>
-        <p class="deck">Honest answers to the questions most guests ask.</p>
-      </div>
-      <div class="faq-list">
-        {questions.map((question, index) => (
-          <details open={index === 0}>
-            <summary>{question.title}<span aria-hidden="true">+</span></summary>
-            <div class="faq-answer">
-              <p>{question.text}</p>
-              <a class="more" href={url(question.href)}>{question.label} <span aria-hidden="true">→</span></a>
-            </div>
-          </details>
-        ))}
+<Base title="Plan your visit" description={`Service times, directions, and what to expect on your first Sunday at ${site.legal} in ${site.locality}, Oklahoma.`}>
+  <PageHeader
+    eyebrow="Plan your visit"
+    title="Come as you are."
+    lede="A new church can come with a lot of questions. Here is everything you need to feel at home before you walk through the door."
+    image={{ src: img('church'), alt: 'The Well Assembly of God from the parking lot: a long brick building with a red metal roof and a covered front entrance.', position: 'center 45%' }}
+  />
+
+  <Section labelledby="when-title">
+    <h2 id="when-title" class="sr-only">When and where</h2>
+    <div class="glance" data-reveal>
+      <ServiceTimes variant="cards" />
+      <div class="location tone-navy">
+        <div>
+          <p class="location-label">Find us</p>
+          <p class="location-address">{site.address}, {site.city}</p>
+        </div>
+        <div class="location-actions">
+          <Button href={site.mapsHref} leading="pin" icon="none">Get directions</Button>
+          <Button href={site.phoneHref} variant="secondary" leading="phone" icon="none">{site.phoneDisplay}</Button>
+        </div>
       </div>
     </div>
-  </section>
-  <section class="section visit-connect">
-    <div class="wrap contact-grid">
-      <div class="measure">
-        <p class="eyebrow">Start a conversation</p>
-        <h2 class="block-title">Let us know<br />you’re coming.</h2>
-        <p class="deck">Tell us a little about yourself and we will have someone watching for you at the door, ready to help with kids check-in and save you a seat.</p>
-        <div class="actions"><a class="more" href={url('/contact')}>Contact information <span aria-hidden="true">→</span></a></div>
-      </div>
-      <div class="panel">
-        <h2 class="card-title form-title">Plan a first visit</h2>
-        <PlaceholderForm submit="Preview your note">
-          <label class="field"><span>Name</span><input name="name" autocomplete="name" required /></label>
-          <label class="field"><span>Email</span><input name="email" type="email" autocomplete="email" required /></label>
-          <label class="field"><span>Number of guests</span><input name="party" type="number" min="1" inputmode="numeric" /></label>
-          <label class="field"><span>Questions about your visit</span><textarea name="note" rows="4"></textarea></label>
-        </PlaceholderForm>
+  </Section>
+
+  <Section tone="sand" width="wide" labelledby="flow-title">
+    <SectionHeader id="flow-title" align="split" eyebrow={`Your first ${sunday.day}`} title="What the morning looks like." lede={`From the parking lot to the last song, here is how a ${sunday.day} at The Well usually goes.`} />
+    <ol class="flow" role="list" data-reveal>
+      {sundayFlow.map((step, index) => (
+        <li>
+          <span class="flow-icon"><Icon name={step.icon} size={22} /></span>
+          <span class="flow-step">Step {index + 1}</span>
+          <h3>{step.title}</h3>
+          <p>{step.text}</p>
+        </li>
+      ))}
+    </ol>
+  </Section>
+
+  <Section width="wide" labelledby="kids-title">
+    <div class="kids" data-reveal>
+      <div class="kids-media"><img src={img('kids')} alt="A bright children's classroom with low shelves and small tables." width="1280" height="720" loading="lazy" /></div>
+      <div class="kids-copy">
+        <p class="eyebrow">Coming with kids?</p>
+        <h2 id="kids-title">Your kids will love it here.</h2>
+        <p class="lede">While you worship, your children worship too, with Bible lessons made for their age in a clean, safe space. Every child is returned only to the adult who checked them in.</p>
+        <Button href="/ministries/kids" variant="secondary">About The Well Kids</Button>
       </div>
     </div>
-  </section>
+  </Section>
+
+  <Section labelledby="faq-title">
+    <div class="faq">
+      <div class="faq-head">
+        <SectionHeader id="faq-title" eyebrow="Good questions" title="Before you come." lede="Honest answers to what most guests wonder about." />
+      </div>
+      <Accordion items={questions} open={0} />
+    </div>
+  </Section>
+
+  <Section tone="sand" labelledby="hello-title">
+    <div class="hello">
+      <div class="hello-copy" data-reveal>
+        <p class="eyebrow">Let us know you’re coming</p>
+        <h2 id="hello-title">We’ll watch for you at the door.</h2>
+        <p class="lede">Tell us you are coming and someone will be ready to welcome you, help with kids check-in, and save you a seat.</p>
+      </div>
+      <ContactOptions title="Say hello before Sunday" subject="Planning a visit" submit="Let us know" directions>
+        <label>Name<input name="name" autocomplete="name" required /></label>
+        <label>Email<input name="email" type="email" autocomplete="email" required /></label>
+        <label>How many are coming?<input name="party" type="number" min="1" inputmode="numeric" /></label>
+        <label>Ages of any kids, or questions<textarea name="note" rows="3"></textarea></label>
+      </ContactOptions>
+    </div>
+  </Section>
 </Base>
 
 <style>
-  .visit-at-a-glance { padding-bottom: 3rem; }
-  .visit-at-a-glance .facts { margin-top: 0; margin-bottom: .7rem; }
-  .facts dd small, .facts dd a { display: block; }
-  .facts dd a { color: inherit; text-decoration: none; }
-  .facts dd a:hover { text-decoration: underline; text-underline-offset: .2em; }
-  .facts dd small, .facts dd a[href^='tel:'] { font: .95rem var(--sans); letter-spacing: 0; color: var(--muted); margin-top: .5rem; }
-  .preview-note { max-width: 48ch; }
-  .visit-questions { display: grid; grid-template-columns: .85fr 1.15fr; gap: 4rem; align-items: start; }
-  .visit-questions .deck, .visit-connect .deck { margin-top: 1.2rem; }
-  .visit-connect { padding-top: 0; }
-  .visit-connect .fine { margin-top: 1rem; }
-  .faq-list details { border-top: 1px solid var(--line); }
-  .faq-list details:last-child { border-bottom: 1px solid var(--line); }
-  .faq-list summary { display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; cursor: pointer; padding: 1.4rem 0; font-size: 1.08rem; font-weight: 500; list-style: none; }
-  .faq-list summary::-webkit-details-marker { display: none; }
-  .faq-list summary span { flex: none; color: var(--tide); font-size: 1.5rem; transition: transform .2s; }
-  .faq-list details[open] summary span { transform: rotate(45deg); }
-  .faq-answer { padding: 0 0 1.4rem; }
-  .faq-answer p { color: var(--muted); max-width: 55ch; }
-  .faq-answer .more { display: inline-flex; margin-top: 1rem; }
-  .form-title { margin: 0 0 1.3rem; }
-  @media (max-width: 800px) { .visit-questions { grid-template-columns: minmax(0, 1fr); gap: 2rem; } }
-  @media (max-width: 680px) {
-    .visit-at-a-glance .facts { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .25rem 1rem; }
-    .visit-at-a-glance .facts > div:last-child { grid-column: 1 / -1; }
+  .glance { display: grid; gap: 1rem; }
+  .location { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1.25rem 2rem; padding: clamp(1.5rem, 3vw, 2rem); border-radius: var(--radius); background: var(--bg); color: var(--fg); }
+  .location-label { font: 600 0.72rem / 1.4 var(--sans); letter-spacing: 0.16em; text-transform: uppercase; color: var(--fg-muted); }
+  .location-address { font: 500 1.6rem / 1.25 var(--serif); letter-spacing: -0.02em; }
+  .location-actions { display: flex; flex-wrap: wrap; gap: 0.6rem; }
+
+  .flow { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; counter-reset: none; }
+  .flow li { display: grid; align-content: start; gap: 0.6rem; padding: 1.6rem; border-radius: var(--radius); background: var(--paper); border: 1px solid var(--line); }
+  .flow-icon { display: grid; place-items: center; width: 2.75rem; height: 2.75rem; border-radius: 50%; background: var(--navy); color: #fff; }
+  .flow-step { margin-top: 0.5rem; font: 600 0.68rem / 1.4 var(--sans); letter-spacing: 0.16em; text-transform: uppercase; color: var(--accent-ink); }
+  .flow h3 { font-size: 1.4rem; }
+  .flow p { color: var(--fg-muted); font-size: 0.95rem; }
+
+  .kids { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(2rem, 5vw, 5rem); align-items: center; }
+  .kids-media { overflow: hidden; aspect-ratio: 4 / 3; border-radius: var(--radius-lg); }
+  .kids-media img { width: 100%; height: 100%; object-fit: cover; }
+  .kids-copy { display: grid; gap: 1.25rem; justify-items: start; }
+
+  .faq { display: grid; grid-template-columns: 0.8fr 1.2fr; gap: clamp(2rem, 5vw, 5rem); align-items: start; }
+  .faq-head { position: sticky; top: calc(var(--header-h) + 2rem); }
+
+  .hello { display: grid; grid-template-columns: 0.9fr 1.1fr; gap: clamp(2rem, 5vw, 5rem); align-items: center; }
+  .hello-copy { display: grid; gap: 1.25rem; }
+
+  @media (max-width: 1000px) {
+    .kids, .faq, .hello { grid-template-columns: 1fr; }
+    .faq-head { position: static; }
+    .flow { grid-template-columns: 1fr 1fr; }
   }
-  @media (prefers-reduced-motion: reduce) { .faq-list summary span { transition: none; } }
+  @media (max-width: 620px) {
+    .flow { grid-template-columns: 1fr; }
+  }
 </style>

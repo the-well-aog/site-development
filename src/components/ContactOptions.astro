@@ -1,0 +1,95 @@
+---
+import Button from './Button.astro';
+import Icon from './Icon.astro';
+import { site } from '../data/site';
+
+interface Props {
+  title: string;
+  text?: string;
+  subject: string;
+  submit?: string;
+  directions?: boolean;
+}
+
+const { title, text, subject, submit = 'Send', directions = false } = Astro.props;
+const live = Boolean(site.formEndpoint);
+const options = [
+  { icon: 'phone', label: 'Call the church', value: site.phoneDisplay, href: site.phoneHref },
+  site.facebookPage && { icon: 'message', label: 'Message us on Facebook', value: 'We usually reply within a day', href: site.facebookPage },
+  directions && { icon: 'pin', label: 'Get directions', value: `${site.address}, ${site.locality}`, href: site.mapsHref },
+].filter(Boolean) as { icon: 'phone' | 'message' | 'pin'; label: string; value: string; href: string }[];
+---
+
+<div class="contact-card">
+  <h2 class="contact-title">{title}</h2>
+  {text && <p class="contact-text">{text}</p>}
+  {live ? (
+    <form class="contact-form" action={site.formEndpoint} method="POST">
+      <input type="hidden" name="_subject" value={subject} />
+      <slot />
+      <Button type="submit">{submit}</Button>
+    </form>
+  ) : (
+    <ul class="contact-options" role="list">
+      {options.map((option) => (
+        <li>
+          <a href={option.href}>
+            <span class="contact-icon"><Icon name={option.icon} size={20} /></span>
+            <span class="contact-label"><strong>{option.label}</strong><span>{option.value}</span></span>
+            <Icon name={option.href.startsWith('http') ? 'arrow-up-right' : 'arrow-right'} class="contact-arrow" />
+          </a>
+        </li>
+      ))}
+    </ul>
+  )}
+</div>
+
+<style>
+  .contact-card {
+    display: grid;
+    gap: 1rem;
+    padding: clamp(1.5rem, 3vw, 2.25rem);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    background: var(--surface);
+    box-shadow: var(--shadow-sm);
+  }
+  .contact-title { font-size: clamp(1.6rem, 1.4rem + 0.8vw, 2rem); }
+  .contact-text { color: var(--fg-muted); }
+  .contact-options { display: grid; margin-top: 0.5rem; border-top: 1px solid var(--line); }
+  .contact-options li { border-bottom: 1px solid var(--line); }
+  .contact-options a {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 0;
+    color: inherit;
+    text-decoration: none;
+  }
+  .contact-icon { display: grid; place-items: center; width: 2.75rem; height: 2.75rem; border-radius: 50%; background: var(--foam); color: var(--navy); }
+  .contact-label { display: grid; gap: 0.1rem; }
+  .contact-label strong { font-weight: 500; color: var(--heading); }
+  .contact-label span { color: var(--fg-muted); font-size: 0.9rem; }
+  .contact-options a :global(.contact-arrow) { color: var(--heading); transition: transform 0.2s var(--ease); }
+  .contact-options a:hover :global(.contact-arrow) { transform: translateX(3px); }
+  .contact-options a:hover strong { text-decoration: underline; text-underline-offset: 0.25em; }
+
+  .contact-form { display: grid; gap: 1.1rem; margin-top: 0.5rem; }
+  .contact-form :global(label) { display: grid; gap: 0.4rem; font-size: 0.85rem; font-weight: 500; color: var(--heading); }
+  .contact-form :global(label.check) { display: flex; align-items: flex-start; gap: 0.6rem; font-weight: 400; color: var(--fg); }
+  .contact-form :global(input:not([type='checkbox']):not([type='hidden'])),
+  .contact-form :global(textarea) {
+    width: 100%;
+    padding: 0.8rem 0.95rem;
+    border: 1px solid var(--line-strong);
+    border-radius: 10px;
+    background: var(--paper);
+    font-size: 1rem;
+    transition: border-color 0.2s var(--ease), box-shadow 0.2s var(--ease);
+  }
+  .contact-form :global(textarea) { min-height: 8rem; resize: vertical; }
+  .contact-form :global(input:focus), .contact-form :global(textarea:focus) { outline: none; border-color: var(--navy); box-shadow: 0 0 0 3px var(--foam); }
+  .contact-form :global(input[type='checkbox']) { width: 1.1rem; height: 1.1rem; margin-top: 0.2rem; accent-color: var(--navy); }
+  .contact-form :global(.button) { justify-self: start; margin-top: 0.25rem; }
+</style>

@@ -1,0 +1,59 @@
+---
+import Icon from './Icon.astro';
+import type { IconName } from '../lib/icons';
+
+interface Props {
+  facts: { icon: IconName; label: string; value: string; note?: string; datetime?: string }[];
+  note?: string;
+}
+
+const { facts, note } = Astro.props;
+---
+
+<div class="detail">
+  <div class="detail-main"><slot /></div>
+  <aside class="facts">
+    <dl>
+      {facts.map((fact) => (
+        <div>
+          <dt><Icon name={fact.icon} size={18} />{fact.label}</dt>
+          <dd>
+            {fact.datetime ? <time datetime={fact.datetime}>{fact.value}</time> : fact.value}
+            {fact.note && <span>{fact.note}</span>}
+          </dd>
+        </div>
+      ))}
+    </dl>
+    {note && <p class="facts-note">{note}</p>}
+    <slot name="actions" />
+  </aside>
+</div>
+
+<style>
+  .detail { display: grid; grid-template-columns: minmax(0, 1fr) 22rem; gap: clamp(2rem, 6vw, 6rem); align-items: start; }
+  .detail-main { display: grid; gap: 1.5rem; }
+  .facts {
+    position: sticky;
+    top: calc(var(--header-h) + 2rem);
+    display: grid;
+    gap: 1rem;
+    justify-items: start;
+    padding: 1.75rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    background: var(--surface);
+    box-shadow: var(--shadow-sm);
+  }
+  .facts dl { display: grid; gap: 1rem; width: 100%; }
+  .facts dl div { display: grid; gap: 0.2rem; padding-bottom: 1rem; border-bottom: 1px solid var(--line); }
+  dt { display: flex; align-items: center; gap: 0.5rem; font: 600 0.7rem / 1.4 var(--sans); letter-spacing: 0.14em; text-transform: uppercase; color: var(--fg-muted); }
+  dt :global(.icon) { color: var(--accent-ink); }
+  dd { font: 500 1.15rem / 1.35 var(--serif); color: var(--heading); }
+  dd span { display: block; margin-top: 0.2rem; font: 400 0.88rem var(--sans); color: var(--fg-muted); }
+  .facts-note { color: var(--fg-muted); font-size: 0.82rem; }
+  .facts :global(.button-primary) { width: 100%; }
+  @media (max-width: 1000px) {
+    .detail { grid-template-columns: 1fr; }
+    .facts { position: static; }
+  }
+</style>

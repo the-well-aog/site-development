@@ -1,52 +1,56 @@
 ---
 import Base from '../../layouts/Base.astro';
+import Button from '../../components/Button.astro';
+import MessageCard from '../../components/MessageCard.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import Section from '../../components/Section.astro';
+import SectionHeader from '../../components/SectionHeader.astro';
+import VideoEmbed from '../../components/VideoEmbed.astro';
 import { loadSocial, type YoutubeVideo } from '../../lib/feeds';
 import { longDate } from '../../lib/format';
-import { url } from '../../lib/url';
 
 export async function getStaticPaths() {
   const social = await loadSocial();
   return social.videos.map((video) => ({
     params: { id: video.id },
-    props: { video },
+    props: { video, more: social.videos.filter((other) => other.id !== video.id).slice(0, 3) },
   }));
 }
 
 interface Props {
   video: YoutubeVideo;
+  more: YoutubeVideo[];
 }
 
-const { video } = Astro.props;
-const description = video.excerpt || video.title;
+const { video, more } = Astro.props;
 ---
 
-<Base title={video.title} description={description} image={video.thumbnail}>
-  <header class="page-hero">
-    <div class="wrap">
-      <p class="fine" style="margin-bottom: 1.4rem;"><a href={url('/sermons')}>← All messages</a></p>
-      <p class="eyebrow">Message</p>
-      <h1>{video.title}</h1>
-      <p class="meta-row">
-        <span>{longDate(new Date(video.published))}</span>
-      </p>
+<Base title={video.title} description={video.excerpt || video.title} image={video.thumbnail}>
+  <PageHeader back={{ href: '/watch', label: 'All messages' }} title={video.title}>
+    <Fragment slot="meta"><span>{longDate(new Date(video.published))}</span></Fragment>
+  </PageHeader>
+
+  <Section space="flush-top" width="wide">
+    <VideoEmbed id={video.id} title={video.title} eager />
+    <div class="below">
+      {video.excerpt && <p class="lede">{video.excerpt}</p>}
+      <Button href={video.watchUrl} variant="text">Watch on YouTube</Button>
     </div>
-  </header>
-  <section class="section" style="padding-top: 0;">
-    <div class="wrap">
-      <div class="video-embed">
-        <iframe
-          src={`https://www.youtube-nocookie.com/embed/${video.id}`}
-          title={video.title}
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-          allowfullscreen
-          referrerpolicy="strict-origin-when-cross-origin"
-        />
-      </div>
-      {video.excerpt && <p class="deck" style="margin-top: 1.4rem;">{video.excerpt}</p>}
-      <p class="watch-links">
-        <a class="more" href={url('/sermons')}>All sermons <span aria-hidden="true">→</span></a>
-        <a class="more" href={video.watchUrl}>On YouTube</a>
-      </p>
-    </div>
-  </section>
+  </Section>
+
+  {more.length > 0 && (
+    <Section tone="sand" width="wide" labelledby="more-title">
+      <SectionHeader id="more-title" align="split" eyebrow="Keep watching" title="More messages." action={{ href: '/watch', label: 'All messages' }} />
+      <ul class="grid" role="list">
+        {more.map((other) => <li><MessageCard href={`/watch/${other.id}`} image={other.thumbnail} title={other.title} meta={longDate(new Date(other.published))} video /></li>)}
+      </ul>
+    </Section>
+  )}
 </Base>
+
+<style>
+  .below { display: grid; gap: 1rem; justify-items: start; max-width: 68ch; margin-top: 2rem; }
+  .grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.25rem; }
+  @media (max-width: 1000px) { .grid { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 620px) { .grid { grid-template-columns: 1fr; } }
+</style>

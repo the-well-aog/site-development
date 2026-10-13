@@ -1,0 +1,37 @@
+---
+interface Props {
+  tone?: 'paper' | 'sand' | 'navy';
+  width?: 'normal' | 'wide' | 'narrow';
+  space?: 'normal' | 'tight' | 'flush-top';
+  id?: string;
+  labelledby?: string;
+  label?: string;
+  class?: string;
+}
+
+const { tone = 'paper', width = 'normal', space = 'normal', id, labelledby, label, class: className } = Astro.props;
+const wrap = width === 'wide' ? 'wrap-wide' : width === 'narrow' ? 'wrap-narrow' : 'wrap';
+---
+
+<section
+  class:list={['section', `tone-${tone}`, `space-${space}`, className]}
+  id={id}
+  aria-labelledby={labelledby}
+  aria-label={label}
+>
+  <div class={wrap}><slot /></div>
+</section>
+
+<style>
+  .section {
+    position: relative;
+    padding-block: var(--section);
+    background: var(--bg);
+    color: var(--fg);
+  }
+  .space-tight { padding-block: calc(var(--section) * 0.6); }
+  .space-flush-top { padding-top: 0; }
+  /* Two paper sections in a row read as one; trim the gap between them. */
+  .tone-paper + .tone-paper:not(.space-flush-top) { padding-top: calc(var(--section) * 0.35); }
+  .tone-navy { overflow: hidden; }
+</style>

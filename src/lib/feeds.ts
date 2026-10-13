@@ -107,21 +107,31 @@ function channelPage(input: string): string | null {
   }
 }
 
+// YouTube intermittently times out or answers 404/5xx. Retry so a scheduled rebuild
+// does not publish an empty sermon list.
+async function fetchText(url: string, label: string, headers: Record<string, string>, attempts = 3): Promise<string | null> {
+  for (let attempt = 1; attempt <= attempts; attempt++) {
+    try {
+      const response = await fetch(url, { redirect: 'follow', signal: AbortSignal.timeout(20000), headers });
+      if (response.ok) return await response.text();
+      console.warn(`${label} returned ${response.status} (attempt ${attempt}/${attempts}).`);
+    } catch (error) {
+      console.warn(`${label} failed: ${error instanceof Error ? error.message : error} (attempt ${attempt}/${attempts}).`);
+    }
+    if (attempt < attempts) await new Promise((resolve) => setTimeout(resolve, 1500 * attempt));
+  }
+  return null;
+}
+
+const userAgent = 'Mozilla/5.0 (compatible; TheWellSite/1.0)';
+
 async function resolveChannelId(input: string): Promise<string | null> {
   const direct = channelIdFrom(input);
   if (direct) return direct;
   const page = channelPage(input);
   if (!page) return null;
-  const response = await fetch(page, {
-    redirect: 'follow',
-    signal: AbortSignal.timeout(12000),
-    headers: {
-      'User-Agent': 'Mozilla/5.0 (compatible; TheWellSite/1.0)',
-      'Accept-Language': 'en-US,en',
-    },
-  });
-  if (!response.ok) return null;
-  const html = await response.text();
+  const html = await fetchText(page, 'YouTube channel page', { 'User-Agent': userAgent, 'Accept-Language': 'en-US,en' });
+  if (!html) return null;
   const canonical = html.match(/youtube\.com\/channel\/(UC[\w-]{22})/);
   if (canonical && CHANNEL_ID.test(canonical[1])) return canonical[1];
   const external = html.match(/"externalId":"(UC[\w-]{22})"/);
@@ -151,19 +161,9 @@ function parseFeed(xml: string, limit: number): YoutubeVideo[] {
   return videos;
 }
 
-// YouTube's RSS endpoint intermittently answers 404/5xx. Retry so a daily rebuild
-// does not publish an empty sermon list.
-async function fetchVideos(channelId: string, attempts = 3): Promise<YoutubeVideo[]> {
-  for (let attempt = 1; attempt <= attempts; attempt++) {
-    const response = await fetch(`https://www.youtube.com/feeds/videos.xml?channel_id=${channelId}`, {
-      signal: AbortSignal.timeout(12000),
-      headers: { 'User-Agent': 'Mozilla/5.0 (compatible; TheWellSite/1.0)' },
-    });
-    if (response.ok) return parseFeed(await response.text(), 12);
-    console.warn(`YouTube feed returned ${response.status} (attempt ${attempt}/${attempts}).`);
-    if (attempt < attempts) await new Promise((resolve) => setTimeout(resolve, 1500 * attempt));
-  }
-  return [];
+async function fetchVideos(channelId: string): Promise<YoutubeVideo[]> {
+  const xml = await fetchText(`https://www.youtube.com/feeds/videos.xml?channel_id=${channelId}`, 'YouTube feed', { 'User-Agent': userAgent });
+  return xml ? parseFeed(xml, 12) : [];
 }
 
 async function load(): Promise<SocialFeeds> {

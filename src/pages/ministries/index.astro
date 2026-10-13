@@ -1,31 +1,29 @@
 ---
 import { getCollection } from 'astro:content';
 import Base from '../../layouts/Base.astro';
-import PageHero from '../../components/PageHero.astro';
-import { img, url } from '../../lib/url';
+import CtaBand from '../../components/CtaBand.astro';
+import MinistryCard from '../../components/MinistryCard.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import Section from '../../components/Section.astro';
+import { site } from '../../data/site';
 
 const ministries = (await getCollection('ministries')).sort((a, b) => a.data.order - b.data.order);
 ---
 
-<Base title="Ministries" description="Kids, students, and adult groups at The Well Assembly of God: a place for every generation to know Jesus and grow." image="images/table.jpg">
-  <PageHero kicker="Life together" title="Find your people." deck="The church is a family for every generation. From the nursery to the grandparents, there is a place for you to know Jesus and grow." />
-  <section class="section" style="padding-top: 0.5rem;">
-    <div class="wrap">
-      {
-        ministries.map((entry, index) => (
-          <a class:list={['ministry-row', { flip: index % 2 === 1 }]} href={url(`/ministries/${entry.id}`)}>
-            <img src={img(entry.data.image)} alt={entry.data.alt} loading="lazy" />
-            <div>
-              <p class="eyebrow">{entry.data.who}</p>
-              <h2 class="block-title">{entry.data.title}</h2>
-              <p class="deck" style="margin-top: 0.8rem;">{entry.data.summary}</p>
-              <p class="meta-row">{entry.data.when}</p>
-              <p class="more" style="margin-top: 1.2rem;">Explore {entry.data.title} <span aria-hidden="true">→</span></p>
-            </div>
-          </a>
-        ))
-      }
+<Base title="Ministries" description={`Kids, students, and adult groups at ${site.legal}: a place for every generation to know Jesus and grow.`}>
+  <PageHeader eyebrow="Ministries" title="Find your people." lede="The church is a family for every generation. From the nursery to the grandparents, there is a place for you to know Jesus and grow." />
+
+  <Section width="wide" space="flush-top" label="All ministries">
+    <div class="grid" data-reveal>
+      {ministries.map((entry) => <MinistryCard entry={entry} />)}
     </div>
-  </section>
-  <section class="section" style="padding-top: 0;"><div class="wrap measure"><p class="eyebrow">Not sure where to start?</p><h2 class="block-title">A conversation can help.</h2><div class="actions"><a class="btn" href={url('/contact')}>Get in touch <span aria-hidden="true">↗</span></a></div></div></section>
+  </Section>
+
+  <CtaBand eyebrow="Not sure where to start?" title="We’ll help you" accent="find your place." text="Tell us a little about you or your family, and we will point you to the right ministry and the right people." primary={{ href: '/contact', label: 'Get in touch' }} secondary={{ href: '/visit', label: 'Plan your visit' }} />
 </Base>
+
+<style>
+  .grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1.25rem; }
+  @media (max-width: 1240px) { .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 640px) { .grid { grid-template-columns: 1fr; } }
+</style>

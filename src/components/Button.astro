@@ -1,0 +1,77 @@
+---
+import Icon from './Icon.astro';
+import type { IconName } from '../lib/icons';
+import { isExternal, url } from '../lib/url';
+
+interface Props {
+  href?: string;
+  variant?: 'primary' | 'secondary' | 'text';
+  icon?: IconName | 'none';
+  leading?: IconName;
+  type?: 'button' | 'submit';
+  size?: 'md' | 'lg';
+  class?: string;
+  'aria-label'?: string;
+}
+
+const { href, variant = 'primary', icon, leading, type = 'button', size = 'md', class: className, ...rest } = Astro.props;
+const external = href ? isExternal(href) : false;
+const trailing = icon === 'none' ? null : icon ?? (external ? 'arrow-up-right' : 'arrow-right');
+const classes = ['button', `button-${variant}`, `button-${size}`, className];
+---
+
+{href ? (
+  <a class:list={classes} href={url(href)} {...rest}>
+    {leading && <Icon name={leading} />}
+    <span><slot /></span>
+    {trailing && <Icon name={trailing} class="button-trail" />}
+  </a>
+) : (
+  <button class:list={classes} type={type} {...rest}>
+    {leading && <Icon name={leading} />}
+    <span><slot /></span>
+    {trailing && <Icon name={trailing} class="button-trail" />}
+  </button>
+)}
+
+<style>
+  .button {
+    --btn-bg: var(--heading);
+    --btn-fg: var(--bg);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    min-height: 48px;
+    padding: 0.75rem 1.4rem;
+    border: 1px solid transparent;
+    border-radius: 999px;
+    background: var(--btn-bg);
+    color: var(--btn-fg);
+    font: 500 0.95rem / 1.2 var(--sans);
+    letter-spacing: 0.005em;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color 0.2s var(--ease), border-color 0.2s var(--ease), transform 0.2s var(--ease), box-shadow 0.2s var(--ease);
+  }
+  .button-lg { min-height: 54px; padding-inline: 1.7rem; font-size: 1rem; }
+  .button-primary:hover { transform: translateY(-1px); box-shadow: var(--shadow-md); }
+  .button-secondary {
+    --btn-bg: transparent;
+    --btn-fg: var(--heading);
+    border-color: var(--line-strong);
+  }
+  .button-secondary:hover { border-color: var(--heading); }
+  .button-text {
+    --btn-bg: transparent;
+    --btn-fg: var(--heading);
+    min-height: 44px;
+    padding-inline: 0;
+    border-radius: 0;
+    font-weight: 500;
+  }
+  .button-text span { text-decoration: underline; text-decoration-color: var(--line-strong); text-underline-offset: 0.3em; transition: text-decoration-color 0.2s var(--ease); }
+  .button-text:hover span { text-decoration-color: currentColor; }
+  .button :global(.button-trail) { flex: none; transition: transform 0.2s var(--ease); }
+  .button:hover :global(.button-trail) { transform: translateX(3px); }
+</style>

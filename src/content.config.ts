@@ -60,11 +60,11 @@ const leaders = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/leaders' }),
   schema: z.object({
     name: z.string(),
-    focus: z.string(),
+    role: z.string(),
     order: z.number(),
-    image,
+    // Path under public/, e.g. images/team/jane.jpg. Without one the site shows a branded placeholder.
+    photo: z.string().optional(),
     summary: z.string(),
-    alt: z.string(),
   }),
 });
 

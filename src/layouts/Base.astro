@@ -11,19 +11,17 @@ interface Props {
   image?: string;
 }
 
-const { title, description, image = 'images/the-well-logo.png' } = Astro.props;
-const fullTitle = title === 'The Well' ? 'The Well Assembly of God' : `${title} · The Well`;
+const { title, description, image = 'images/church-exterior.jpg' } = Astro.props;
+const fullTitle = title === 'Home' ? site.legal : `${title} · ${site.name}`;
 const canonical = new URL(Astro.url.pathname, Astro.site);
 const ogImage = /^https?:/.test(image) ? new URL(image) : new URL(url(image), Astro.site);
-const logoUrl = new URL(url('images/the-well-logo.png'), Astro.site);
-const sameAs = [site.facebookPage].filter(Boolean);
 const organization = {
   '@context': 'https://schema.org',
   '@type': 'Church',
-  name: 'The Well Assembly of God',
+  name: site.legal,
   description: site.tagline,
   url: new URL(url('/'), Astro.site).href,
-  logo: logoUrl.href,
+  logo: new URL(url('images/the-well-logo.png'), Astro.site).href,
   telephone: site.phoneHref.replace('tel:', ''),
   address: {
     '@type': 'PostalAddress',
@@ -33,7 +31,7 @@ const organization = {
     postalCode: site.postalCode,
     addressCountry: site.country,
   },
-  ...(sameAs.length ? { sameAs } : {}),
+  ...(site.facebookPage ? { sameAs: [site.facebookPage] } : {}),
 };
 ---
 
@@ -41,33 +39,30 @@ const organization = {
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>{fullTitle}</title>
     <meta name="description" content={description} />
-    <meta name="theme-color" content="#002e4a" />
+    <meta name="theme-color" content="#faf8f3" />
     <link rel="canonical" href={canonical} />
     <link rel="icon" href={url('images/the-well-logo-192.png')} type="image/png" />
     <link rel="apple-touch-icon" href={url('images/the-well-logo-192.png')} />
     <meta property="og:title" content={fullTitle} />
-    <meta property="og:site_name" content="The Well Assembly of God" />
+    <meta property="og:site_name" content={site.legal} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
     <meta property="og:url" content={canonical} />
     <meta property="og:image" content={ogImage} />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content={fullTitle} />
-    <meta name="twitter:description" content={description} />
-    <meta name="twitter:image" content={ogImage} />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500;1,9..144,600&family=Outfit:wght@300;400;500;600&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&family=Outfit:wght@400;500;600&display=swap"
       rel="stylesheet"
     />
-    <script type="application/ld+json" set:html={JSON.stringify(organization).replace(/</g, '\u003c')} />
-    <title>{fullTitle}</title>
+    <script type="application/ld+json" set:html={JSON.stringify(organization).replace(/</g, '\\u003c')} />
   </head>
   <body>
-    <a class="skip" href="#content">Skip to content</a>
+    <a class="skip-link" href="#content">Skip to content</a>
     <Header />
     <main id="content" tabindex="-1">
       <slot />
@@ -76,7 +71,3 @@ const organization = {
   </body>
 </html>
 
-<style>
-  main { padding-top: var(--header, 104px); }
-  main:focus { outline: none; }
-</style>

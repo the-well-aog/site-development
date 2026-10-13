@@ -1,28 +1,15 @@
 ---
 import Base from '../layouts/Base.astro';
-import { url } from '../lib/url';
+import Button from '../components/Button.astro';
+import PageHeader from '../components/PageHeader.astro';
 ---
 
 <Base title="Page not found" description="Find your way back to The Well Assembly of God.">
-  <header class="page-hero not-found">
-    <div class="wrap">
-      <p class="eyebrow">404 · Page not found</p>
-      <h1>A little off<br />the path.</h1>
-      <p class="deck">This page may have moved, or the link may be incomplete. The good news: you are never too lost to be found (Luke 19:10).</p>
-      <div class="actions">
-        <a class="btn" href={url('/')}>Back to The Well <span aria-hidden="true">→</span></a>
-        <a class="more" href={url('/visit')}>Plan a visit <span aria-hidden="true">↗</span></a>
-      </div>
-      <nav aria-label="Helpful pages" class="not-found-links">
-        <a href={url('/sermons')}>Watch a message</a>
-        <a href={url('/ministries')}>Explore ministries</a>
-        <a href={url('/contact')}>Contact</a>
-      </nav>
-    </div>
-  </header>
+  <PageHeader eyebrow="404 · Page not found" title="A little off the path." lede="This page may have moved, or the link may be incomplete. The good news: you are never too lost to be found (Luke 19:10).">
+    <Fragment slot="actions">
+      <Button href="/" size="lg">Back to home</Button>
+      <Button href="/visit" variant="text">Plan a visit</Button>
+      <Button href="/watch" variant="text">Watch a message</Button>
+    </Fragment>
+  </PageHeader>
 </Base>
-
-<style>
-  .not-found { padding-bottom: 6rem; min-height: 75svh; }
-  .not-found-links { display: flex; flex-wrap: wrap; gap: 1rem 2rem; border-top: 1px solid var(--line); padding-top: 1.4rem; margin-top: 3rem; font-size: .92rem; color: var(--muted); }
-</style>

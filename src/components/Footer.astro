@@ -1,76 +1,109 @@
 ---
+import Icon from './Icon.astro';
+import { getNav } from '../data/nav';
 import { site } from '../data/site';
 import { loadSocial } from '../lib/feeds';
 import { url } from '../lib/url';
 
 const year = new Date().getFullYear();
 const social = await loadSocial();
-const explore = [['/visit', 'Plan your visit'], ['/about', 'Our story'], ['/beliefs', 'What we believe'], ['/leadership', 'Our leadership'], ['/sermons', 'Sermons'], ['/events', 'Events']];
-const connect = [['/jesus', 'Know Jesus'], ['/next-steps', 'Next steps'], ['/ministries', 'Ministries'], ['/prayer', 'Ask for prayer'], ['/give', 'Give'], ['/live', 'Watch live']];
+const { groups, links, cta } = await getNav();
+const columns = [
+  ...groups.map((group) => ({ label: group.label, links: group.links })),
+  { label: 'Connect', links: [cta, ...links, { href: '/contact', label: 'Contact' }] },
+];
 ---
 
 <footer class="site-footer">
-  <div class="wrap footer-grid">
-    <nav aria-label="Explore The Well">
-      <h2>Welcome to The Well</h2>
-      <ul>{explore.map(([href, label]) => <li><a href={url(href)}>{label}</a></li>)}</ul>
+  <div class="wrap-wide footer-top">
+    <div class="footer-brand">
+      <a class="footer-logo" href={url('/')} aria-label={`${site.legal}, home`}>
+        <img src={url('images/the-well-logo-192.png')} width="192" height="192" alt="" loading="lazy" />
+      </a>
+      <p class="footer-tagline">{site.tagline}</p>
+      <ul class="footer-times" role="list">
+        {site.services.map((service) => <li><span>{service.day}</span><strong>{service.time}</strong><em>{service.name}</em></li>)}
+      </ul>
+      <address>
+        <a href={site.mapsHref}>{site.address}<br />{site.city}</a>
+        <a href={site.phoneHref}>{site.phoneDisplay}</a>
+      </address>
+      {(social.facebookPage || social.channelUrl) && (
+        <ul class="footer-social" role="list">
+          {social.facebookPage && <li><a href={social.facebookPage}><Icon name="facebook" size={18} label="The Well on Facebook" /></a></li>}
+          {social.channelUrl && <li><a href={social.channelUrl}><Icon name="youtube" size={18} label="The Well on YouTube" /></a></li>}
+        </ul>
+      )}
+    </div>
+
+    <nav class="footer-nav" aria-label="Footer">
+      {columns.map((column) => (
+        <div>
+          <p class="footer-heading">{column.label}</p>
+          <ul role="list">
+            {column.links.map((link) => <li><a href={url(link.href)}>{link.label}</a></li>)}
+          </ul>
+        </div>
+      ))}
     </nav>
-    <nav aria-label="Get connected">
-      <h2>Life together</h2>
-      <ul>{connect.map(([href, label]) => <li><a href={url(href)}>{label}</a></li>)}</ul>
-    </nav>
+
     <div class="footer-map">
-      <p class="footer-map-address"><a href={site.mapsHref}>{site.address}</a><span>{site.city}</span></p>
-      <p class="footer-map-phone"><a href={site.phoneHref}>{site.phoneDisplay}</a></p>
-      <p class="footer-times">{site.sundayLabel} {site.sundayTime} · {site.midweekLabel} {site.midweekTime}</p>
-      <p class="footer-map-actions">
-        <a href={site.mapsHref}>Open in Google Maps <span aria-hidden="true">↗</span></a>
-        <a href={site.appleMapsHref}>Open in Apple Maps <span aria-hidden="true">↗</span></a>
-      </p>
       <div class="footer-map-frame">
-        <iframe title="Map showing The Well Assembly of God at 2902 S Pocola Blvd, Pocola, Oklahoma" src={site.mapsEmbed} loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
+        <iframe title={`Map showing ${site.legal} at ${site.address}, ${site.city}`} src={site.mapsEmbed} loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
       </div>
-      <nav class="footer-social" aria-label="Social media">
-        {social.facebookPage && <a href={social.facebookPage}>Facebook <span aria-hidden="true">↗</span></a>}
-        {social.channelUrl && <a href={social.channelUrl}>YouTube <span aria-hidden="true">↗</span></a>}
-      </nav>
+      <p class="footer-map-links">
+        <a href={site.mapsHref}>Google Maps <Icon name="arrow-up-right" size={14} /></a>
+        <a href={site.appleMapsHref}>Apple Maps <Icon name="arrow-up-right" size={14} /></a>
+      </p>
     </div>
   </div>
-  <div class="wrap legal">
-    <span>© {year} {site.legal} · {site.affiliation}</span>
-    <span>“Come to Me and drink.” John 7:37</span>
+
+  <div class="wrap-wide footer-bottom">
+    <p>© {year} {site.legal}. A member church of the {site.affiliation}.</p>
+    <p class="footer-verse">“If anyone thirsts, let him come to Me and drink.” John 7:37</p>
   </div>
 </footer>
 
 <style>
-  .site-footer { padding: 3.5rem 0 1.5rem; color: var(--well, #002e4a); background: var(--paper-2, #efece3); border-top: 1px solid var(--line); }
-  .footer-grid { display: grid; grid-template-columns: 1fr 1fr minmax(18rem, 24rem); gap: 2.5rem 3rem; align-items: start; }
-  .footer-map-address { margin: 0; }
-  .footer-map-address a { font-family: var(--serif); font-size: 1.55rem; letter-spacing: -.03em; line-height: 1.15; text-decoration: none; }
-  .footer-map-address span { display: block; margin-top: .35rem; color: var(--muted); font-size: .95rem; }
-  .footer-map-phone { margin: .7rem 0 0; }
-  .footer-map-phone a { color: var(--tide); font-weight: 500; text-decoration: none; }
-  .footer-times { margin: .35rem 0 0; color: var(--muted); font-size: .9rem; }
-  .footer-map-actions { display: flex; flex-wrap: wrap; gap: .35rem 1.15rem; margin: .35rem 0 1rem; }
-  .footer-map-actions a { color: var(--tide); font-size: .92rem; font-weight: 500; text-decoration: none; }
-  .footer-map-frame { overflow: hidden; border-radius: .8rem; background: white; aspect-ratio: 1; }
-  .footer-map-frame iframe { display: block; width: 100%; height: 100%; border: 0; }
-  .site-footer nav { padding-top: .15rem; }
-  .site-footer nav h2 { margin: 0 0 1.05rem; font-family: var(--sans); font-size: .7rem; font-weight: 500; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
-  .site-footer ul { list-style: none; margin: 0; padding: 0; display: grid; gap: .15rem; }
-  .site-footer li a { display: inline-flex; align-items: center; min-height: 40px; padding: .35rem 0; font-size: .97rem; text-decoration: none; }
-  .site-footer a:hover { text-decoration: underline; text-underline-offset: .25em; }
-  .footer-social { display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 1.1rem; }
-  .footer-social a { display: inline-flex; gap: .4rem; align-items: center; min-height: 40px; text-decoration: none; font-size: .8rem; }
-  .footer-social span { color: var(--tide); }
-  .legal { display: flex; align-items: center; justify-content: space-between; gap: .5rem 1rem; flex-wrap: wrap; margin-top: 3.5rem; padding-top: 1.1rem; border-top: 1px solid var(--line); color: var(--muted); font-size: .75rem; }
-  @media (max-width: 800px) {
-    .footer-grid { grid-template-columns: 1fr 1fr; gap: 1.75rem; }
-    .footer-map { grid-column: 1 / -1; order: -1; padding-bottom: 1.25rem; border-bottom: 1px solid var(--line); }
+  .site-footer { padding-top: clamp(3.5rem, 6vw, 5.5rem); background: var(--sand); color: var(--ink); border-top: 1px solid var(--line); }
+  .footer-top { display: grid; grid-template-columns: minmax(14rem, 1fr) minmax(0, 2.2fr) minmax(16rem, 1fr); gap: clamp(2rem, 4vw, 4rem); align-items: start; }
+
+  .footer-brand { display: grid; gap: 1.25rem; justify-items: start; }
+  .footer-logo img { width: 84px; height: 84px; }
+  .footer-tagline { font: italic 500 1.15rem / 1.4 var(--serif); color: var(--navy); max-width: 18ch; }
+  .footer-times { display: grid; grid-template-columns: 1fr 1fr; gap: 0.9rem 1.5rem; }
+  .footer-times li { display: grid; }
+  .footer-times em { font-style: normal; font-size: 0.82rem; color: var(--muted); }
+  .footer-times span { font: 600 0.66rem / 1.4 var(--sans); letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); }
+  .footer-times strong { font: 500 1.25rem / 1.2 var(--serif); color: var(--navy); }
+  address { display: grid; gap: 0.5rem; font-style: normal; font-size: 0.95rem; }
+  address a { text-decoration: none; }
+  address a:hover { text-decoration: underline; }
+  .footer-social { display: flex; gap: 0.5rem; }
+  .footer-social a { display: grid; place-items: center; width: 2.75rem; height: 2.75rem; border: 1px solid var(--line-strong); border-radius: 50%; color: var(--navy); transition: background-color 0.2s var(--ease), color 0.2s var(--ease); }
+  .footer-social a:hover { background: var(--navy); color: #fff; border-color: var(--navy); }
+
+  .footer-nav { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 2rem 1.5rem; }
+  .footer-heading { margin-bottom: 0.75rem; font: 600 0.7rem / 1.4 var(--sans); letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); }
+  .footer-nav a { display: inline-block; padding: 0.35rem 0; font-size: 0.95rem; text-decoration: none; }
+  .footer-nav a:hover { color: var(--navy); text-decoration: underline; }
+
+  .footer-map-frame { overflow: hidden; aspect-ratio: 1; border-radius: var(--radius); background: var(--sand-2); }
+  .footer-map-frame iframe { width: 100%; height: 100%; border: 0; }
+  .footer-map-links { display: flex; flex-wrap: wrap; gap: 0.5rem 1.25rem; margin-top: 0.75rem; }
+  .footer-map-links a { display: inline-flex; align-items: center; gap: 0.3rem; min-height: 40px; font-size: 0.9rem; font-weight: 500; color: var(--navy); text-decoration: none; }
+  .footer-map-links a:hover { text-decoration: underline; }
+
+  .footer-bottom { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.5rem 2rem; margin-top: clamp(3rem, 5vw, 4.5rem); padding: 1.5rem 0 calc(1.5rem + env(safe-area-inset-bottom)); border-top: 1px solid var(--line); color: var(--muted); font-size: 0.82rem; }
+  .footer-verse { font-style: italic; }
+
+  @media (max-width: 1100px) {
+    .footer-top { grid-template-columns: 1fr 1fr; }
+    .footer-nav { grid-column: 1 / -1; order: 3; }
     .footer-map-frame { aspect-ratio: 4 / 3; }
-    .site-footer { padding-top: 2.5rem; }
-    .site-footer li a { min-height: 44px; font-size: .9rem; }
-    .site-footer nav h2 { max-width: 15ch; line-height: 1.6; }
-    .legal { margin-top: 2rem; }
+  }
+  @media (max-width: 640px) {
+    .footer-top { grid-template-columns: 1fr; }
+    .footer-nav { grid-template-columns: 1fr 1fr; }
   }
 </style>

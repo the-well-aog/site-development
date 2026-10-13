@@ -1,0 +1,52 @@
+---
+import Button from './Button.astro';
+import Scripture from './Scripture.astro';
+
+export type NumberedItem = {
+  id?: string;
+  title: string;
+  text: string;
+  ref?: string;
+  verse?: { text: string; reference: string };
+  link?: { href: string; label: string };
+};
+
+interface Props {
+  items: readonly NumberedItem[];
+  as?: 'h2' | 'h3';
+}
+
+const { items, as: Heading = 'h3' } = Astro.props;
+---
+
+<ol class="numbered" role="list">
+  {items.map((item, index) => (
+    <li id={item.id} data-reveal>
+      <div class="numbered-item">
+        <span class="numbered-num" aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
+        <div class="numbered-body">
+          <Heading>{item.title}</Heading>
+          <p>{item.text}</p>
+          {item.ref && <p class="ref">{item.ref}</p>}
+          {item.verse && <div class="numbered-verse"><Scripture text={item.verse.text} reference={item.verse.reference} /></div>}
+          {item.link && <Button href={item.link.href} variant="text">{item.link.label}</Button>}
+        </div>
+      </div>
+    </li>
+  ))}
+</ol>
+
+<style>
+  .numbered { counter-reset: none; border-bottom: 1px solid var(--line); }
+  li { border-top: 1px solid var(--line); }
+  .numbered-item { display: grid; grid-template-columns: 4.5rem minmax(0, 1fr); gap: 0.5rem 1.5rem; padding: clamp(1.6rem, 3vw, 2.4rem) 0; }
+  .numbered-num { font: italic 500 1.6rem / 1.2 var(--serif); color: var(--accent-ink); }
+  .numbered-body { display: grid; gap: 0.75rem; justify-items: start; max-width: 66ch; }
+  .numbered-body h2, .numbered-body h3 { font-size: clamp(1.5rem, 1.25rem + 1vw, 2.1rem); }
+  .numbered-body > p:not(.ref) { color: var(--fg-muted); }
+  .numbered-verse { width: 100%; margin-top: 0.25rem; padding: 1.1rem 1.25rem; border-left: 2px solid var(--accent-ink); background: var(--sand); border-radius: 0 var(--radius) var(--radius) 0; }
+  .numbered-verse :global(blockquote p) { font-size: 1.15rem; }
+  @media (max-width: 620px) {
+    .numbered-item { grid-template-columns: 1fr; }
+  }
+</style>

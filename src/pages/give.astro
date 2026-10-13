@@ -1,87 +1,88 @@
 ---
 import Base from '../layouts/Base.astro';
-import PageHero from '../components/PageHero.astro';
-import { site } from '../data/site';
-import { url } from '../lib/url';
+import Button from '../components/Button.astro';
+import FeatureGrid from '../components/FeatureGrid.astro';
+import Icon from '../components/Icon.astro';
+import PageHeader from '../components/PageHeader.astro';
+import Scripture from '../components/Scripture.astro';
+import Section from '../components/Section.astro';
+import SectionHeader from '../components/SectionHeader.astro';
+import { midweek, site, sunday } from '../data/site';
 
-// Set this to the church's giving provider (Tithe.ly, Pushpay, Planning Center, etc.) when it exists.
+// The church's giving provider (Tithe.ly, Pushpay, Planning Center…). Blank shows in-person and mail options only.
 const givingUrl = '';
 
 const impact = [
-  { title: 'Reaching our community', text: 'Outreach events, serving families in need, and sharing the gospel across Pocola and the Fort Smith area.' },
-  { title: 'Raising the next generation', text: 'Kids and students ministry: curriculum, safe spaces, camps, and leaders who invest in young lives.' },
-  { title: 'Sending missionaries', text: 'Supporting Assemblies of God missionaries who carry the gospel across the nation and around the world.' },
-  { title: 'Caring for the church', text: 'Pastoral care, worship, facilities, and everything it takes to open the doors each week.' },
-];
+  { icon: 'heart', title: 'Reaching our community', text: `Outreach events, serving families in need, and sharing the gospel across ${site.locality} and the Fort Smith area.` },
+  { icon: 'kids', title: 'Raising the next generation', text: 'Kids and students ministry: curriculum, safe spaces, camps, and leaders who invest in young lives.' },
+  { icon: 'flame', title: 'Sending missionaries', text: `Supporting ${site.affiliation} missionaries who carry the gospel across the nation and around the world.` },
+  { icon: 'door', title: 'Caring for the church', text: 'Pastoral care, worship, the building, and everything it takes to open the doors each week.' },
+] as const;
 ---
 
-<Base title="Give" description="Give to The Well Assembly of God. Your tithes and offerings help reach Pocola with the gospel, raise the next generation, and send missionaries around the world." image="images/water.jpg">
-  <PageHero kicker="Generosity" title="Give with joy." deck="Giving is worship. It is a response to a generous God who gave His Son for us, and a way to be part of what He is doing through The Well." />
+<Base title="Give" description={`Give to ${site.legal}. Your tithes and offerings help reach ${site.locality} with the gospel, raise the next generation, and send missionaries around the world.`}>
+  <PageHeader eyebrow="Give" title="Give with joy." lede="Giving is worship. It is a response to a generous God who gave His Son for us, and a way to be part of what He is doing through The Well." />
 
-  <section class="section" style="padding-top: 0.5rem;">
-    <div class="wrap pair">
-      <article>
-        <p class="eyebrow">Give online</p>
-        <h2>Simple and secure.</h2>
+  <Section space="flush-top" labelledby="ways-title">
+    <h2 id="ways-title" class="sr-only">Ways to give</h2>
+    <div class="ways" data-reveal>
+      <article class:list={['way', { 'way-online': givingUrl }]}>
+        <span class="way-icon"><Icon name="heart" size={22} /></span>
+        <h3>Give online</h3>
         {givingUrl ? (
           <>
             <p>Give once or set up recurring giving through our secure giving partner.</p>
-            <div class="actions"><a class="btn" href={givingUrl}>Give online <span aria-hidden="true">↗</span></a></div>
+            <Button href={givingUrl} size="lg">Give online</Button>
           </>
         ) : (
-          <>
-            <p>Online giving is coming soon. Until then, you can give during any service or by mail.</p>
-            <div class="actions"><button class="btn" type="button" disabled>Online giving coming soon</button></div>
-          </>
+          <p>Online giving is coming soon. Until then, you are welcome to give during a service or by mail.</p>
         )}
-        <p class="fine" style="margin-top: 1rem;">This website never collects card or bank details.</p>
+        <p class="way-note">This website never collects card or bank details.</p>
       </article>
-      <article>
-        <p class="eyebrow">Other ways to give</p>
-        <h2>In person or by mail.</h2>
-        <p><strong>During a service:</strong> place your gift in the offering on Sunday or Wednesday.</p>
-        <p style="margin-top: .6rem;"><strong>By mail:</strong> make checks payable to {site.legal} and mail to {site.address}, {site.city}.</p>
-        <div class="actions"><a class="more" href={url('/contact')}>Questions about giving <span aria-hidden="true">→</span></a></div>
+      <article class="way">
+        <span class="way-icon"><Icon name="hands" size={22} /></span>
+        <h3>During a service</h3>
+        <p>Place your gift in the offering during worship on {sunday.day}s at {sunday.time} or {midweek.day}s at {midweek.time}.</p>
+      </article>
+      <article class="way">
+        <span class="way-icon"><Icon name="pin" size={22} /></span>
+        <h3>By mail</h3>
+        <p>Make checks payable to <strong>{site.legal}</strong> and mail them to:</p>
+        <address>{site.address}<br />{site.city}</address>
       </article>
     </div>
-  </section>
+  </Section>
 
-  <section class="band-dark" aria-labelledby="why-title">
-    <div class="wrap give-why">
-      <div>
-        <p class="eyebrow light">Why we give</p>
-        <h2 id="why-title" class="block-title">Because God gave first.</h2>
+  <Section tone="navy" labelledby="why-title">
+    <div class="why" data-reveal>
+      <div class="stack">
+        <p class="eyebrow">Why we give</p>
+        <h2 id="why-title">Because God gave first.</h2>
       </div>
-      <div class="give-why-copy">
-        <p class="give-verse">“So let each one give as he purposes in his heart, not grudgingly or of necessity; for God loves a cheerful giver.” <span>2 Corinthians 9:7</span></p>
-        <p>Everything we have comes from God. When we bring our tithes and offerings, we are not paying God or buying His favor; we already have it in Christ. We are saying thank you, putting Him first, and trusting Him with our lives.</p>
-        <p>The Bible teaches the tithe, the first tenth, as a starting place for faithful giving (Malachi 3:10), and calls every believer to be generous with an open hand. Give with joy, as God leads you.</p>
+      <div class="stack">
+        <Scripture text="So let each one give as he purposes in his heart, not grudgingly or of necessity; for God loves a cheerful giver." reference="2 Corinthians 9:7" />
+        <p class="muted">Everything we have comes from God. When we bring our tithes and offerings, we are not paying God or buying His favor; we already have it in Christ. We are saying thank you, putting Him first, and trusting Him with our lives.</p>
+        <p class="muted">The Bible teaches the tithe, the first tenth, as a starting place for faithful giving (Malachi 3:10), and calls every believer to be generous with an open hand. Give with joy, as God leads you.</p>
       </div>
     </div>
-  </section>
+  </Section>
 
-  <section class="section" aria-labelledby="impact-title">
-    <div class="wrap">
-      <div class="section-head"><div><p class="eyebrow">Your gift at work</p><h2 id="impact-title" class="block-title">Where your giving goes.</h2></div></div>
-      <div class="impact-grid">
-        {impact.map((item) => <article><h3>{item.title}</h3><p>{item.text}</p></article>)}
-      </div>
-      <p class="fine" style="margin-top: 2rem; max-width: 60ch;">We handle every gift with integrity and accountability. If you have a question about how The Well stewards its finances, please ask.</p>
-    </div>
-  </section>
+  <Section labelledby="impact-title">
+    <SectionHeader id="impact-title" align="split" eyebrow="Your gift at work" title="Where your giving goes." lede="We handle every gift with integrity and accountability. If you have a question about how The Well stewards its finances, please ask." action={{ href: '/contact', label: 'Questions about giving' }} />
+    <FeatureGrid items={impact} columns={4} />
+  </Section>
 </Base>
 
 <style>
-  button:disabled { cursor: not-allowed; opacity: .55; }
-  .give-why { display: grid; grid-template-columns: .85fr 1.15fr; gap: clamp(2rem, 5vw, 4rem); align-items: start; }
-  .give-why-copy p { color: #d1dfe6; }
-  .give-why-copy p + p { margin-top: 1rem; }
-  .give-why-copy .give-verse { font: italic 500 clamp(1.3rem, 2.2vw, 1.7rem)/1.4 var(--serif); color: var(--paper); margin-bottom: 1.6rem; }
-  .give-verse span { display: block; margin-top: .6rem; font: normal 500 .72rem var(--sans); letter-spacing: .12em; text-transform: uppercase; color: #c1d2dc; }
-  .impact-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1.5rem; }
-  .impact-grid article { padding-top: 1.1rem; border-top: 1px solid var(--line-strong); }
-  .impact-grid h3 { font: 500 1.35rem/1.2 var(--serif); letter-spacing: -.02em; }
-  .impact-grid p { margin-top: .5rem; color: var(--muted); font-size: .95rem; }
-  @media (max-width: 980px) { .give-why { grid-template-columns: 1fr; } .impact-grid { grid-template-columns: 1fr 1fr; } }
-  @media (max-width: 560px) { .impact-grid { grid-template-columns: 1fr; } }
+  .ways { display: grid; grid-template-columns: 1.3fr 1fr 1fr; gap: 1rem; }
+  .way { display: grid; align-content: start; justify-items: start; gap: 0.9rem; padding: clamp(1.5rem, 3vw, 2rem); border: 1px solid var(--line); border-radius: var(--radius-lg); background: var(--surface); }
+  .way-online { background: var(--sand); }
+  .way h3 { font-size: 1.6rem; }
+  .way p { color: var(--fg-muted); }
+  .way strong { color: var(--fg); font-weight: 500; }
+  .way address { font: normal 500 1.15rem / 1.4 var(--serif); color: var(--heading); }
+  .way-icon { display: grid; place-items: center; width: 2.75rem; height: 2.75rem; border-radius: 50%; background: var(--navy); color: #fff; }
+  .way-note { font-size: 0.82rem; }
+  .why { display: grid; grid-template-columns: 0.8fr 1.2fr; gap: clamp(2rem, 5vw, 5rem); align-items: start; }
+  @media (max-width: 1000px) { .ways, .why { grid-template-columns: 1fr; } }
 </style>

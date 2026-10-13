@@ -1,78 +1,63 @@
 ---
 import Base from '../layouts/Base.astro';
-import PageHero from '../components/PageHero.astro';
+import CtaBand from '../components/CtaBand.astro';
+import NumberedList from '../components/NumberedList.astro';
+import PageHeader from '../components/PageHeader.astro';
+import Section from '../components/Section.astro';
 import { url } from '../lib/url';
 
 const steps = [
   {
-    n: '01', id: 'jesus', title: 'Follow Jesus',
+    id: 'jesus', title: 'Follow Jesus',
     text: 'Every step starts here. Following Jesus means turning from sin, trusting Him as Savior, and making Him Lord of your life. If you are not sure where you stand with God, we would love to help.',
-    ref: 'John 14:6', href: '/jesus', label: 'Read the good news',
+    ref: 'John 14:6', link: { href: '/jesus', label: 'Read the good news' },
   },
   {
-    n: '02', id: 'baptism', title: 'Be baptized in water',
-    text: 'Jesus commanded His followers to be baptized. Water baptism by immersion does not save you; it is an outward declaration of what Jesus has already done inside you. You are buried with Him and raised to walk in new life. We hold baptism services throughout the year, and a pastor will meet with you first to talk it through.',
-    ref: 'Matthew 28:19 · Romans 6:4', href: '/contact', label: 'Ask about baptism',
+    id: 'baptism', title: 'Be baptized in water',
+    text: 'Jesus commanded His followers to be baptized. Water baptism by immersion does not save you; it declares what Jesus has already done in you. You are buried with Him and raised to walk in new life. We hold baptism services through the year, and a pastor will meet with you first to talk it through.',
+    ref: 'Matthew 28:19 · Romans 6:4', link: { href: '/contact', label: 'Ask about baptism' },
   },
   {
-    n: '03', id: 'holy-spirit', title: 'Receive the baptism in the Holy Spirit',
-    text: 'On the Day of Pentecost the disciples were filled with the Holy Spirit and spoke in other tongues as the Spirit gave them utterance. That promise is for every believer today. The baptism in the Holy Spirit gives power to live for Jesus and tell others about Him. We pray with believers to receive this gift at the altar on Sundays and Wednesdays, and we are always glad to answer questions.',
-    ref: 'Acts 1:8 · Acts 2:4, 38–39', href: '/beliefs#truth-07', label: 'What the Bible teaches',
+    id: 'holy-spirit', title: 'Receive the baptism in the Holy Spirit',
+    text: 'On the Day of Pentecost the disciples were filled with the Holy Spirit and spoke in other tongues as the Spirit gave them utterance. That promise is for every believer today, and it brings power to live for Jesus and tell others about Him. We pray with believers to receive this gift at the altar on Sundays and Wednesdays.',
+    ref: 'Acts 1:8 · Acts 2:4, 38–39', link: { href: '/beliefs#truth-07', label: 'What the Bible teaches' },
   },
   {
-    n: '04', id: 'groups', title: 'Grow in a group',
+    id: 'groups', title: 'Grow in a group',
     text: 'Sunday is where we gather; groups are where we grow. Open the Bible together, pray for one another, and build friendships that carry you through the week.',
-    ref: 'Acts 2:42', href: '/ministries/groups', label: 'Find a group',
+    ref: 'Acts 2:42', link: { href: '/ministries/groups', label: 'Find a group' },
   },
   {
-    n: '05', id: 'membership', title: 'Make The Well your home',
-    text: 'Membership is how we say, “This is my church family.” Our membership class covers our story, our beliefs, and how you can be part of what God is doing here. Ask about the next class.',
-    ref: 'Ephesians 2:19', href: '/contact', label: 'Ask about membership',
+    id: 'membership', title: 'Make The Well your home',
+    text: 'Membership is how we say, “This is my church family.” Our membership class covers our story, our beliefs, and how you can be part of what God is doing here.',
+    ref: 'Ephesians 2:19', link: { href: '/contact', label: 'Ask about the next class' },
   },
   {
-    n: '06', id: 'serve', title: 'Serve with your gifts',
+    id: 'serve', title: 'Serve with your gifts',
     text: 'God has given every believer gifts to build up the church. Greeting, worship, kids, students, media, hospitality, prayer, outreach: there is a place for you to make a difference.',
-    ref: '1 Peter 4:10', href: '/contact', label: 'Join a team',
+    ref: '1 Peter 4:10', link: { href: '/contact', label: 'Join a team' },
   },
 ];
 ---
 
-<Base title="Next steps" description="Follow Jesus, be baptized in water, receive the baptism in the Holy Spirit, join a group, become a member, and serve at The Well." image="images/table.jpg">
-  <PageHero kicker="Grow in your faith" title="Your next step." deck="Following Jesus is a journey, not a single moment. Wherever you are today, here is a clear next step to take with us." />
-  <section class="section" style="padding-top: 0.4rem;">
-    <div class="wrap">
-      <nav class="step-jump" aria-label="Steps on this page">
-        {steps.map((step) => <a href={`#${step.id}`}>{step.title}</a>)}
-      </nav>
-      <div class="steps">
-        {steps.map((step) => (
-          <article class="step" id={step.id}>
-            <span class="num" aria-hidden="true">{step.n}</span>
-            <div>
-              <h2>{step.title}</h2>
-              <p>{step.text}</p>
-              <p class="step-ref">{step.ref}</p>
-              <p style="margin-top: 0.6rem;"><a class="more" href={url(step.href)}>{step.label} <span aria-hidden="true">→</span></a></p>
-            </div>
-          </article>
-        ))}
-      </div>
-    </div>
-  </section>
-  <section class="band-dark">
-    <div class="wrap">
-      <p class="eyebrow light">Your first step can be Sunday</p>
-      <h2 class="block-title">Come and worship with us.</h2>
-      <p class="deck" style="color: rgba(243,239,230,.82); margin-top: 1rem;">See what to expect, find the service times, and bring your questions. We saved you a seat.</p>
-      <div class="actions"><a class="btn btn-light" href={url('/visit')}>Plan your visit <span aria-hidden="true">↗</span></a></div>
-    </div>
-  </section>
+<Base title="Next steps" description="Follow Jesus, be baptized in water, receive the baptism in the Holy Spirit, join a group, become a member, and serve at The Well.">
+  <PageHeader eyebrow="Grow" title="Your next step." lede="Following Jesus is a journey, not a single moment. Wherever you are today, here is a clear next step to take with us.">
+    <nav slot="actions" class="jump" aria-label="Steps on this page">
+      {steps.map((step, index) => <a href={url(`#${step.id}`)}><span>{String(index + 1).padStart(2, '0')}</span>{step.title}</a>)}
+    </nav>
+  </PageHeader>
+
+  <Section space="flush-top" labelledby="steps-title">
+    <h2 id="steps-title" class="sr-only">Six next steps</h2>
+    <NumberedList items={steps} as="h3" />
+  </Section>
+
+  <CtaBand eyebrow="Your first step can be Sunday" title="Come and worship" accent="with us." text="See what to expect, find the service times, and bring your questions. We saved you a seat." primary={{ href: '/visit', label: 'Plan your visit' }} secondary={{ href: '/prayer', label: 'Ask for prayer' }} />
 </Base>
 
 <style>
-  .step p { max-width: 64ch; }
-  .step .step-ref { font-size: .78rem; letter-spacing: .08em; text-transform: uppercase; color: var(--tide); }
-  .step-jump { display: flex; flex-wrap: wrap; gap: .5rem; margin-bottom: 2rem; }
-  .step-jump a { padding: .5rem .95rem; border: 1px solid var(--line-strong); border-radius: 999px; font-size: .85rem; text-decoration: none; }
-  .step-jump a:hover { background: var(--well); border-color: var(--well); color: var(--paper); }
+  .jump { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  .jump a { display: inline-flex; align-items: center; gap: 0.5rem; min-height: 40px; padding: 0 1rem 0 0.4rem; border: 1px solid var(--line-strong); border-radius: 999px; font-size: 0.88rem; font-weight: 500; color: var(--heading); text-decoration: none; transition: background-color 0.2s var(--ease), color 0.2s var(--ease); }
+  .jump a span { display: grid; place-items: center; width: 1.9rem; height: 1.9rem; border-radius: 50%; background: var(--sand); font: italic 500 0.8rem var(--serif); color: var(--accent-ink); }
+  .jump a:hover { background: var(--navy); border-color: var(--navy); color: #fff; }
 </style>

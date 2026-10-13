@@ -1,0 +1,78 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import Icon from './Icon.astro';
+import { dayNum, iso, monthShort, weekdayShort } from '../lib/format';
+import { url } from '../lib/url';
+
+interface Props {
+  events: CollectionEntry<'events'>[];
+  compact?: boolean;
+}
+
+const { events, compact = false } = Astro.props;
+---
+
+<ul class:list={['event-list', { compact }]} role="list">
+  {events.map((entry) => (
+    <li data-reveal>
+      <a class="event" href={url(`/events/${entry.id}`)}>
+        <time class="event-date" datetime={iso(entry.data.date)}>
+          <span class="event-month">{monthShort(entry.data.date)}</span>
+          <span class="event-day">{dayNum(entry.data.date)}</span>
+          <span class="event-weekday">{weekdayShort(entry.data.date)}</span>
+        </time>
+        <span class="event-body">
+          <span class="event-title">{entry.data.title}{entry.data.draft && <span class="event-sample">Sample</span>}</span>
+          <span class="event-meta">{entry.data.time} · {entry.data.place}</span>
+          {!compact && <span class="event-summary">{entry.data.summary}</span>}
+        </span>
+        <span class="event-arrow" aria-hidden="true"><Icon name="arrow-right" /></span>
+      </a>
+    </li>
+  ))}
+</ul>
+
+<style>
+  .event-list { display: grid; gap: 0.75rem; }
+  .event {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 1.25rem;
+    padding: 1rem 1.25rem 1rem 1rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--surface);
+    color: inherit;
+    text-decoration: none;
+    transition: border-color 0.2s var(--ease), box-shadow 0.2s var(--ease), transform 0.2s var(--ease);
+  }
+  .event:hover { border-color: transparent; box-shadow: var(--shadow-md); transform: translateY(-2px); }
+  .event-date {
+    display: grid;
+    justify-items: center;
+    width: 4.25rem;
+    padding: 0.55rem 0 0.6rem;
+    border-radius: 10px;
+    background: var(--navy);
+    color: #fff;
+    line-height: 1;
+  }
+  .event-month, .event-weekday { font: 600 0.62rem / 1 var(--sans); letter-spacing: 0.14em; text-transform: uppercase; }
+  .event-month { color: var(--mist); }
+  .event-weekday { color: var(--mist); opacity: 0.8; }
+  .event-day { margin: 0.3rem 0 0.35rem; font: 500 1.75rem / 1 var(--serif); letter-spacing: -0.03em; }
+  .event-body { display: grid; gap: 0.25rem; }
+  .event-title { display: flex; flex-wrap: wrap; align-items: center; gap: 0.6rem; font: 500 1.2rem / 1.25 var(--serif); color: var(--heading); }
+  .event-sample { padding: 0.15rem 0.5rem; border-radius: 999px; background: var(--sand-2); color: var(--muted); font: 600 0.62rem / 1.4 var(--sans); letter-spacing: 0.1em; text-transform: uppercase; }
+  .event-meta { color: var(--fg); font-size: 0.88rem; font-weight: 500; }
+  .event-summary { color: var(--fg-muted); font-size: 0.92rem; }
+  .event-arrow { color: var(--heading); transition: transform 0.2s var(--ease); }
+  .event:hover .event-arrow { transform: translateX(3px); }
+  .compact .event { padding-block: 0.8rem; }
+  @media (max-width: 560px) {
+    .event { grid-template-columns: auto minmax(0, 1fr); gap: 1rem; }
+    .event-arrow { display: none; }
+    .event-date { width: 3.75rem; }
+  }
+</style>

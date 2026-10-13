@@ -1,0 +1,86 @@
+---
+import Button from './Button.astro';
+import Icon from './Icon.astro';
+
+type Item = {
+  id?: string;
+  title: string;
+  text: string;
+  ref?: string;
+  number?: string;
+  link?: { href: string; label: string };
+};
+
+interface Props {
+  items: readonly Item[];
+  open?: number;
+}
+
+const { items, open } = Astro.props;
+---
+
+<div class="accordion">
+  {items.map((item, index) => (
+    <details id={item.id} open={index === open}>
+      <summary>
+        {item.number && <span class="accordion-num" aria-hidden="true">{item.number}</span>}
+        <span class="accordion-title">{item.title}</span>
+        <span class="accordion-icon" aria-hidden="true"><Icon name="plus" size={18} /></span>
+      </summary>
+      <div class:list={['accordion-body', { indented: item.number }]}>
+        <p>{item.text}</p>
+        {item.ref && <p class="ref">{item.ref}</p>}
+        {item.link && <Button href={item.link.href} variant="text">{item.link.label}</Button>}
+      </div>
+    </details>
+  ))}
+</div>
+
+<style>
+  .accordion { border-bottom: 1px solid var(--line); }
+  details { border-top: 1px solid var(--line); }
+  summary {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    min-height: 64px;
+    padding: 1.1rem 0;
+    cursor: pointer;
+    list-style: none;
+  }
+  summary::-webkit-details-marker { display: none; }
+  .accordion-num { flex: none; width: 2.25rem; font: italic 500 1.15rem var(--serif); color: var(--accent-ink); }
+  .accordion-title { flex: 1; font: 500 clamp(1.15rem, 1.05rem + 0.4vw, 1.35rem) / 1.3 var(--serif); color: var(--heading); }
+  .accordion-icon {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: 2.25rem;
+    height: 2.25rem;
+    border: 1px solid var(--line-strong);
+    border-radius: 50%;
+    color: var(--heading);
+    transition: transform 0.25s var(--ease), background-color 0.2s var(--ease), color 0.2s var(--ease);
+  }
+  summary:hover .accordion-icon { background: var(--heading); color: var(--bg); }
+  details[open] .accordion-icon { transform: rotate(45deg); }
+  .accordion-body { display: grid; gap: 0.75rem; justify-items: start; padding: 0 3.5rem 1.6rem 0; max-width: 66ch; }
+  .accordion-body.indented { padding-left: 3.5rem; }
+  .accordion-body p:first-child { color: var(--fg-muted); }
+  @media (max-width: 560px) {
+    .accordion-body, .accordion-body.indented { padding-inline: 0; }
+  }
+</style>
+
+<script>
+  // Open the item a link points to (for example /beliefs#truth-07).
+  function openTarget() {
+    const target = location.hash && document.getElementById(decodeURIComponent(location.hash.slice(1)));
+    if (target instanceof HTMLDetailsElement) {
+      target.open = true;
+      target.scrollIntoView({ block: 'start' });
+    }
+  }
+  openTarget();
+  window.addEventListener('hashchange', openTarget);
+</script>

@@ -1,0 +1,100 @@
+---
+import Icon from './Icon.astro';
+import { url } from '../lib/url';
+
+interface Props {
+  eyebrow?: string;
+  title: string;
+  accent?: string;
+  lede?: string;
+  back?: { href: string; label: string };
+  image?: { src: string; alt: string; position?: string };
+}
+
+const { eyebrow, title, accent, lede, back, image } = Astro.props;
+const hasAside = Boolean(lede) || Astro.slots.has('aside');
+---
+
+<header class:list={['page-header', { 'has-image': image }]}>
+  <svg class="ripple" viewBox="0 0 600 600" aria-hidden="true" focusable="false">
+    {[60, 120, 180, 240, 300].map((r) => <circle cx="300" cy="300" r={r} />)}
+  </svg>
+  <div class="wrap page-header-inner">
+    {back ? (
+      <a class="page-back" href={url(back.href)}><Icon name="arrow-left" size={16} />{back.label}</a>
+    ) : (
+      eyebrow && <p class="eyebrow">{eyebrow}</p>
+    )}
+    <div class:list={['page-header-grid', { 'has-aside': hasAside }]}>
+      <div class="page-header-title">
+        {back && eyebrow && <p class="eyebrow">{eyebrow}</p>}
+        <h1>{title}{accent && <><br /><em>{accent}</em></>}</h1>
+      </div>
+      {hasAside && (
+        <div class="page-header-aside">
+          {lede && <p class="lede">{lede}</p>}
+          <slot name="aside" />
+        </div>
+      )}
+    </div>
+    {Astro.slots.has('meta') && <div class="page-header-meta"><slot name="meta" /></div>}
+    {Astro.slots.has('actions') && <div class="page-header-actions"><slot name="actions" /></div>}
+  </div>
+  {image && (
+    <figure class="wrap-wide page-header-image">
+      <img src={image.src} alt={image.alt} width="1600" height="800" fetchpriority="high" style={image.position ? `object-position: ${image.position}` : undefined} />
+    </figure>
+  )}
+</header>
+
+<style>
+  .page-header {
+    position: relative;
+    overflow: hidden;
+    padding: clamp(2.5rem, 6vw, 5.5rem) 0 clamp(2.5rem, 5vw, 4.5rem);
+  }
+  .page-header.has-image { padding-bottom: 0; }
+  .ripple {
+    position: absolute;
+    width: min(46rem, 90vw);
+    top: -14rem;
+    right: -12rem;
+    fill: none;
+    stroke: var(--navy);
+    stroke-opacity: 0.07;
+    stroke-width: 1;
+    pointer-events: none;
+  }
+  .page-header-inner { position: relative; display: grid; gap: 1.5rem; }
+  .page-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    justify-self: start;
+    min-height: 44px;
+    color: var(--fg-muted);
+    font-size: var(--text-sm);
+    font-weight: 500;
+    text-decoration: none;
+  }
+  .page-back:hover { color: var(--heading); }
+  .page-header-grid { display: grid; gap: 1.5rem; }
+  .page-header-title { display: grid; gap: 1rem; }
+  .page-header h1 { max-width: 14ch; }
+  .page-header-aside { display: grid; gap: 1.25rem; align-content: end; }
+  .page-header-meta { display: flex; flex-wrap: wrap; gap: 0.5rem 1.75rem; color: var(--fg-muted); font-size: 0.95rem; }
+  .page-header-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem 1.5rem; margin-top: 0.5rem; }
+  .page-header-image { margin-top: clamp(2.5rem, 5vw, 4rem); }
+  .page-header-image img {
+    width: 100%;
+    aspect-ratio: 21 / 9;
+    object-fit: cover;
+    border-radius: var(--radius-lg);
+  }
+  @media (min-width: 900px) {
+    .page-header-grid.has-aside { grid-template-columns: 1.15fr 0.85fr; align-items: end; gap: 4rem; }
+  }
+  @media (max-width: 640px) {
+    .page-header-image img { aspect-ratio: 4 / 3; border-radius: var(--radius); }
+  }
+</style>

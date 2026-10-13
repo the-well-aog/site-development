@@ -1,15 +1,18 @@
 ---
 import { getCollection, render, type CollectionEntry } from 'astro:content';
 import Base from '../../layouts/Base.astro';
+import Button from '../../components/Button.astro';
+import DetailLayout from '../../components/DetailLayout.astro';
+import MinistryCard from '../../components/MinistryCard.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import Section from '../../components/Section.astro';
+import SectionHeader from '../../components/SectionHeader.astro';
 import { site } from '../../data/site';
-import { img, url } from '../../lib/url';
+import { img } from '../../lib/url';
 
 export async function getStaticPaths() {
   const ministries = await getCollection('ministries');
-  return ministries.map((entry) => ({
-    params: { slug: entry.id },
-    props: { entry },
-  }));
+  return ministries.map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
 }
 
 interface Props {
@@ -18,46 +21,39 @@ interface Props {
 
 const { entry } = Astro.props;
 const { Content } = await render(entry);
+const others = (await getCollection('ministries')).filter((other) => other.id !== entry.id).sort((a, b) => a.data.order - b.data.order);
 ---
 
 <Base title={entry.data.title} description={entry.data.summary} image={`images/${entry.data.image}.jpg`}>
-  <header class="page-hero">
-    <div class="wrap">
-      <p class="fine" style="margin-bottom: 1.4rem;"><a href={url('/ministries')}>← All ministries</a></p>
-      <p class="eyebrow">{entry.data.who}</p>
-      <h1>{entry.data.title}</h1>
-      <p class="deck">{entry.data.summary}</p>
-      <p class="meta-row">{entry.data.when}</p>
-    </div>
-  </header>
-  <section class="section" style="padding-top: 0;">
-    <div class="wrap detail">
-      <div>
-        <div class="detail-hero">
-          <img src={img(entry.data.image)} alt={entry.data.alt} loading="lazy" />
-        </div>
-        <div class="prose">
-          <Content />
-        </div>
-        <p style="margin-top: 1.6rem;">
-          <a class="more" href={url('/ministries')}>All ministries <span aria-hidden="true">→</span></a>
-        </p>
-      </div>
-      <aside>
-        <dl>
-          <div>
-            <dt>Who</dt>
-            <dd>{entry.data.who}</dd>
-          </div>
-          <div>
-            <dt>When</dt>
-            <dd>{entry.data.when}</dd>
-          </div>
-        </dl>
-        <a class="btn" href={url('/contact')}>Ask a question</a>
-        {site.preview && <p class="fine">Meeting times are awaiting final confirmation.</p>}
-        <a class="more" href={url('/visit')}>Plan your visit <span aria-hidden="true">→</span></a>
-      </aside>
-    </div>
-  </section>
+  <PageHeader back={{ href: '/ministries', label: 'All ministries' }} eyebrow={entry.data.who} title={entry.data.title} lede={entry.data.summary} image={{ src: img(entry.data.image), alt: entry.data.alt }} />
+
+  <Section width="wide">
+    <DetailLayout
+      facts={[
+        { icon: 'kids', label: 'Who', value: entry.data.who },
+        { icon: 'clock', label: 'When', value: entry.data.when },
+        { icon: 'pin', label: 'Where', value: site.legal, note: `${site.address}, ${site.locality}` },
+      ]}
+      note={site.preview ? 'Meeting times are awaiting final confirmation.' : undefined}
+    >
+      <div class="prose"><Content /></div>
+      <Fragment slot="actions">
+        <Button href="/visit">Plan your visit</Button>
+        <Button href="/contact" variant="text">Ask a question</Button>
+      </Fragment>
+    </DetailLayout>
+  </Section>
+
+  {others.length > 0 && (
+    <Section tone="sand" width="wide" labelledby="more-title">
+      <SectionHeader id="more-title" eyebrow="Ministries" title="There’s more for your family." />
+      <div class="others">{others.map((other) => <MinistryCard entry={other} />)}</div>
+    </Section>
+  )}
 </Base>
+
+<style>
+  .others { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.25rem; }
+  @media (max-width: 1000px) { .others { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 640px) { .others { grid-template-columns: 1fr; } }
+</style>

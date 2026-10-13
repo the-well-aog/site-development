@@ -1,19 +1,28 @@
+export type Service = {
+  day: string;
+  time: string;
+  name: string;
+  detail: string;
+};
+
 export const site = {
   name: 'The Well',
   legal: 'The Well Assembly of God',
-  // While true, pages show a short "please confirm" note beside service times, names, and dates.
-  // Set to false once the church has confirmed every fact in this file and in src/content.
+  // While true, pages note that leader names and ministry meeting details are awaiting confirmation,
+  // and events marked `draft: true` appear as samples. Set to false once the church has confirmed
+  // the remaining facts in this file and in src/content.
   preview: true,
   tagline: 'Spirit-filled. Bible-based. A place to belong.',
   affiliation: 'Assemblies of God',
   // Oklahoma's Assemblies of God district. Confirm before launch.
   district: 'Oklahoma Ministry Network',
-  sundayLabel: 'Sunday',
-  sundayTime: '10:00a',
-  sundayDetail: 'Worship, the Word, and Kids',
-  midweekLabel: 'Wednesday',
-  midweekTime: '6:30p',
-  midweekDetail: 'Prayer, Bible study, Students',
+  // Confirmed by the church.
+  services: [
+    { day: 'Sunday', time: '10:00a', name: 'Sunday School', detail: 'Bible classes for every age' },
+    { day: 'Sunday', time: '11:00a', name: 'Sunday Worship', detail: 'Worship, the Word, and Kids' },
+    { day: 'Tuesday', time: '7:00p', name: 'Prayer Meeting', detail: 'Seeking God together in prayer' },
+    { day: 'Wednesday', time: '7:00p', name: 'Wednesday Service', detail: 'Worship and the Word' },
+  ] satisfies Service[],
   serviceLength: 'about 90 minutes',
   address: '2902 S Pocola Blvd',
   city: 'Pocola, OK 74902',
@@ -27,10 +36,20 @@ export const site = {
   appleMapsHref: 'https://maps.apple.com/?q=2902%20S%20Pocola%20Blvd%2C%20Pocola%2C%20OK%2074902%2C%20United%20States',
   // Public embed. output=embed does not use the Maps Embed API or an API key.
   mapsEmbed: 'https://maps.google.com/maps?q=2902%20S%20Pocola%20Blvd%2C%20Pocola%2C%20OK%2074902%2C%20United%20States&z=16&hl=en&output=embed',
-  email: 'hello@example.com',
-  // Public Facebook Page URL. The timeline embed loads from Facebook. No app id or token.
+  // A form host endpoint (Formspree, Basin, Getform). Leave blank and the site offers call,
+  // message, and directions instead of a form. Forms post straight to the host; nothing is stored here.
+  formEndpoint: '',
+  // Public Facebook Page URL. No app id or token.
   facebookPage: 'https://www.facebook.com/profile.php?id=100083294263196',
   // @handle, channel URL, or UC… id. Latest uploads come from YouTube's public RSS. No API key.
   // NOTE: this handle names a Foursquare church. Replace it with The Well's own channel before launch.
   youtubeChannel: 'https://www.youtube.com/@TheWellFoursquareChurch',
 };
+
+const byName = (name: string) => site.services.find((service) => service.name === name)!;
+
+/** The main Sunday gathering; "Join us Sundays at …" copy reads from this. */
+export const sunday = byName('Sunday Worship');
+export const sundaySchool = byName('Sunday School');
+export const prayerMeeting = byName('Prayer Meeting');
+export const midweek = byName('Wednesday Service');

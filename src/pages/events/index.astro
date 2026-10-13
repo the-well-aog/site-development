@@ -1,38 +1,59 @@
 ---
 import Base from '../../layouts/Base.astro';
-import PageHero from '../../components/PageHero.astro';
+import Button from '../../components/Button.astro';
+import EventList from '../../components/EventList.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import Section from '../../components/Section.astro';
+import SectionHeader from '../../components/SectionHeader.astro';
+import ServiceTimes from '../../components/ServiceTimes.astro';
+import { site } from '../../data/site';
 import { upcomingEvents } from '../../lib/events';
-import { dayNum, iso, monthShort } from '../../lib/format';
-import { url } from '../../lib/url';
+import { loadSocial } from '../../lib/feeds';
 
 const events = await upcomingEvents();
+const social = await loadSocial();
 ---
 
-<Base title="Events" description="What is happening at The Well Assembly of God." image="images/exterior.jpg">
-  <PageHero kicker="The calendar" title="What’s happening." deck="Worship nights, baptisms, family events, and ways to serve. There is always a next thing to be part of at The Well." />
-  <section class="section" style="padding-top: 0.5rem;">
-    <div class="wrap">
-      {
-        events.length === 0 ? (
-          <div class="empty"><h2 class="card-title">More to come.</h2><p style="margin-top: .8rem;">There are no upcoming events listed right now. You can still explore a Sunday visit or find a ministry.</p><div class="actions"><a class="btn" href={url('/visit')}>Plan a visit</a><a class="more" href={url('/ministries')}>Explore ministries <span aria-hidden="true">→</span></a></div></div>
-        ) : (
-          <>{events.some((entry) => entry.data.draft) && <p class="fine" style="margin-bottom: 1.5rem;">This calendar shows sample events for the website preview. Dates and details are not confirmed.</p>}<div class="event-list">
-            {events.map((entry) => (
-              <a class="event-row" href={url(`/events/${entry.id}`)}>
-                <time class="event-day" datetime={iso(entry.data.date)}>
-                  {dayNum(entry.data.date)}
-                  <small>{monthShort(entry.data.date)}</small>
-                </time>
-                <span>
-                  <strong>{entry.data.title}</strong>
-                  <em>{entry.data.place}</em>
-                </span>
-                <em>{entry.data.time}</em>
-              </a>
-            ))}
-          </div></>
-        )
-      }
-    </div>
-  </section>
+<Base title="Events" description={`Upcoming events, weekly services, and ways to get involved at ${site.legal}.`}>
+  <PageHeader eyebrow="Events" title="What’s happening." lede="Worship nights, baptisms, family events, and ways to serve. There is always a next thing to be part of at The Well." />
+
+  <Section space="flush-top" labelledby="weekly-title">
+    <SectionHeader id="weekly-title" eyebrow="Every week" title="Gather with us." />
+    <ServiceTimes variant="cards" />
+  </Section>
+
+  <Section labelledby="upcoming-title">
+    <SectionHeader id="upcoming-title" align="split" eyebrow="Coming up" title="Mark your calendar." lede={events.some((entry) => entry.data.draft) ? 'These are sample events for the website preview. Dates and details are not confirmed.' : undefined} />
+    {events.length > 0 ? (
+      <EventList events={events} />
+    ) : (
+      <div class="empty">
+        <p class="lede">No special events are on the calendar right now. Join us for a weekly service, and check back soon.</p>
+        <Button href="/visit">Plan your visit</Button>
+      </div>
+    )}
+  </Section>
+
+  {social.facebookPlugin && social.facebookPage && (
+    <Section tone="sand" labelledby="updates-title">
+      <div class="updates">
+        <div class="updates-copy">
+          <SectionHeader id="updates-title" eyebrow="Latest updates" title="Follow along on Facebook." lede="Last-minute changes, photos, and announcements are posted to our Facebook page first." />
+          <Button href={social.facebookPage} variant="secondary" leading="facebook">Visit our Facebook page</Button>
+        </div>
+        <div class="fb">
+          <iframe src={social.facebookPlugin} title={`${site.legal} on Facebook`} width="500" height="640" loading="lazy" allow="encrypted-media; clipboard-write; web-share" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+        </div>
+      </div>
+    </Section>
+  )}
 </Base>
+
+<style>
+  .empty { display: grid; gap: 1.25rem; justify-items: start; padding: 2rem; border: 1px dashed var(--line-strong); border-radius: var(--radius-lg); }
+  .updates { display: grid; grid-template-columns: 1fr minmax(0, 500px); gap: clamp(2rem, 5vw, 5rem); align-items: start; }
+  .updates-copy { display: grid; justify-items: start; }
+  .fb { overflow: hidden; border-radius: var(--radius-lg); background: #fff; box-shadow: var(--shadow-sm); }
+  .fb iframe { width: 100%; height: 640px; border: 0; }
+  @media (max-width: 1000px) { .updates { grid-template-columns: 1fr; } .fb iframe { height: 520px; } }
+</style>

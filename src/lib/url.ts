@@ -12,10 +12,16 @@ const photos = {
 
 export type PhotoKey = keyof typeof photos;
 
+/** Prefix a site path with the deploy base. External, tel:, mailto:, and #hash links pass through. */
 export function url(path = '/'): string {
+  if (isExternal(path) || path.startsWith('#') || /^(tel|mailto|sms):/.test(path)) return path;
   const base = import.meta.env.BASE_URL.replace(/\/$/, '');
   if (!path || path === '/') return base === '' ? '/' : `${base}/`;
   return `${base}/${path.replace(/^\//, '')}`;
+}
+
+export function isExternal(href: string): boolean {
+  return /^https?:\/\//.test(href);
 }
 
 export function img(key: string): string {
@@ -29,7 +35,7 @@ export function isActive(pathname: string, hrefPath: string): boolean {
   if (base && (path === base || path.startsWith(`${base}/`))) {
     path = path.slice(base.length) || '/';
   }
-  const target = hrefPath === '/' ? '/' : hrefPath.replace(/\/$/, '');
+  const target = hrefPath === '/' ? '/' : hrefPath.split('#')[0].replace(/\/$/, '');
   if (target === '/') return path === '/';
   return path === target || path.startsWith(`${target}/`);
 }

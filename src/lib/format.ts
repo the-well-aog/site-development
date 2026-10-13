@@ -24,3 +24,7 @@ export function monthShort(date: Date): string {
 export function todayIso(): string {
   return new Date().toISOString().slice(0, 10);
 }
+
+export function weekdayShort(date: Date): string {
+  return new Intl.DateTimeFormat('en-US', { ...utc, weekday: 'short' }).format(date);
+}

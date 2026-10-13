@@ -1,0 +1,23 @@
+---
+import { url } from '../lib/url';
+
+interface Props {
+  to: string;
+}
+
+const target = url(Astro.props.to);
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="robots" content="noindex" />
+    <meta http-equiv="refresh" content={`0; url=${target}`} />
+    <link rel="canonical" href={new URL(target, Astro.site)} />
+    <title>Redirecting…</title>
+  </head>
+  <body>
+    <p>This page has moved. <a href={target}>Continue</a>.</p>
+  </body>
+</html>

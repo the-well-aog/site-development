@@ -17,7 +17,7 @@ merge to main →  GitHub Actions build  →  GitHub Pages
 
 Astro compiles `src/pages` and the Markdown in `src/content` into `dist/`. Shared chrome lives in `src/layouts` and `src/components`. Photographs sit in `public/images` and are copied through as-is.
 
-GitHub Pages serves `dist/` at `https://the-well-aog.github.io/site-development/` until a custom domain is attached. Forms are visual only. Giving links out later. Nothing here calls n8n, and the repo holds no secrets.
+GitHub Pages serves `dist/` at `https://the-well-aog.github.io/site-development/` until a custom domain is attached. Forms post to an external form host once `site.formEndpoint` is set; until then the site offers call, message, and directions. Giving links out to the church's provider. Nothing here calls n8n, and the repo holds no secrets.
 
 ## Quick start
 
@@ -63,7 +63,7 @@ There is no runtime environment and no `.env` secrets.
 | `npm run preview` | Serve `dist/` |
 | `npm run check` | Re-check links in an existing `dist/` |
 
-Public routes: `/`, `/visit`, `/jesus`, `/about`, `/beliefs`, `/leadership`, `/ministries`, `/ministries/kids`, `/ministries/students`, `/ministries/groups`, `/sermons`, `/live`, `/events`, `/give`, `/contact`, `/prayer`, `/next-steps`.
+Public routes: `/`, `/visit`, `/about` (story, values, team), `/beliefs`, `/jesus`, `/next-steps`, `/prayer`, `/ministries` and one page per ministry, `/watch` (live, recent messages, sermon notes), `/watch/<video>`, `/sermons/<notes>`, `/events`, `/give`, `/contact`. `/sermons`, `/live`, and `/leadership` redirect to their new homes.
 
 Sermons, events, ministries, leaders, and announcements are Markdown files under `src/content`. Add a file, and the next build publishes it.
 
@@ -72,15 +72,33 @@ Sermons, events, ministries, leaders, and announcements are Markdown files under
 ```text
 .github/workflows/pages.yml   build on pull request, deploy on main
 public/                       images, favicon, robots.txt
-src/components                header, footer, page hero, placeholder form
+src/components                the component library (see below)
 src/content                   sermons, events, ministries, leaders, announcements
-src/data                      church facts, belief titles, lorem copy
+src/data                      church facts and service times, navigation, beliefs
 src/layouts/Base.astro        document shell
 src/pages                     one route per file
-src/styles/global.css         the visual system
+src/styles/global.css         design tokens, tone variables, base type and layout only
 scripts/check-links.mjs       fails the build on a broken local link
 astro.config.mjs              site URL, base path, sitemap
 ```
+
+## Components
+
+Pages are composed from a small library in `src/components`. Each component owns its styles; `global.css` holds only tokens and base rules. Colour comes from tone variables (`--bg`, `--fg`, `--heading`, `--accent-ink`, …), so a component reads correctly inside a paper, sand, or navy `Section` without overrides.
+
+| Component | Use |
+| --- | --- |
+| `PageHeader` | Every page's title block: eyebrow or back link, title, lede, meta, actions, optional image |
+| `Section`, `SectionHeader` | Page bands (`tone`, `width`, `space`) and their heading row |
+| `Button`, `Icon` | All links styled as actions; inline SVG icons |
+| `ServiceTimes` | Renders `site.services` (compact or cards, filterable by day) |
+| `FeatureGrid`, `NumberedList`, `Accordion` | Card or ruled grids, numbered steps, expandable Q&A and beliefs |
+| `MessageCard`, `MinistryCard`, `EventList`, `VideoEmbed` | Content listings |
+| `DetailLayout` | Ministry and event detail body with the sticky facts panel |
+| `ContactOptions` | A real form when `site.formEndpoint` is set; otherwise call, message, and directions |
+| `CtaBand`, `Scripture` | Closing invitations and quoted verses |
+
+Navigation for the header, mobile menu, and footer comes from one model in `src/data/nav.ts`.
 
 ## Tech stack
 
@@ -93,8 +111,10 @@ astro.config.mjs              site URL, base path, sitemap
 
 - `/beliefs` restates each of the 16 Fundamental Truths in plain language with its Scripture references and links to the official statement on ag.org. Keep it faithful to that statement.
 - Scripture quotations are NKJV.
-- `site.preview` in `src/data/site.ts` shows "awaiting confirmation" notes beside service times, leader names, and meeting times, and publishes events marked `draft: true` as samples. Set it to `false` at launch.
-- Leader files hold role descriptions only. Add real names, photos, and bios the leaders approve.
+- Service times live in `site.services` (confirmed by the church). Every page reads them from there.
+- `site.preview` in `src/data/site.ts` notes that leader names and ministry meeting details are awaiting confirmation, and publishes events marked `draft: true` as samples. Set it to `false` at launch.
+- `site.formEndpoint`: paste a Formspree, Basin, or Getform endpoint to turn the Visit, Contact, and Prayer panels into working forms.
+- Leader files hold role descriptions only. Add real names, bios, and an optional `photo:` path (under `public/`). Without a photo the team grid shows initials.
 - Do not collect card numbers, passwords, or prayer-request storage in this repo. Point Give at the church's giving provider when that URL exists.
 - No secrets in the repo. This site does not call Autotask or n8n.
 - One-time Pages setting: in the GitHub repo, Settings → Pages → Build and deployment → Source: GitHub Actions. After that, a merge to `main` publishes the site.

@@ -1,0 +1,80 @@
+---
+import Icon from './Icon.astro';
+import type { IconName } from '../lib/icons';
+import { url } from '../lib/url';
+
+export type Feature = {
+  title: string;
+  text: string;
+  ref?: string;
+  icon?: IconName;
+  href?: string;
+  label?: string;
+};
+
+interface Props {
+  items: readonly Feature[];
+  columns?: 2 | 3 | 4;
+  variant?: 'cards' | 'rules';
+  numbered?: boolean;
+  as?: 'h3' | 'h4';
+}
+
+const { items, columns = 3, variant = 'rules', numbered = false, as: Heading = 'h3' } = Astro.props;
+---
+
+<ul class:list={['feature-grid', `cols-${columns}`, `variant-${variant}`]} role="list" data-reveal>
+  {items.map((item, index) => {
+    const Tag = item.href ? 'a' : 'div';
+    return (
+      <li>
+        <Tag class="feature" href={item.href ? url(item.href) : undefined}>
+          {item.icon && <span class="feature-icon"><Icon name={item.icon} size={22} /></span>}
+          {numbered && <span class="feature-num" aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>}
+          <Heading>{item.title}</Heading>
+          <p class="feature-text">{item.text}</p>
+          {item.ref && <p class="ref">{item.ref}</p>}
+          {item.href && <span class="feature-link">{item.label ?? 'Learn more'} <Icon name="arrow-right" size={16} /></span>}
+        </Tag>
+      </li>
+    );
+  })}
+</ul>
+
+<style>
+  .feature-grid { display: grid; gap: 1.25rem; grid-template-columns: repeat(var(--cols), minmax(0, 1fr)); }
+  .cols-2 { --cols: 2; }
+  .cols-3 { --cols: 3; }
+  .cols-4 { --cols: 4; }
+  @media (max-width: 1000px) { .cols-4, .cols-3 { --cols: 2; } }
+  @media (max-width: 620px) { .feature-grid { --cols: 1; } }
+
+  .feature { display: flex; flex-direction: column; gap: 0.7rem; height: 100%; color: inherit; text-decoration: none; }
+  .feature h3, .feature h4 { font-size: clamp(1.25rem, 1.15rem + 0.4vw, 1.45rem); }
+  .feature-text { color: var(--fg-muted); font-size: 0.97rem; }
+  .feature .ref { margin-top: auto; padding-top: 0.25rem; }
+  .feature-num { font: italic 500 1.2rem var(--serif); color: var(--accent-ink); }
+  .feature-icon {
+    display: grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 50%;
+    background: var(--foam);
+    color: var(--navy);
+  }
+  :global(.tone-navy) .feature-icon { background: rgb(255 255 255 / 10%); color: #fff; }
+  .feature-link { display: inline-flex; align-items: center; gap: 0.45rem; margin-top: auto; padding-top: 0.5rem; color: var(--heading); font-weight: 500; font-size: 0.95rem; }
+  .feature-link :global(.icon) { transition: transform 0.2s var(--ease); }
+  a.feature:hover .feature-link :global(.icon) { transform: translateX(3px); }
+
+  .variant-rules .feature { padding-top: 1.25rem; border-top: 1px solid var(--line-strong); }
+  .variant-cards .feature {
+    padding: clamp(1.4rem, 2.5vw, 1.9rem);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--surface);
+    transition: transform 0.25s var(--ease), box-shadow 0.25s var(--ease), border-color 0.25s var(--ease);
+  }
+  .variant-cards a.feature:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); border-color: transparent; }
+</style>
