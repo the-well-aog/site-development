@@ -9,5 +9,6 @@ const base = process.env.BASE_PATH || fileEnv.BASE_PATH || '/';
 export default defineConfig({
   site,
   base,
-  integrations: [sitemap()],
+  // /today/ only forwards to the verse on the home page; it exists for link previews.
+  integrations: [sitemap({ filter: (page) => !page.includes('/today/') })],
 });

@@ -1,0 +1,27 @@
+---
+import Base from '../layouts/Base.astro';
+import { site } from '../data/site';
+import { dailyVerse } from '../lib/daily-verse';
+import { verseStamp } from '../lib/og-verse';
+import { url } from '../lib/url';
+
+/*
+  The address shared with the verse of the day. Link previews (Facebook, iMessage, X) read this page's
+  tags: today's verse and its picture. People are sent straight on to the verse on the home page.
+  Shared links carry the date (/today/?d=20261013), so each day's share gets its own fresh preview.
+*/
+const verse = await dailyVerse();
+const image = `${url('og/today.jpg')}?v=${verseStamp()}`;
+const home = `${url('/')}#today`;
+---
+
+<Base title={`A word for today: ${verse.reference}`} description={`“${verse.text}” ${verse.reference} (KJV). Today’s verse from ${site.legal}.`} image={image} canonical={false}>
+  <script is:inline define:vars={{ home }}>location.replace(home);</script>
+  <section class="wrap today-forward">
+    <p>Taking you to today’s verse… <a href={home}>Go now</a></p>
+  </section>
+</Base>
+
+<style>
+  .today-forward { padding-block: 4rem; text-align: center; }
+</style>

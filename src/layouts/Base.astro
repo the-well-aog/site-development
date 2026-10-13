@@ -12,9 +12,11 @@ interface Props {
   image?: string;
   /** Offer the "Be still" reading mode on this page. */
   still?: boolean;
+  /** Leave out the canonical address, so link previews key on the exact shared URL (see /today). */
+  canonical?: boolean;
 }
 
-const { title, description, image = img('church'), still = false } = Astro.props;
+const { title, description, image = img('church'), still = false, canonical: withCanonical = true } = Astro.props;
 const fullTitle = title === 'Home' ? site.legal : `${title} · ${site.name}`;
 const canonical = new URL(Astro.url.pathname, Astro.site);
 // Absolute URLs and already-resolved site paths ("/…") pass through; bare paths get the base prefix.
@@ -47,14 +49,14 @@ const organization = {
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
     <meta name="theme-color" content="#faf8f3" />
-    <link rel="canonical" href={canonical} />
+    {withCanonical && <link rel="canonical" href={canonical} />}
     <link rel="icon" href={url('images/the-well-logo-192.png')} type="image/png" />
     <link rel="apple-touch-icon" href={url('images/the-well-logo-192.png')} />
     <meta property="og:title" content={fullTitle} />
     <meta property="og:site_name" content={site.legal} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
-    <meta property="og:url" content={canonical} />
+    {withCanonical && <meta property="og:url" content={canonical} />}
     <meta property="og:image" content={ogImage} />
     <meta name="twitter:card" content="summary_large_image" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />

@@ -17,6 +17,8 @@ const config = {
   zone: site.timeZone,
   verses: today.source === 'fallback' ? verses : [],
   base: url('verse/'),
+  // Shared links go through /today/, whose link preview shows today's verse.
+  share: url('today/'),
   logo: url('images/the-well-logo-white.png'),
   legal: site.legal,
 };
@@ -149,7 +151,7 @@ const dateLabel = new Intl.DateTimeFormat('en-US', { timeZone: site.timeZone, we
   import { verseBackgrounds, backgroundFor } from '../data/verse-backgrounds';
   import { canvasBlob, paintVerseCard } from '../lib/verse-image';
 
-  type Config = { zone: string; verses: { text: string; reference: string }[]; base: string; logo: string; legal: string };
+  type Config = { zone: string; verses: { text: string; reference: string }[]; base: string; share: string; logo: string; legal: string };
 
   document.querySelectorAll<HTMLElement>('[data-daily-verse]').forEach((root) => {
     const config: Config = JSON.parse(root.dataset.config || '{}');
@@ -173,7 +175,9 @@ const dateLabel = new Intl.DateTimeFormat('en-US', { timeZone: site.timeZone, we
 
     const verseText = () => (text.textContent || '').replace(/^[“"]|[”"]$/g, '');
     const reference = () => ref.textContent || '';
-    const link = () => `${location.origin}${location.pathname}#today`;
+    // Dated, so each day's share gets a fresh preview instead of one a social network cached earlier.
+    const stamp = new Intl.DateTimeFormat('en-CA', { timeZone: config.zone }).format(new Date()).replace(/-/g, '');
+    const link = () => `${location.origin}${config.share}?d=${stamp}`;
     const say = (message: string) => {
       status.textContent = message;
       window.clearTimeout(Number(status.dataset.timer));
