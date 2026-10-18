@@ -31,7 +31,7 @@ export const site = {
   // Turn online features on once they are ready. Each one is independent.
   features: {
     // Recent videos pulled from the YouTube channel below.
-    youtube: false,
+    youtube: true,
     // "Watch live" links and the live-stream panel.
     livestream: false,
     // The Groups ministry and every "find a group" link, until groups are meeting.
@@ -57,8 +57,7 @@ export const site = {
   // Public Facebook Page URL. No app id or token.
   facebookPage: 'https://www.facebook.com/profile.php?id=100083294263196',
   // @handle, channel URL, or UC… id. Latest uploads come from YouTube's public RSS. No API key.
-  // NOTE: this handle names a Foursquare church. Replace it with The Well's own channel before launch.
-  youtubeChannel: 'https://www.youtube.com/@TheWellFoursquareChurch',
+  youtubeChannel: 'https://www.youtube.com/@thewellassemblyofgod',
 };
 
 const byName = (name: string) => site.services.find((service) => service.name === name)!;
