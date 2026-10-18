@@ -1,0 +1,175 @@
+---
+import Icon from './Icon.astro';
+import { site } from '../data/site';
+import { monthHtml, monthTitle, type CalendarItem } from '../lib/church-calendar';
+import { calendarEvents } from '../lib/events';
+import { iso } from '../lib/format';
+import { url } from '../lib/url';
+
+/*
+  A month calendar: weekly services, special events, and national and Christian holidays.
+  The build draws this month; the arrows redraw in the browser from the same code (lib/church-calendar.ts).
+  On phones it becomes a list of the days that have something on.
+*/
+const services = site.services.map(({ day, time, name }) => ({ day, time, name }));
+const events: CalendarItem[] = (await calendarEvents()).map((entry) => ({
+  date: iso(entry.data.date),
+  title: entry.data.title,
+  time: entry.data.time,
+  kind: 'event',
+  href: url(`/events/${entry.id}`),
+}));
+const today = new Intl.DateTimeFormat('en-CA', { timeZone: site.timeZone }).format(new Date());
+const [year, month] = today.split('-').map(Number);
+const legend = [
+  { kind: 'service', label: 'Weekly services' },
+  { kind: 'event', label: 'Church events' },
+  { kind: 'christian', label: 'Christian holidays' },
+  { kind: 'national', label: 'National holidays' },
+];
+---
+
+<div class="cal" data-calendar data-services={JSON.stringify(services)} data-events={JSON.stringify(events)} data-zone={site.timeZone} data-year={year} data-month={month - 1}>
+  <div class="cal-bar">
+    <h3 class="cal-title" aria-live="polite" data-cal-title>{monthTitle(year, month - 1)}</h3>
+    <div class="cal-nav">
+      <button class="cal-button" type="button" data-cal-step="-1" aria-label="Previous month"><Icon name="arrow-right" size={18} /></button>
+      <button class="cal-button cal-now" type="button" data-cal-now>Today</button>
+      <button class="cal-button" type="button" data-cal-step="1" aria-label="Next month"><Icon name="arrow-right" size={18} /></button>
+    </div>
+  </div>
+  <ul class="cal-legend" role="list" aria-label="Show on the calendar">
+    {legend.map(({ kind, label }) => (
+      <li><button class:list={['cal-key', `is-${kind}`]} type="button" aria-pressed="true" data-cal-kind={kind}><span class="cal-swatch" aria-hidden="true"></span>{label}</button></li>
+    ))}
+  </ul>
+  <ul class="cal-head" role="list" aria-hidden="true">
+    {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day) => <li>{day}</li>)}
+  </ul>
+  <ul class="cal-grid" role="list" data-cal-grid set:html={monthHtml(year, month - 1, services, events, today)} />
+  <p class="cal-note">Holiday weeks can change the service schedule. Changes are posted on our Facebook page.</p>
+</div>
+
+<style>
+  .cal { display: grid; gap: 1rem; }
+  .cal-bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.75rem 1.5rem; }
+  .cal-title { font: 500 var(--h3) / 1.2 var(--serif); color: var(--heading); }
+  .cal-nav { display: flex; gap: 0.4rem; }
+  .cal-button {
+    display: inline-grid;
+    place-items: center;
+    min-width: 2.75rem;
+    height: 2.75rem;
+    padding: 0 0.9rem;
+    border: 1px solid var(--line-strong);
+    border-radius: 999px;
+    background: var(--surface);
+    color: var(--heading);
+    font: 600 0.9rem var(--sans);
+    cursor: pointer;
+    transition: background 0.2s var(--ease), color 0.2s var(--ease);
+  }
+  .cal-button:hover { background: var(--navy); color: #fff; }
+  .cal-button[data-cal-step='-1'] :global(svg) { transform: scaleX(-1); }
+
+  .cal-legend { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  .cal-key {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.4rem 0.85rem;
+    border: 1px solid var(--line-strong);
+    border-radius: 999px;
+    background: var(--surface);
+    color: var(--fg);
+    font: 500 0.88rem var(--sans);
+    cursor: pointer;
+  }
+  .cal-key[aria-pressed='false'] { opacity: 0.55; text-decoration: line-through; }
+  .cal-swatch { width: 0.7rem; height: 0.7rem; border-radius: 3px; background: var(--kind); }
+
+  /* One colour per kind, shared by the legend and the day entries. */
+  .cal :global(.is-service) { --kind: var(--tide); --kind-bg: var(--foam); }
+  .cal :global(.is-event) { --kind: var(--navy); --kind-bg: var(--mist); }
+  .cal :global(.is-christian) { --kind: var(--gold); --kind-bg: #f6ead2; }
+  .cal :global(.is-national) { --kind: #9b3b3b; --kind-bg: #f6e1df; }
+
+  .cal-head, .cal-grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); }
+  .cal-head li { padding: 0 0.6rem 0.35rem; color: var(--fg-muted); font: 600 0.78rem var(--sans); letter-spacing: 0.08em; text-transform: uppercase; }
+  .cal-grid { border-top: 1px solid var(--line); border-left: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; background: var(--surface); }
+  .cal-grid :global(.cal-day) { min-height: 7.5rem; padding: 0.45rem; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+  .cal-grid :global(.is-outside) { background: color-mix(in srgb, var(--bg) 70%, transparent); }
+  .cal-grid :global(.is-outside > *) { opacity: 0.5; }
+  .cal-grid :global(.cal-date) { display: flex; align-items: center; gap: 0.4rem; margin-bottom: 0.3rem; font: 600 0.88rem var(--sans); color: var(--heading); }
+  .cal-grid :global(.cal-long) { display: none; }
+  .cal-grid :global(.is-today .cal-num) { display: inline-grid; place-items: center; min-width: 1.7rem; height: 1.7rem; border-radius: 50%; background: var(--navy); color: #fff; }
+  .cal-grid :global(.cal-today) { color: var(--gold-ink); font-size: 0.75rem; letter-spacing: 0.06em; text-transform: uppercase; }
+  .cal-grid :global(.cal-items) { display: grid; gap: 0.2rem; }
+  .cal-grid :global(.cal-item) {
+    padding: 0.15rem 0.4rem;
+    border-left: 3px solid var(--kind);
+    border-radius: 4px;
+    background: var(--kind-bg);
+    color: var(--ink);
+    font-size: 0.78rem;
+    line-height: 1.3;
+  }
+  .cal-grid :global(.cal-item a) { color: inherit; font-weight: 600; text-decoration: underline; text-underline-offset: 0.15em; }
+  .cal-grid :global(.is-christian), .cal-grid :global(.is-national) { font-weight: 600; }
+  .cal-grid :global(.cal-time) { color: var(--muted); font-variant-numeric: tabular-nums; }
+  .cal-note { color: var(--fg-muted); font-size: 0.9rem; }
+
+  .cal.hide-service :global(.cal-item.is-service),
+  .cal.hide-event :global(.cal-item.is-event),
+  .cal.hide-christian :global(.cal-item.is-christian),
+  .cal.hide-national :global(.cal-item.is-national) { display: none; }
+
+  /* Phones: a list of the days that have something on (from today on, in the current month). */
+  @media (max-width: 760px) {
+    .cal-head { display: none; }
+    .cal-grid { grid-template-columns: 1fr; border: 0; border-radius: 0; background: none; gap: 0.6rem; }
+    .cal-grid :global(.cal-day) { min-height: 0; padding: 0.75rem 0.9rem; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); }
+    .cal-grid :global(.is-outside), .cal-grid :global(.is-empty), .cal-grid :global(.is-past:not(.is-today)) { display: none; }
+    .cal-grid :global(.cal-num) { display: none; }
+    .cal-grid :global(.is-today .cal-num) { display: none; }
+    .cal-grid :global(.cal-long) { display: inline; font-size: 0.95rem; }
+    .cal-grid :global(.cal-item) { font-size: 0.9rem; padding: 0.3rem 0.55rem; }
+  }
+</style>
+
+<script>
+  import { monthHtml, monthTitle, type CalendarItem, type CalendarService } from '../lib/church-calendar';
+
+  document.querySelectorAll<HTMLElement>('[data-calendar]').forEach((root) => {
+    const services: CalendarService[] = JSON.parse(root.dataset.services || '[]');
+    const events: CalendarItem[] = JSON.parse(root.dataset.events || '[]');
+    const grid = root.querySelector<HTMLElement>('[data-cal-grid]')!;
+    const title = root.querySelector<HTMLElement>('[data-cal-title]')!;
+    // Today on the church's clock, so the calendar stays right between rebuilds.
+    const today = () => new Intl.DateTimeFormat('en-CA', { timeZone: root.dataset.zone }).format(new Date());
+    let [year, month] = today().split('-').map(Number);
+    month -= 1;
+
+    const draw = () => {
+      title.textContent = monthTitle(year, month);
+      grid.innerHTML = monthHtml(year, month, services, events, today());
+    };
+    root.querySelectorAll<HTMLButtonElement>('[data-cal-step]').forEach((button) => button.addEventListener('click', () => {
+      const next = new Date(Date.UTC(year, month + Number(button.dataset.calStep), 1));
+      year = next.getUTCFullYear();
+      month = next.getUTCMonth();
+      draw();
+    }));
+    root.querySelector('[data-cal-now]')?.addEventListener('click', () => {
+      [year, month] = today().split('-').map(Number);
+      month -= 1;
+      draw();
+    });
+    root.querySelectorAll<HTMLButtonElement>('[data-cal-kind]').forEach((button) => button.addEventListener('click', () => {
+      const shown = button.getAttribute('aria-pressed') !== 'true';
+      button.setAttribute('aria-pressed', String(shown));
+      root.classList.toggle(`hide-${button.dataset.calKind}`, !shown);
+    }));
+    draw();
+  });
+</script>
