@@ -31,7 +31,7 @@ export const site = {
   // Turn online features on once they are ready. Each one is independent.
   features: {
     // Recent videos pulled from the YouTube channel below.
-    youtube: true,
+    youtube: false,
     // "Watch live" links and the live-stream panel.
     livestream: false,
     // The Groups ministry and every "find a group" link, until groups are meeting.
