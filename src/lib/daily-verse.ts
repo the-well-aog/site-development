@@ -6,6 +6,8 @@ import { verses } from '../data/verses';
   The site quotes only the King James Version: if the service names another translation, the KJV
   text for the same reference comes from bible-api.com instead. If neither can be reached, the
   verse is picked from the KJV list in src/data/verses.ts, so the build never fails over it.
+  The site shows one verse: a passage ("John 11:4-6") is cut to its first verse, unless that verse
+  ends mid-sentence, in which case the list is used instead.
 */
 export type DailyVerse = { text: string; reference: string; source: 'service' | 'fallback' };
 
@@ -15,6 +17,12 @@ const KJV_LOOKUP = (reference: string) => `https://bible-api.com/${encodeURI(ref
 
 /** "John 11: 4" (as the service writes it) becomes "John 11:4". */
 const tidyReference = (reference: string) => reference.replace(/\s*:\s*/g, ':').replace(/\s*[-–—]\s*/g, '-').replace(/\s+/g, ' ').trim();
+
+/** "John 11:4-6" (or "John 11:4,6") becomes "John 11:4". */
+const firstVerse = (reference: string) => reference.match(/^(.+?\d+:\d+)/)?.[1] ?? reference;
+
+/** Whether a verse finishes its sentence, rather than running on into the next verse. */
+const endsSentence = (text: string) => /[.?!][”’"')]*$/.test(text);
 
 const TEXT_KEYS = ['text', 'verse_text', 'versetext', 'verse', 'content', 'body', 'passage', 'scripture', 'quote'];
 const REF_KEYS = ['reference', 'ref', 'citation', 'verse_reference', 'passage_reference', 'title', 'display_ref'];
@@ -79,11 +87,14 @@ async function load(): Promise<DailyVerse> {
     const found = parse(body);
     console.log(`Daily verse service answered: ${JSON.stringify(found)} (response starts: ${JSON.stringify(body.slice(0, 300))})`);
     if (!found.reference) throw new Error('no verse reference in the response');
-    const reference = tidyReference(found.reference);
+    const passage = tidyReference(found.reference);
+    const reference = firstVerse(passage);
     const isKjv = /^(kjv|king james)/i.test(found.version ?? '');
-    const text = isKjv && found.text ? found.text : await kjv(reference);
+    // The service's own text covers the whole passage, so it is used only when the passage is one verse.
+    const text = isKjv && found.text && reference === passage ? found.text : await kjv(reference);
     if (!text) throw new Error(`no KJV text for ${reference}`);
-    return { text: unquote(text), reference: reference.replace(/-/g, '–'), source: 'service' };
+    if (reference !== passage && !endsSentence(unquote(text))) throw new Error(`${reference}, the first verse of ${passage}, ends mid-sentence`);
+    return { text: unquote(text), reference, source: 'service' };
   } catch (error) {
     console.warn(`Daily verse: using the built-in KJV list (${error instanceof Error ? error.message : error}).`);
     return fallback();

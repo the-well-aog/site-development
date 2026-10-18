@@ -1,14 +1,14 @@
 // Fallback verses (King James Version), used only when the daily verse service can't be reached.
-// Add, remove, or reorder freely; the home page picks one by date.
+// One verse each. Add, remove, or reorder freely; the home page picks one by date.
 export const verses: { text: string; reference: string }[] = [
   { text: 'Be still, and know that I am God.', reference: 'Psalm 46:10' },
   { text: 'Come unto me, all ye that labour and are heavy laden, and I will give you rest.', reference: 'Matthew 11:28' },
   { text: 'He that believeth on me, as the scripture hath said, out of his belly shall flow rivers of living water.', reference: 'John 7:38' },
   { text: 'As the hart panteth after the water brooks, so panteth my soul after thee, O God.', reference: 'Psalm 42:1' },
-  { text: 'It is of the LORD’s mercies that we are not consumed, because his compassions fail not. They are new every morning: great is thy faithfulness.', reference: 'Lamentations 3:22–23' },
+  { text: 'It is of the LORD’s mercies that we are not consumed, because his compassions fail not.', reference: 'Lamentations 3:22' },
   { text: 'The LORD is my shepherd; I shall not want.', reference: 'Psalm 23:1' },
   { text: 'But they that wait upon the LORD shall renew their strength; they shall mount up with wings as eagles; they shall run, and not be weary; and they shall walk, and not faint.', reference: 'Isaiah 40:31' },
-  { text: 'Trust in the LORD with all thine heart; and lean not unto thine own understanding. In all thy ways acknowledge him, and he shall direct thy paths.', reference: 'Proverbs 3:5–6' },
+  { text: 'Trust in the LORD with all thine heart; and lean not unto thine own understanding.', reference: 'Proverbs 3:5' },
   { text: 'Fear thou not; for I am with thee: be not dismayed; for I am thy God: I will strengthen thee; yea, I will help thee; yea, I will uphold thee with the right hand of my righteousness.', reference: 'Isaiah 41:10' },
   { text: 'Therefore if any man be in Christ, he is a new creature: old things are passed away; behold, all things are become new.', reference: '2 Corinthians 5:17' },
   { text: 'But ye shall receive power, after that the Holy Ghost is come upon you: and ye shall be witnesses unto me both in Jerusalem, and in all Judaea, and in Samaria, and unto the uttermost part of the earth.', reference: 'Acts 1:8' },
@@ -21,9 +21,9 @@ export const verses: { text: string; reference: string }[] = [
   { text: 'I will praise thee; for I am fearfully and wonderfully made: marvellous are thy works; and that my soul knoweth right well.', reference: 'Psalm 139:14' },
   { text: 'For I know the thoughts that I think toward you, saith the LORD, thoughts of peace, and not of evil, to give you an expected end.', reference: 'Jeremiah 29:11' },
   { text: 'And we know that all things work together for good to them that love God, to them who are the called according to his purpose.', reference: 'Romans 8:28' },
-  { text: 'Be careful for nothing; but in every thing by prayer and supplication with thanksgiving let your requests be made known unto God. And the peace of God, which passeth all understanding, shall keep your hearts and minds through Christ Jesus.', reference: 'Philippians 4:6–7' },
+  { text: 'And the peace of God, which passeth all understanding, shall keep your hearts and minds through Christ Jesus.', reference: 'Philippians 4:7' },
   { text: 'Have not I commanded thee? Be strong and of a good courage; be not afraid, neither be thou dismayed: for the LORD thy God is with thee whithersoever thou goest.', reference: 'Joshua 1:9' },
-  { text: 'But the fruit of the Spirit is love, joy, peace, longsuffering, gentleness, goodness, faith, meekness, temperance: against such there is no law.', reference: 'Galatians 5:22–23' },
+  { text: 'If we live in the Spirit, let us also walk in the Spirit.', reference: 'Galatians 5:25' },
   { text: 'He hath shewed thee, O man, what is good; and what doth the LORD require of thee, but to do justly, and to love mercy, and to walk humbly with thy God?', reference: 'Micah 6:8' },
   { text: 'For God so loved the world, that he gave his only begotten Son, that whosoever believeth in him should not perish, but have everlasting life.', reference: 'John 3:16' },
   { text: 'But whosoever drinketh of the water that I shall give him shall never thirst; but the water that I shall give him shall be in him a well of water springing up into everlasting life.', reference: 'John 4:14' },
