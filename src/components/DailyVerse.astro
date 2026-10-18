@@ -201,34 +201,41 @@ const dateLabel = new Intl.DateTimeFormat('en-US', { timeZone: site.timeZone, we
       say(copied ? 'Copied' : 'Your browser blocked copying. Select the verse above to copy it.');
     });
 
-    // Image share: paint the card, then share it as a file where the device can, or download it.
+    // Image share: paint the card. Phones copy it to the clipboard, ready to paste into a post or message,
+    // as "Share this verse" does with the text. Elsewhere it is shared as a file where the device can, or downloaded.
     const imageButton = root.querySelector<HTMLButtonElement>('[data-verse-image]');
     imageButton?.addEventListener('click', async () => {
       imageButton.disabled = true;
       say('Making your image…');
+      // A different photograph each time, as in The Word (never the same one twice in a row).
+      const choices = verseBackgrounds.filter((item) => item.file !== root.dataset.lastImage);
+      const art = choices[Math.floor(Math.random() * choices.length)];
+      root.dataset.lastImage = art.file;
+      const image = paintVerseCard({
+        text: verseText(),
+        reference: reference(),
+        date: date.textContent || '',
+        background: `${config.base}${art.file}`,
+        dark: art.dark,
+        logo: config.logo,
+        // Whatever address the site is served from today.
+        site: `${location.host}${location.pathname}`.replace(/^www\./, '').replace(/\/$/, ''),
+      }).then(canvasBlob);
+      // The copy starts before the image is painted: browsers only allow it right after the tap.
+      const copied = matchMedia('(pointer: coarse)').matches && typeof ClipboardItem !== 'undefined'
+        ? navigator.clipboard.write([new ClipboardItem({ 'image/png': image })]).then(() => true, () => false)
+        : Promise.resolve(false);
       try {
-        // A different photograph each time, as in The Word (never the same one twice in a row).
-        const choices = verseBackgrounds.filter((item) => item.file !== root.dataset.lastImage);
-        const art = choices[Math.floor(Math.random() * choices.length)];
-        root.dataset.lastImage = art.file;
-        const canvas = await paintVerseCard({
-          text: verseText(),
-          reference: reference(),
-          date: date.textContent || '',
-          background: `${config.base}${art.file}`,
-          dark: art.dark,
-          logo: config.logo,
-          // Whatever address the site is served from today (GitHub Pages now, the church's domain later).
-          site: `${location.host}${location.pathname}`.replace(/^www\./, '').replace(/\/$/, ''),
-        });
-        const blob = await canvasBlob(canvas);
+        const blob = await image;
+        if (await copied) {
+          say('Image copied. Paste it into a post or message.');
+          return;
+        }
         const name = `the-well-${reference().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')}.png`;
         const file = new File([blob], name, { type: 'image/png' });
-        const caption = `${reference()} (KJV)\n${link()}`;
-        try { await navigator.clipboard.writeText(caption); } catch { /* optional */ }
         if (navigator.canShare?.({ files: [file] })) {
           try {
-            await navigator.share({ files: [file], text: caption });
+            await navigator.share({ files: [file] });
             say('Shared');
             return;
           } catch { /* closed the share sheet; fall back to saving */ }
