@@ -17,7 +17,7 @@ merge to main →  GitHub Actions build  →  GitHub Pages
 
 Astro compiles `src/pages` and the Markdown in `src/content` into `dist/`. Shared chrome lives in `src/layouts` and `src/components`. Stock photographs sit in `src/assets/photos`; the build serves each as AVIF/WebP at the sizes it is shown (`src/components/Photo.astro`). Logos stay in `public/images`.
 
-GitHub Pages serves `dist/` at `https://the-well-aog.github.io/site-development/` until a custom domain is attached. Forms post to an external form host once `site.formEndpoint` is set; until then the site offers call, message, and directions. Giving links out to the church's provider. Nothing here calls n8n, and the repo holds no secrets.
+GitHub Pages serves `dist/` at https://thewellpocola.com. Forms post to an external form host once `site.formEndpoint` is set; until then the site offers call, message, and directions. Giving links out to the church's provider. Nothing here calls n8n, and the repo holds no secrets.
 
 ## Quick start
 
@@ -28,11 +28,11 @@ npm run dev
 
 Open `http://localhost:4321`.
 
-A production build with the GitHub Pages base path:
+A production build as GitHub Pages builds it:
 
 ```powershell
-$env:SITE_URL = "https://the-well-aog.github.io"
-$env:BASE_PATH = "/site-development"
+$env:SITE_URL = "https://thewellpocola.com"
+$env:BASE_PATH = "/"
 npm run build
 npm run preview
 ```
@@ -45,8 +45,8 @@ Build-time only. Copy `.env.example` to `.env` if you want `npm run build` to pi
 
 | Variable | Required | Description |
 | --- | --- | --- |
-| `SITE_URL` | Optional | Public origin, no trailing slash. Default `https://the-well-aog.github.io`. |
-| `BASE_PATH` | Optional | URL prefix. Default `/` for local dev. The Pages workflow sets `/site-development`. Use `/` on a custom domain. |
+| `SITE_URL` | Optional | Public origin, no trailing slash. Default `https://thewellpocola.com`. |
+| `BASE_PATH` | Optional | URL prefix. Default `/`. Use `/site-development` only when serving from `the-well-aog.github.io/site-development/` with no custom domain. |
 | `FACEBOOK_PAGE` | Optional | Overrides `facebookPage` in `src/data/site.ts` for this build. A public Facebook Page URL. |
 | `YOUTUBE_CHANNEL` | Optional | Overrides `youtubeChannel` in `src/data/site.ts`. An `@handle`, channel URL, or `UC…` id. |
 
@@ -157,4 +157,4 @@ Navigation for the header, mobile menu, and footer comes from one model in `src/
 - Do not collect card numbers, passwords, or prayer-request storage in this repo. Point Give at the church's giving provider when that URL exists.
 - No secrets in the repo. This site does not call Autotask or n8n.
 - One-time Pages setting: in the GitHub repo, Settings → Pages → Build and deployment → Source: GitHub Actions. After that, a merge to `main` publishes the site.
-- For a custom domain, set `BASE_PATH` to `/` in `.github/workflows/pages.yml` and add the domain under Pages settings.
+- The custom domain (`thewellpocola.com`) is set under Settings → Pages. If it ever changes, update `SITE_URL` in `.github/workflows/pages.yml` to match; keep `BASE_PATH` at `/`.

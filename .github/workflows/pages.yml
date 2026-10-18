@@ -30,8 +30,8 @@ jobs:
       - run: npm ci
       - run: npm run build
         env:
-          SITE_URL: https://the-well-aog.github.io
-          BASE_PATH: /site-development
+          SITE_URL: https://thewellpocola.com
+          BASE_PATH: /
           STRAPI_URL: https://cms.wellspringstudiollc.com
           ASTRO_TELEMETRY_DISABLED: 1
       - uses: actions/upload-pages-artifact@v3
